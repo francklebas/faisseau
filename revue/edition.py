@@ -41,7 +41,7 @@ def sujet_en_json(sujet: Sujet, config: Config, effectif: dict[str, int]) -> dic
         "nb_articles": len(articles),
         "nb_medias": sum(len(m) for m in blocs.values()),
         "couverture": {b: blocs[b] for b in BLOCS},
-        "asymetrie": asymetrie([a.media_id for a in articles], effectif, config),
+        "asymetrie": asymetrie(articles, effectif, config),
         "faits_communs": faits["commun"],
         "faits_recoupes": faits["recoupe"],
         "affirmations_isolees": faits["isole"],

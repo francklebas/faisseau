@@ -74,6 +74,17 @@ couverture:
     # En dessous de ces deux seuils, l'écart n'est pas affiché (bruit) :
     ecart_min: 0.25             # écart minimal entre les deux parts (0,25 = 25 points)
     min_medias_bord: 2          # le bord dominant doit compter au moins 2 médias sur le sujet
+    # Ce qui fausse la comparaison sans rien dire d'un choix éditorial : les médias des deux
+    # bords n'ont ni les mêmes rubriques ni le même débit de dépêches.
+    ecarter:
+      # Sujet de sport : au moins cette part de ses articles est rangée dans une rubrique
+      # sportive (segment de l'adresse de l'article). Le sujet n'est pas classé.
+      rubriques_sport: [sport, sports, football, foot, rugby, tennis, basket, basketball, cyclisme, handball, f1, formule-1, jo, sport-rugby, ligue-des-nations, ligue-1, ligue-des-champions]
+      part_sport: 0.5
+      # Dépêche reprise : un article dont le titre est presque identique à celui d'un autre
+      # média du sujet (part de mots communs). Il ne compte pas pour son bord ; un média
+      # compte seulement s'il publie au moins un article au titre propre.
+      titre_repris: 0.75
 
 affinites:
   # Contrôle du classement par la couverture (commande : revue affinites). Signale les

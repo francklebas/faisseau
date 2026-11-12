@@ -59,7 +59,7 @@ def _sujets(
     limite = max_sujets or g["max_sujets"]
     sujets = tous[:limite]
     effectif = effectifs((a.media_id for a in articles), cfg)
-    ecarts = [(asymetrie(s.medias, effectif, cfg), s) for s in tous[limite:]]
+    ecarts = [(asymetrie(s.articles, effectif, cfg), s) for s in tous[limite:]]
     penches = sorted((e for e in ecarts if e[0]["notable"]), key=lambda e: -abs(e[0]["ecart"]))
     sujets += [s for _, s in penches[: g["max_asymetries"]]]
     _dire(

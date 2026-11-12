@@ -67,6 +67,13 @@ useSeoMeta({
       choix d'un seul média suffirait à le créer.
     </p>
     <p>
+      Deux cas sont écartés parce qu'ils mesurent autre chose qu'un choix de traitement. Les sujets de
+      sport ne sont pas classés : on les reconnaît à la rubrique des articles, et tous les médias suivis
+      n'ont pas de rubrique sportive. Un article dont le titre est repris presque mot pour mot par un autre
+      média est traité comme une dépêche d'agence : un média ne compte pour son bord que s'il publie au
+      moins un article au titre propre.
+    </p>
+    <p>
       Pour cette comparaison, les médias classés centre-gauche ou centre-droit ne comptent pour aucun bord,
       bien qu'ils figurent à gauche et à droite dans la répartition affichée : deux généralistes modérés
       ne suffisent pas à faire pencher un sujet. Un écart ne dit rien de l'importance du sujet ni d'une

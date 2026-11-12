@@ -10,6 +10,7 @@ useSeoMeta({
 const sujets = computed(() => (edition.value?.sujets.filter(s => s.asymetrie.notable) ?? [])
   .toSorted((a, b) => Math.abs(b.asymetrie.ecart) - Math.abs(a.asymetrie.ecart)))
 const BORDS = ['gauche', 'droite'] as const
+const nbSport = computed(() => edition.value?.sujets.filter(s => s.asymetrie.ecarte === 'sport').length ?? 0)
 </script>
 
 <template>
@@ -37,7 +38,8 @@ const BORDS = ['gauche', 'droite'] as const
             <dt><span class="pastille" :class="`pastille--${bord}`" aria-hidden="true" />Médias de {{ bord }}</dt>
             <dd>
               {{ sujet.asymetrie[bord].medias.length }} sur {{ sujet.asymetrie[bord].total }}
-              ({{ pourcent(sujet.asymetrie[bord].part) }})
+              ({{ pourcent(sujet.asymetrie[bord].part) }})<template v-if="sujet.asymetrie[bord].depeche.length">,
+                plus {{ sujet.asymetrie[bord].depeche.length }} par dépêche reprise</template>
             </dd>
           </div>
           <div>
@@ -51,7 +53,10 @@ const BORDS = ['gauche', 'droite'] as const
 
     <p class="note ecarts__note">
       Un écart n'est affiché qu'à partir de 25 points et de deux médias du bord qui domine. Les médias de
-      centre gauche et de centre droit ne sont pas comptés. Le calcul dépend entièrement du classement des
+      centre gauche et de centre droit ne sont pas comptés. Les sujets de sport ne sont pas classés
+      <template v-if="nbSport">({{ nbSport }} dans cette édition)</template>, et un média qui ne fait que
+      reprendre une dépêche d'agence n'est pas compté : dans les deux cas, l'écart refléterait les
+      rubriques et le débit des médias, pas un choix de traitement. Le calcul dépend entièrement du classement des
       médias, qui est provisoire et consultable sur la page <NuxtLink to="/medias">Médias</NuxtLink>. Un
       flux RSS ne reflète pas toujours tout ce qu'un média publie, et les médias des deux bords n'ont ni la
       même taille ni les mêmes rubriques : voir la <NuxtLink to="/methode">méthode</NuxtLink>.

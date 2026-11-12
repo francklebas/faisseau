@@ -41,8 +41,10 @@ export interface ArticleSource {
 export type Bord = 'gauche' | 'droite'
 
 export interface CouvertureBord {
-  /** Médias de ce bord qui couvrent le sujet. */
+  /** Médias de ce bord qui couvrent le sujet avec au moins un article au titre propre. */
   medias: string[]
+  /** Médias de ce bord qui n'ont publié qu'une dépêche reprise : non comptés. */
+  depeche: string[]
   /** Médias de ce bord ayant publié ce jour-là. */
   total: number
   /** medias.length / total, entre 0 et 1. */
@@ -56,6 +58,8 @@ export interface Asymetrie {
   /** Part à gauche − part à droite, entre −1 et 1. */
   ecart: number
   bord_dominant: Bord | null
+  /** Motif pour lequel le sujet n'est pas classé (rubrique sportive). */
+  ecarte: 'sport' | null
   /** L'écart dépasse le seuil d'affichage. */
   notable: boolean
 }

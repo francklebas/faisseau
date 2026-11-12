@@ -57,8 +57,8 @@ def test_edition_chaque_fait_renvoie_a_un_article_liste(cfg, tmp_path, monkeypat
     # Couverture : quatre médias du bloc gauche, aucun à droite. Pour l'asymétrie, Le Monde
     # (centre-gauche) ne compte pas : 3 médias de gauche sur 6 présents, 0 sur 10 à droite.
     assert publie["couverture"] == {"gauche": ["humanite", "liberation", "mediapart", "lemonde"], "centre": [], "droite": []}
-    assert publie["asymetrie"]["gauche"] == {"medias": ["humanite", "liberation", "mediapart"], "total": 6, "part": 0.5}
-    assert publie["asymetrie"]["droite"] == {"medias": [], "total": 10, "part": 0.0}
+    assert publie["asymetrie"]["gauche"] == {"medias": ["humanite", "liberation", "mediapart"], "depeche": [], "total": 6, "part": 0.5}
+    assert publie["asymetrie"]["droite"] == {"medias": [], "depeche": [], "total": 10, "part": 0.0}
     assert publie["asymetrie"]["ecart"] == 0.5 and publie["asymetrie"]["notable"]
     assert edition["stats"]["nb_asymetries"] == 1 and edition["stats"]["effectif_bords"] == {"gauche": 6, "droite": 10}
 
