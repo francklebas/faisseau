@@ -72,6 +72,14 @@ class Config:
                 return bloc
         raise ValueError(f"orientation « {orientation} » absente de couverture.blocs")
 
+    def bord(self, media_id: str) -> str | None:
+        """Bord (gauche, droite) d'un média pour les angles morts, None s'il n'en a pas."""
+        orientation = self.medias[media_id].orientation
+        for bord, orientations in self.reglages["couverture"]["angle_mort"]["bords"].items():
+            if orientation in orientations:
+                return bord
+        return None
+
     # ── embeddings ──
     @property
     def modele_embeddings(self) -> dict[str, Any]:

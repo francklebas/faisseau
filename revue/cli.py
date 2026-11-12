@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from . import config as configuration
 from .base import Base
 from .collecte import collecter
-from .couverture import angle_mort, repartition
+from .couverture import angle_mort
 from .edition import ecrire_edition
 from .modeles import Sujet
 
@@ -54,8 +54,7 @@ def _sujets(cfg, base: Base, max_sujets: int | None = None) -> tuple[list[Sujet]
     # nature, un sujet porté par un seul bord est rarement parmi les plus couverts.
     limite = max_sujets or g["max_sujets"]
     sujets = tous[:limite]
-    reglage = r["couverture"]["angle_mort"]
-    angles = [s for s in tous[limite:] if angle_mort(repartition(s.medias, cfg), reglage)]
+    angles = [s for s in tous[limite:] if angle_mort(s.medias, cfg)]
     sujets += angles[: g["max_angles_morts"]]
     _dire(
         f"Regroupement : {len(tous)} sujets d'au moins {g['min_medias']} médias ; "

@@ -15,17 +15,20 @@ def repartition(media_ids: list[str], config: Config) -> dict[str, list[str]]:
     return blocs
 
 
-def angle_mort(blocs: dict[str, list[str]], reglage: dict) -> dict | None:
+def angle_mort(media_ids: list[str], config: Config) -> dict | None:
     """Sujet couvert surtout par un bord et presque pas par l'autre.
 
     Renvoie {"bord_dominant", "bord_absent", "part"} ou None. Les parts sont calculées sur
     le nombre de médias distincts, pas d'articles : un média très prolixe ne pèse qu'une fois.
+    Les bords sont ceux de couverture.angle_mort.bords, plus étroits que les blocs affichés.
     """
-    total = sum(len(m) for m in blocs.values())
-    if total < reglage["min_medias"]:
+    reglage = config.reglages["couverture"]["angle_mort"]
+    medias = list(dict.fromkeys(media_ids))
+    if len(medias) < reglage["min_medias"]:
         return None
+    bords = [config.bord(m) for m in medias]
     for bord, oppose in OPPOSE.items():
-        part = len(blocs[bord]) / total
-        if part >= reglage["part_dominante"] and len(blocs[oppose]) / total <= reglage["part_opposee_max"]:
+        part = bords.count(bord) / len(medias)
+        if part >= reglage["part_dominante"] and bords.count(oppose) / len(medias) <= reglage["part_opposee_max"]:
             return {"bord_dominant": bord, "bord_absent": oppose, "part": round(part, 2)}
     return None

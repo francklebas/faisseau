@@ -57,6 +57,12 @@ couverture:
     centre: [centre]
     droite: [centre-droit, droite, extreme-droite]
   angle_mort:
+    # Orientations qui comptent comme un « bord » pour les angles morts. Plus strict que
+    # les blocs affichés : centre-gauche et centre-droit n'y figurent pas, sinon un sujet
+    # porté par deux généralistes modérés passe pour l'angle mort du bord d'en face.
+    bords:
+      gauche: [extreme-gauche, gauche]
+      droite: [droite, extreme-droite]
     min_medias: 4               # en dessous, trop peu de sources pour conclure
     part_dominante: 0.6         # part minimale du bord dominant (gauche ou droite)
     part_opposee_max: 0.1       # part maximale du bord opposé

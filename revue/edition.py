@@ -41,7 +41,7 @@ def sujet_en_json(sujet: Sujet, config: Config) -> dict:
         "nb_articles": len(articles),
         "nb_medias": sum(len(m) for m in blocs.values()),
         "couverture": {b: blocs[b] for b in BLOCS},
-        "angle_mort": angle_mort(blocs, config.reglages["couverture"]["angle_mort"]),
+        "angle_mort": angle_mort([a.media_id for a in articles], config),
         "faits_communs": faits["commun"],
         "faits_recoupes": faits["recoupe"],
         "affirmations_isolees": faits["isole"],

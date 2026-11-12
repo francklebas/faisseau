@@ -57,6 +57,11 @@ useSeoMeta({
       est signalé comme angle mort lorsqu'un bord fournit au moins 60 % des médias qui en parlent et que
       l'autre en fournit 10 % au plus, avec quatre médias au minimum.
     </p>
+    <p>
+      Pour ce signalement, les médias classés centre-gauche ou centre-droit ne comptent pour aucun bord,
+      bien qu'ils figurent à gauche et à droite dans la répartition affichée : deux généralistes modérés
+      ne suffisent pas à faire d'un sujet l'angle mort du camp d'en face.
+    </p>
 
     <h2>Ce que cela ne sait pas faire</h2>
     <ul>

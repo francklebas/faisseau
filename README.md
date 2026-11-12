@@ -97,7 +97,7 @@ flux RSS ──► collecte ──► embeddings ──► regroupement ──�
 | Embeddings | `revue/plongements.py` | `sentence-transformers` sur CPU, 4 fils, vecteurs en cache. |
 | Regroupement | `revue/regroupement.py` | Classification ascendante hiérarchique, distance cosinus, **liaison moyenne** : deux groupes ne fusionnent que si leurs articles se ressemblent en moyenne, ce qui empêche un article « pont » de souder deux sujets voisins. Sujet = au moins 3 médias distincts. |
 | Faits | `revue/faits.py` | Le LLM propose faits et sources ; le code contrôle chaque rattachement (mots, noms propres, chiffres), retire les sources non fondées, ajoute les sources oubliées, et calcule seul le statut à partir du nombre de **médias** distincts. |
-| Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Angle mort : un bord ≥ 60 %, l'autre ≤ 10 %, au moins 4 médias. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 angles morts trouvés au-delà. |
+| Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Angle mort : un bord ≥ 60 %, l'autre ≤ 10 %, au moins 4 médias ; centre-gauche et centre-droit ne comptent pour aucun bord. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 angles morts trouvés au-delà. |
 | Site | `web/` | Nuxt 4, `nuxt generate`, **zéro JavaScript** côté lecteur (`features.noScripts`). |
 
 ### Solon ou E5 ?
@@ -158,8 +158,11 @@ qu'une fausse fusion.
   pour retrouver une application Vue hydratée le jour où il faudra de l'interactivité.
 - **« France uniquement »** est compris comme : médias français, en français. L'actualité
   internationale qu'ils couvrent est incluse.
-- **Centre-gauche compte à gauche, centre-droit à droite** (comme Ground News) ; réglable dans
-  `reglages.yaml`.
+- **Centre-gauche compte à gauche, centre-droit à droite** dans la répartition affichée (comme
+  Ground News), mais **pas pour les angles morts** : seuls gauche, droite et extrêmes y font un
+  bord (`couverture.angle_mort.bords`). Sur la journée du 11 novembre, les deux angles morts
+  trouvés avec la définition large (une critique de film, un sujet à quatre médias) tenaient à
+  des médias modérés et disparaissent ; la définition stricte en trouve donc peu.
 - Le dossier s'appelle `faisseau/` comme demandé ; le dépôt git est initialisé, rien n'est commité.
 
 ## Accessibilité
