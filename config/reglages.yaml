@@ -1,0 +1,62 @@
+# Réglages de la Revue du matin.
+# Tout ce qui est ici peut être modifié sans toucher au code.
+# Les secrets (clé Mistral) vont dans .env, jamais ici.
+
+collecte:
+  fenetre_heures: 36            # articles pris en compte pour l'édition du jour
+  extrait_max_caracteres: 400   # longueur maximale conservée de l'extrait RSS
+  delai_secondes: 20            # délai maximal par flux
+  connexions_simultanees: 8
+  conservation_jours: 14        # purge des articles plus anciens
+  user_agent: "RevueDuMatin/0.1 (agregateur RSS ; titres et extraits uniquement)"
+
+embeddings:
+  modele: solon                 # clé de la table ci-dessous (surcharge : REVUE_EMBEDDINGS)
+  fils_cpu: 4                   # nombre de fils PyTorch (limite la chauffe)
+  lot: 32
+  modeles:
+    solon:
+      nom: OrdalieTech/Solon-embeddings-base-0.1
+      prefixe: ""               # Solon : pas de préfixe pour une comparaison symétrique
+      seuil: 0.58               # similarité cosinus moyenne minimale pour fusionner
+    e5-small:
+      nom: intfloat/multilingual-e5-small
+      prefixe: "query: "        # E5 : même préfixe des deux côtés
+      seuil: 0.88
+
+regroupement:
+  liaison: average              # average | complete (complete = plus strict)
+  min_medias: 3                 # un sujet = au moins 3 médias distincts
+  max_sujets: 30                # sujets publiés par édition (les plus couverts)
+  max_angles_morts: 8           # angles morts ajoutés au-delà de ce classement
+  max_articles_par_media: 3     # au-delà, on garde les plus proches du centre du sujet
+
+faits:
+  fournisseur: koboldcpp        # mistral | koboldcpp | aucun (surcharge : REVUE_LLM)
+  temperature: 0.1
+  max_jetons: 900
+  delai_secondes: 600
+  max_articles_par_sujet: 12    # articles transmis au LLM (un par média d'abord)
+  extrait_max_llm: 240          # longueur de l'extrait transmis au LLM (coût, vitesse)
+  part_majorite: 0.5            # « fait commun » = au moins cette part des médias du sujet
+  ancrage_min: 0.5              # part des mots du fait à retrouver dans une source citée
+  ancrage_ajout: 0.7            # au-delà, une source non citée par le LLM est ajoutée
+  fournisseurs:
+    mistral:
+      url: https://api.mistral.ai/v1
+      modele: mistral-small-latest
+      variable_cle: MISTRAL_API_KEY
+    koboldcpp:
+      url: http://localhost:5001/v1   # surcharge : KOBOLDCPP_URL
+      modele: koboldcpp               # ignoré par KoboldCpp (modèle chargé au lancement)
+
+couverture:
+  # Regroupement des nuances de medias.yaml en trois blocs affichés.
+  blocs:
+    gauche: [extreme-gauche, gauche, centre-gauche]
+    centre: [centre]
+    droite: [centre-droit, droite, extreme-droite]
+  angle_mort:
+    min_medias: 4               # en dessous, trop peu de sources pour conclure
+    part_dominante: 0.6         # part minimale du bord dominant (gauche ou droite)
+    part_opposee_max: 0.1       # part maximale du bord opposé

@@ -1,0 +1,506 @@
+# Médias suivis par la Revue du matin.
+#
+# Chaque entrée :
+#   id            identifiant stable (ne pas le changer une fois des articles collectés)
+#   nom           nom affiché
+#   site          page d'accueil
+#   flux          un ou plusieurs flux RSS/Atom (titres et extraits uniquement)
+#   orientation   extreme-gauche | gauche | centre-gauche | centre | centre-droit
+#                 | droite | extreme-droite
+#                 (le regroupement en trois blocs se règle dans reglages.yaml)
+#   justification pourquoi ce positionnement (propriété, ligne revendiquée, histoire)
+#   statut        a_valider | valide — tant que « a_valider », le site l'affiche comme tel
+#   actif         false pour désactiver sans supprimer (optionnel, true par défaut)
+#   note          remarque libre (optionnel)
+#
+# IMPORTANT : tous les positionnements ci-dessous sont des PROPOSITIONS rédigées de
+# mémoire à partir d'éléments publics (actionnariat, ligne éditoriale revendiquée,
+# histoire du titre). Aucun n'a été validé. Ils sont discutables par nature : un
+# positionnement résume mal une rédaction, et diffère souvent entre pages « opinion »
+# et pages « information ». À relire un par un avant toute mise en ligne.
+#
+# Flux testés le 2026-11-11. Les médias dont le flux refuse les robots sont listés en
+# bas avec actif: false (on ne contourne pas un refus).
+
+medias:
+  # ───────────────────────────── Bloc gauche ─────────────────────────────
+  - id: humanite
+    nom: L'Humanité
+    site: https://www.humanite.fr
+    flux:
+      - https://www.humanite.fr/feed
+      - https://www.humanite.fr/sections/politique/feed
+    orientation: gauche
+    justification: Fondé par Jean Jaurès en 1904, organe du PCF jusqu'en 1994, se revendique toujours journal communiste.
+    statut: a_valider
+
+  - id: liberation
+    nom: Libération
+    site: https://www.liberation.fr
+    flux:
+      - https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml
+      - https://www.liberation.fr/arc/outboundfeeds/rss-all/category/politique/?outputType=xml
+    orientation: gauche
+    justification: Quotidien fondé en 1973 autour de Jean-Paul Sartre, ligne éditoriale de gauche revendiquée.
+    statut: a_valider
+
+  - id: mediapart
+    nom: Mediapart
+    site: https://www.mediapart.fr
+    flux:
+      - https://www.mediapart.fr/articles/feed
+    orientation: gauche
+    justification: Journal d'investigation indépendant fondé en 2008 (Edwy Plenel), engagement à gauche assumé dans ses partis pris.
+    statut: a_valider
+
+  - id: politis
+    nom: Politis
+    site: https://www.politis.fr
+    flux:
+      - https://www.politis.fr/flux-rss-apps/
+    orientation: gauche
+    justification: Hebdomadaire indépendant fondé en 1988, se définit comme engagé à gauche (social, écologie).
+    statut: a_valider
+
+  - id: reporterre
+    nom: Reporterre
+    site: https://reporterre.net
+    flux:
+      - https://reporterre.net/spip.php?page=backend
+    orientation: gauche
+    justification: Média associatif consacré à l'écologie, ligne écologiste et critique du productivisme.
+    statut: a_valider
+
+  - id: alternatives-economiques
+    nom: Alternatives Économiques
+    site: https://www.alternatives-economiques.fr
+    flux:
+      - https://www.alternatives-economiques.fr/rss.xml
+    orientation: gauche
+    justification: Mensuel économique en coopérative (Scop), approche keynésienne et critique du libéralisme.
+    statut: a_valider
+
+  - id: basta
+    nom: Basta!
+    site: https://basta.media
+    flux:
+      - https://basta.media/spip.php?page=backend
+    orientation: gauche
+    justification: Média associatif indépendant centré sur les questions sociales et environnementales.
+    statut: a_valider
+
+  - id: streetpress
+    nom: StreetPress
+    site: https://www.streetpress.com
+    flux:
+      - https://www.streetpress.com/rss.xml
+    orientation: gauche
+    justification: Média d'enquête en ligne, travail suivi sur l'extrême droite, les violences policières et les discriminations.
+    statut: a_valider
+
+  - id: regards
+    nom: Regards
+    site: https://regards.fr
+    flux:
+      - https://regards.fr/feed/
+    orientation: gauche
+    justification: Revue issue de la mouvance communiste, aujourd'hui proche de la gauche radicale.
+    statut: a_valider
+
+  - id: nouvelobs
+    nom: Le Nouvel Obs
+    site: https://www.nouvelobs.com
+    flux:
+      - https://www.nouvelobs.com/rss.xml
+    orientation: centre-gauche
+    justification: Hebdomadaire fondé en 1964, historiquement associé à la gauche sociale-démocrate.
+    statut: a_valider
+
+  - id: lemonde
+    nom: Le Monde
+    site: https://www.lemonde.fr
+    flux:
+      - https://www.lemonde.fr/rss/une.xml
+      - https://www.lemonde.fr/rss/en_continu.xml
+      - https://www.lemonde.fr/politique/rss_full.xml
+    orientation: centre-gauche
+    justification: Quotidien de référence ; ligne éditoriale généralement décrite comme de centre gauche, plus nette dans les éditoriaux que dans l'information.
+    statut: a_valider
+
+  - id: huffpost
+    nom: Le HuffPost
+    site: https://www.huffingtonpost.fr
+    flux:
+      - https://www.huffingtonpost.fr/rss/all_headline.xml
+    orientation: centre-gauche
+    justification: Édition française lancée en 2012 avec le groupe Le Monde, ton progressiste sur les sujets de société.
+    statut: a_valider
+
+  - id: slate
+    nom: Slate.fr
+    site: https://www.slate.fr
+    flux:
+      - https://www.slate.fr/rss.xml
+    orientation: centre-gauche
+    justification: Magazine en ligne fondé en 2009 (Jean-Marie Colombani), sensibilité libérale-progressiste.
+    statut: a_valider
+
+  - id: ladepeche
+    nom: La Dépêche du Midi
+    site: https://www.ladepeche.fr
+    flux:
+      - https://www.ladepeche.fr/rss.xml
+      - https://www.ladepeche.fr/actu/france/rss.xml
+    orientation: centre-gauche
+    justification: Quotidien régional de la famille Baylet, historiquement lié au radicalisme de gauche.
+    statut: a_valider
+
+  # ───────────────────────────── Bloc centre ─────────────────────────────
+  - id: franceinfo
+    nom: franceinfo
+    site: https://www.francetvinfo.fr
+    flux:
+      - https://www.francetvinfo.fr/titres.rss
+      - https://www.francetvinfo.fr/politique.rss
+    orientation: centre
+    justification: Service public (France Télévisions / Radio France), soumis à une obligation de pluralisme contrôlée par l'Arcom.
+    statut: a_valider
+
+  - id: franceinter
+    nom: France Inter
+    site: https://www.radiofrance.fr/franceinter
+    flux:
+      - https://www.radiofrance.fr/franceinter/rss
+    orientation: centre
+    justification: Radio de service public soumise au pluralisme ; souvent perçue comme de centre gauche, classée au centre faute de ligne revendiquée.
+    statut: a_valider
+    note: Classement particulièrement discutable (centre ou centre-gauche).
+
+  - id: france24
+    nom: France 24
+    site: https://www.france24.com/fr
+    flux:
+      - https://www.france24.com/fr/rss
+    orientation: centre
+    justification: Chaîne publique d'information internationale (France Médias Monde).
+    statut: a_valider
+
+  - id: rfi
+    nom: RFI
+    site: https://www.rfi.fr/fr
+    flux:
+      - https://www.rfi.fr/fr/rss
+    orientation: centre
+    justification: Radio publique internationale (France Médias Monde).
+    statut: a_valider
+
+  - id: publicsenat
+    nom: Public Sénat
+    site: https://www.publicsenat.fr
+    flux:
+      - https://www.publicsenat.fr/rss
+    orientation: centre
+    justification: Chaîne parlementaire du Sénat, tenue à l'équilibre entre groupes politiques.
+    statut: a_valider
+
+  - id: lcp
+    nom: LCP - Assemblée nationale
+    site: https://lcp.fr
+    flux:
+      - https://lcp.fr/rss.xml
+    orientation: centre
+    justification: Chaîne parlementaire de l'Assemblée nationale, tenue à l'équilibre entre groupes politiques.
+    statut: a_valider
+
+  - id: 20minutes
+    nom: 20 Minutes
+    site: https://www.20minutes.fr
+    flux:
+      - https://www.20minutes.fr/feeds/rss-une.xml
+    orientation: centre
+    justification: Quotidien gratuit d'information généraliste, sans ligne politique revendiquée.
+    statut: a_valider
+
+  - id: ouestfrance
+    nom: Ouest-France
+    site: https://www.ouest-france.fr
+    flux:
+      - https://www.ouest-france.fr/rss/une
+      - https://www.ouest-france.fr/rss/france
+    orientation: centre
+    justification: Premier quotidien régional, propriété d'une association ; tradition démocrate-chrétienne et pro-européenne.
+    statut: a_valider
+
+  - id: leparisien
+    nom: Le Parisien
+    site: https://www.leparisien.fr
+    flux:
+      - https://feeds.leparisien.fr/leparisien/rss
+      - https://feeds.leparisien.fr/leparisien/rss/politique
+    orientation: centre
+    justification: Quotidien populaire généraliste (groupe LVMH), sans ligne partisane revendiquée.
+    statut: a_valider
+    note: Parfois classé centre-droit en raison de son actionnaire.
+
+  - id: lacroix
+    nom: La Croix
+    site: https://www.la-croix.com
+    flux:
+      - https://www.la-croix.com/RSS/UNIVERS
+    orientation: centre
+    justification: Quotidien catholique (groupe Bayard), tradition démocrate-chrétienne modérée.
+    statut: a_valider
+
+  - id: tf1info
+    nom: TF1 Info
+    site: https://www.tf1info.fr
+    flux:
+      - https://www.tf1info.fr/feeds/rss-une.xml
+    orientation: centre
+    justification: Rédaction de TF1 et LCI (groupe Bouygues), information généraliste grand public.
+    statut: a_valider
+    note: Parfois classé centre-droit.
+
+  - id: bfmtv
+    nom: BFMTV
+    site: https://www.bfmtv.com
+    flux:
+      - https://www.bfmtv.com/rss/news-24-7/
+    orientation: centre
+    justification: Chaîne d'information en continu (groupe CMA CGM depuis 2024), sans ligne partisane revendiquée.
+    statut: a_valider
+    note: Parfois classé centre-droit.
+
+  - id: sudouest
+    nom: Sud Ouest
+    site: https://www.sudouest.fr
+    flux:
+      - https://www.sudouest.fr/rss.xml
+    orientation: centre
+    justification: Quotidien régional généraliste, sans ligne politique revendiquée.
+    statut: a_valider
+
+  - id: midilibre
+    nom: Midi Libre
+    site: https://www.midilibre.fr
+    flux:
+      - https://www.midilibre.fr/rss.xml
+    orientation: centre
+    justification: Quotidien régional généraliste (groupe La Dépêche), sans ligne politique revendiquée.
+    statut: a_valider
+
+  - id: leprogres
+    nom: Le Progrès
+    site: https://www.leprogres.fr
+    flux:
+      - https://www.leprogres.fr/rss
+    orientation: centre
+    justification: Quotidien régional généraliste (groupe Ebra, Crédit Mutuel), sans ligne politique revendiquée.
+    statut: a_valider
+
+  - id: latribune
+    nom: La Tribune
+    site: https://www.latribune.fr
+    flux:
+      - https://www.latribune.fr/feed.xml
+    orientation: centre
+    justification: Quotidien économique (groupe CMA CGM), approche pro-entreprise sans affiliation partisane.
+    statut: a_valider
+    note: Parfois classé centre-droit (presse économique).
+
+  - id: challenges
+    nom: Challenges
+    site: https://www.challenges.fr
+    flux:
+      - https://www.challenges.fr/rss.xml
+    orientation: centre
+    justification: Hebdomadaire économique, sensibilité libérale modérée et pro-européenne.
+    statut: a_valider
+
+  # ───────────────────────────── Bloc droite ─────────────────────────────
+  - id: lexpress
+    nom: L'Express
+    site: https://www.lexpress.fr
+    flux:
+      - https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml
+    orientation: centre-droit
+    justification: Hebdomadaire d'actualité, ligne libérale et pro-européenne revendiquée depuis sa reprise en 2019.
+    statut: a_valider
+
+  - id: lopinion
+    nom: L'Opinion
+    site: https://www.lopinion.fr
+    flux:
+      - https://www.lopinion.fr/index.rss
+    orientation: centre-droit
+    justification: Quotidien fondé en 2013 par Nicolas Beytout, se définit comme « libéral, pro-business et européen ».
+    statut: a_valider
+
+  - id: capital
+    nom: Capital
+    site: https://www.capital.fr
+    flux:
+      - https://feed.prismamediadigital.com/v1/cap/rss
+    orientation: centre-droit
+    justification: Magazine économique du groupe Prisma Media (galaxie Bolloré), angle pro-entreprise et fiscalité.
+    statut: a_valider
+
+  - id: lefigaro
+    nom: Le Figaro
+    site: https://www.lefigaro.fr
+    flux:
+      - https://www.lefigaro.fr/rss/figaro_actualites.xml
+      - https://www.lefigaro.fr/rss/figaro_politique.xml
+      - https://www.lefigaro.fr/rss/figaro_flash-actu.xml
+    orientation: droite
+    justification: Quotidien du groupe Dassault, ligne conservatrice et libérale revendiquée.
+    statut: a_valider
+
+  - id: europe1
+    nom: Europe 1
+    site: https://www.europe1.fr
+    flux:
+      - https://www.europe1.fr/rss.xml
+    orientation: droite
+    justification: Radio passée sous le contrôle du groupe Bolloré (Lagardère) ; grille rapprochée de CNews depuis 2021.
+    statut: a_valider
+
+  - id: cnews
+    nom: CNews
+    site: https://www.cnews.fr
+    flux:
+      - https://www.cnews.fr/rss.xml
+    orientation: droite
+    justification: Chaîne du groupe Canal+ (Bolloré), ligne conservatrice ; plusieurs rappels de l'Arcom sur le pluralisme.
+    statut: a_valider
+    note: Parfois classée extrême droite ; à trancher.
+
+  - id: lejdd
+    nom: Le JDD
+    site: https://www.lejdd.fr
+    flux:
+      - https://www.lejdd.fr/rss.xml
+    orientation: droite
+    justification: Hebdomadaire du groupe Lagardère (Bolloré), ligne conservatrice depuis le changement de direction de 2023.
+    statut: a_valider
+    note: Parfois classé extrême droite ; à trancher.
+
+  - id: valeursactuelles
+    nom: Valeurs actuelles
+    site: https://www.valeursactuelles.com
+    flux:
+      - https://www.valeursactuelles.com/feed
+    orientation: droite
+    justification: Hebdomadaire conservateur, se présente comme de droite ; ligne identitaire marquée.
+    statut: a_valider
+    note: Parfois classé extrême droite ; à trancher.
+
+  - id: causeur
+    nom: Causeur
+    site: https://www.causeur.fr
+    flux:
+      - https://www.causeur.fr/feed
+    orientation: droite
+    justification: Magazine d'opinion fondé par Élisabeth Lévy, ligne conservatrice et souverainiste.
+    statut: a_valider
+
+  - id: atlantico
+    nom: Atlantico
+    site: https://atlantico.fr
+    flux:
+      - https://atlantico.fr/rss.xml
+    orientation: droite
+    justification: Site d'information et d'opinion fondé en 2011, ligne libérale-conservatrice.
+    statut: a_valider
+
+  - id: contrepoints
+    nom: Contrepoints
+    site: https://www.contrepoints.org
+    flux:
+      - https://www.contrepoints.org/feed
+    orientation: droite
+    justification: Journal en ligne libéral (association Liberaux.org), défense du libéralisme économique.
+    statut: a_valider
+    note: Libéral au sens classique ; le classement à droite vaut surtout pour l'économie.
+
+  - id: sudradio
+    nom: Sud Radio
+    site: https://www.sudradio.fr
+    flux:
+      - https://www.sudradio.fr/feed
+    orientation: droite
+    justification: Radio généraliste (groupe Fiducial), antenne de débat à tonalité conservatrice et souverainiste.
+    statut: a_valider
+
+  - id: frontpopulaire
+    nom: Front Populaire
+    site: https://frontpopulaire.fr
+    flux:
+      - https://frontpopulaire.fr/rss
+    orientation: droite
+    justification: Revue souverainiste fondée par Michel Onfray en 2020 ; se dit « ni droite ni gauche », lectorat et thèmes majoritairement à droite.
+    statut: a_valider
+    note: Classement particulièrement discutable (souverainisme transpartisan revendiqué).
+
+  - id: bvoltaire
+    nom: Boulevard Voltaire
+    site: https://www.bvoltaire.fr
+    flux:
+      - https://www.bvoltaire.fr/feed/
+    orientation: extreme-droite
+    justification: Site d'opinion cofondé en 2012 par Robert Ménard, ligne identitaire.
+    statut: a_valider
+
+  - id: lincorrect
+    nom: L'Incorrect
+    site: https://lincorrect.org
+    flux:
+      - https://lincorrect.org/feed/
+    orientation: extreme-droite
+    justification: Mensuel fondé en 2017 par des proches de Marion Maréchal, prône l'union des droites.
+    statut: a_valider
+
+  # ─────────────── Flux indisponibles au 2026-11-11 (désactivés) ───────────────
+  - id: lepoint
+    nom: Le Point
+    site: https://www.lepoint.fr
+    flux:
+      - https://www.lepoint.fr/rss.xml
+    orientation: centre-droit
+    justification: Hebdomadaire d'actualité (groupe Artémis, famille Pinault), ligne libérale.
+    statut: a_valider
+    actif: false
+    note: Flux refusé aux robots (HTTP 403/404). À réactiver si un flux public réapparaît.
+
+  - id: lesechos
+    nom: Les Échos
+    site: https://www.lesechos.fr
+    flux:
+      - https://services.lesechos.fr/rss/les-echos-une.xml
+    orientation: centre-droit
+    justification: Quotidien économique (groupe LVMH), ligne libérale.
+    statut: a_valider
+    actif: false
+    note: Flux refusé aux robots (HTTP 403).
+
+  - id: marianne
+    nom: Marianne
+    site: https://www.marianne.net
+    flux:
+      - https://www.marianne.net/rss.xml
+    orientation: centre
+    justification: Hebdomadaire souverainiste et républicain, difficile à situer sur l'axe gauche-droite.
+    statut: a_valider
+    actif: false
+    note: Flux protégé par un contrôle anti-robots (HTTP 403).
+
+  - id: rtl
+    nom: RTL
+    site: https://www.rtl.fr
+    flux:
+      - https://www.rtl.fr/actu/rss
+    orientation: centre
+    justification: Radio généraliste (groupe M6), sans ligne partisane revendiquée.
+    statut: a_valider
+    actif: false
+    note: Aucun flux RSS public trouvé (HTTP 404).

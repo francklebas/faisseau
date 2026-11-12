@@ -1,0 +1,10 @@
+// Déploiement Cloudflare (Workers Static Assets) : `pnpm dlx wrangler deploy` depuis web/,
+// après `make quotidien`. Aucun code serveur : uniquement le dossier de pages statiques.
+{
+  "name": "revue-du-matin",
+  "compatibility_date": "2025-07-15",
+  "assets": {
+    "directory": "./.output/public",
+    "not_found_handling": "404-page"
+  }
+}

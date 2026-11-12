@@ -1,0 +1,4 @@
+# Dépendances autorisées à exécuter un script d'installation (binaires natifs).
+allowBuilds:
+  esbuild: true
+  '@parcel/watcher': true
