@@ -40,6 +40,7 @@ class Extraction:
     faits: list[Fait] = field(default_factory=list)
     hors_sujet: list[str] = field(default_factory=list)  # identifiants d'articles écartés
     rejets: list[str] = field(default_factory=list)  # faits refusés, avec le motif
+    rapproches: int = 0  # sources ajoutées par le sens seul (reformulations)
     etat: str = "ok"  # ok | indisponible | echec
 
 

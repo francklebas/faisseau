@@ -19,10 +19,15 @@ embeddings:
       nom: OrdalieTech/Solon-embeddings-base-0.1
       prefixe: ""               # Solon : pas de préfixe pour une comparaison symétrique
       seuil: 0.58               # similarité cosinus moyenne minimale pour fusionner
+      # Similarité minimale entre un fait et une phrase d'article pour dire que l'article
+      # énonce le fait (en plus du contrôle lexical ; les chiffres doivent concorder).
+      # Propre à chaque modèle. Retirer la ligne pour s'en tenir au contrôle lexical.
+      seuil_faits: 0.75
     e5-small:
       nom: intfloat/multilingual-e5-small
       prefixe: "query: "        # E5 : même préfixe des deux côtés
       seuil: 0.88
+      # pas de seuil_faits : non calibré pour E5, dont les similarités sont très tassées
 
 regroupement:
   liaison: average              # average | complete (complete = plus strict)

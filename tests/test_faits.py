@@ -2,7 +2,7 @@
 
 import json
 
-from conftest import FauxLLM, article
+from conftest import FauxEncodeur, FauxLLM, article
 
 from revue.base import Base
 from revue.faits import ancrage, extraire, lire_json, nombres, statut
@@ -97,6 +97,52 @@ def test_source_oubliee_par_le_llm_est_ajoutee(reglage_faits):
     fait = extraire(sujet_piscine(), client, NOMS, reglage_faits).faits[0]
     assert set(fait.medias) == {"alpha", "beta", "gamma"}
     assert fait.statut != "isole"
+
+
+def sujet_universites():
+    return [
+        article("alpha", "Universités : Sébastien Lecornu annonce 5 000 places de plus en licence",
+                "Le chef du gouvernement veut ouvrir 5 000 places à la rentrée. Les syndicats étudiants jugent l'effort insuffisant."),
+        article("beta", "Le Premier ministre promet 5 000 places supplémentaires en licence",
+                "Matignon a confirmé la création de 5 000 places supplémentaires en licence dès la rentrée prochaine."),
+        article("gamma", "Licence : 3 000 places de plus, loin des besoins selon les présidents d'université",
+                "Les présidents d'université réclamaient 3 000 places de plus dès cette année."),
+    ]  # fmt: skip
+
+
+FAIT_PLACES = "Le Premier ministre a formalisé la création de 5 000 places supplémentaires en licence."
+SENS_PLACES = {"5 000 places": "places", "3 000 places de plus, loin": "places", "formalisé la création": "places"}
+
+
+def test_reformulation_rattachee_par_le_sens(reglage_faits):
+    """Alpha dit la même chose avec d'autres mots : sans le sens, le fait passe pour isolé."""
+    articles = sujet_universites()
+    brut = reponse([(FAIT_PLACES, [2])], titre="5 000 places supplémentaires en licence")
+    lexical = extraire(articles, FauxLLM(brut), NOMS, reglage_faits)
+    assert lexical.faits[0].medias == ["beta"] and lexical.faits[0].statut == "isole"
+
+    encodeur = FauxEncodeur(SENS_PLACES)
+    avec_sens = extraire(articles, FauxLLM(brut), NOMS, reglage_faits, encodeur=encodeur, seuil_semantique=0.75)
+    assert avec_sens.faits[0].medias == ["beta", "alpha"]
+    assert avec_sens.faits[0].statut == "commun"
+    assert avec_sens.rapproches == 1
+    assert encodeur.appels == 1  # un seul lot d'embeddings par sujet
+
+
+def test_le_sens_ne_passe_pas_outre_un_chiffre_different(reglage_faits):
+    """Gamma ressemble au fait mais parle de 3 000 places : la proximité ne vaut pas confirmation."""
+    articles = sujet_universites()
+    client = FauxLLM(reponse([(FAIT_PLACES, [2, 3])], titre="5 000 places supplémentaires en licence"))
+    extraction = extraire(articles, client, NOMS, reglage_faits, encodeur=FauxEncodeur(SENS_PLACES), seuil_semantique=0.75)
+    assert "gamma" not in extraction.faits[0].medias
+
+
+def test_sans_seuil_le_sens_n_est_pas_utilise(reglage_faits):
+    articles = sujet_universites()
+    encodeur = FauxEncodeur(SENS_PLACES)
+    client = FauxLLM(reponse([(FAIT_PLACES, [2])], titre="5 000 places supplémentaires en licence"))
+    extraction = extraire(articles, client, NOMS, reglage_faits, encodeur=encodeur, seuil_semantique=None)
+    assert extraction.faits[0].medias == ["beta"] and encodeur.appels == 0
 
 
 def test_chaque_fait_renvoie_a_des_articles_du_sujet(reglage_faits):

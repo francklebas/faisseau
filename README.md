@@ -96,7 +96,7 @@ flux RSS ──► collecte ──► embeddings ──► regroupement ──�
 | Stockage | `revue/base.py` | SQLite (`data/revue.db`), purge à 14 jours. |
 | Embeddings | `revue/plongements.py` | `sentence-transformers` sur CPU, 4 fils, vecteurs en cache. |
 | Regroupement | `revue/regroupement.py` | Classification ascendante hiérarchique, distance cosinus, **liaison moyenne** : deux groupes ne fusionnent que si leurs articles se ressemblent en moyenne, ce qui empêche un article « pont » de souder deux sujets voisins. Sujet = au moins 3 médias distincts. |
-| Faits | `revue/faits.py` | Le LLM propose faits et sources ; le code contrôle chaque rattachement (mots, noms propres, chiffres), retire les sources non fondées, ajoute les sources oubliées, et calcule seul le statut à partir du nombre de **médias** distincts. |
+| Faits | `revue/faits.py` | Le LLM propose faits et sources ; le code contrôle chaque rattachement (mots, noms propres, chiffres), retire les sources non fondées, ajoute les sources oubliées — y compris celles qui disent la même chose autrement, repérées par Solon — et calcule seul le statut à partir du nombre de **médias** distincts. |
 | Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Angle mort : un bord ≥ 60 %, l'autre ≤ 10 %, au moins 4 médias ; centre-gauche et centre-droit ne comptent pour aucun bord. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 angles morts trouvés au-delà. |
 | Site | `web/` | Nuxt 4, `nuxt generate`, **zéro JavaScript** côté lecteur (`features.noScripts`). |
 
@@ -122,10 +122,16 @@ qu'une fausse fusion.
 
 ## Limites
 
-- **Recoupement lexical.** La vérification compare des mots, des noms propres et des chiffres,
-  pas du sens. Une reformulation très libre échappe au recoupement (faux « isolé ») ; une
-  négation peut passer (faux « commun »). Les nombres écrits en lettres au-delà de vingt
-  (« cinq cents ») ne sont pas rapprochés des chiffres.
+- **Recoupement approximatif.** La vérification compare des mots, des noms propres et des
+  chiffres, puis rattrape les reformulations par le sens : un article est rattaché à un fait si
+  une de ses phrases en est proche pour Solon (`seuil_faits`, 0,75) et que les chiffres
+  concordent. Le seuil est prudent : sur les 30 sujets du 11 novembre, 9 sources ajoutées et
+  4 faits « isolés » sur 66 reclassés, sans rattachement faux parmi ceux relus. À 0,72 on en
+  reclasse 8, mais un rattachement sur 33 était faux (« en Irlande » rapproché d'« en Italie ») :
+  le modèle voit mal un nom de lieu qui change. Une reformulation libre échappe donc encore au
+  recoupement (faux « isolé »), une négation peut passer (faux « commun »), et les nombres en
+  lettres au-delà de vingt (« cinq cents ») ne sont pas rapprochés des chiffres. Non calibré
+  pour E5 : avec `e5-small`, le contrôle reste lexical.
 - **Titres et extraits seulement.** Une « affirmation isolée » l'est dans les extraits RSS ;
   un autre média peut donner la même information dans le corps de son article. Le site le dit
   au lecteur. Certains flux (Le Parisien, L'Express) ne donnent que le titre.

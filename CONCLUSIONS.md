@@ -69,3 +69,25 @@ bien moins sensible. E5 est environ 3,5 fois plus rapide (28 textes/s contre 8).
 - **Commit, déploiement, planification** : rien n'est commité (dépôt git initialisé
   seulement), rien n'est déployé sur Cloudflare, et le timer systemd de `deploy/` n'est pas
   installé.
+
+## Suites du 12 novembre
+
+Deux changements faits après relecture de ce bilan, mesurés sur les données du 11 novembre.
+L'édition déjà générée n'a pas été refaite : ils s'appliqueront au prochain passage.
+
+- **Angles morts : bords plus étroits.** Centre-gauche et centre-droit restent à gauche et à
+  droite dans la répartition affichée, mais ne comptent plus comme un bord pour le signalement
+  (`couverture.angle_mort.bords`). Les deux angles morts du 11 novembre tenaient à des médias
+  modérés (une critique de film à 3 médias « de gauche » dont 2 centre-gauche ; un sujet à
+  4 médias dont 1 centre-droit) : avec la nouvelle définition, aucun des 80 sujets n'en est un.
+  Avec 9 médias de gauche et 12 de droite actifs, le seuil de 60 % sera rarement atteint ; il
+  est à revoir après quelques jours de données.
+- **Recoupement des faits par le sens.** En plus du contrôle lexical, un article est rattaché
+  à un fait si une de ses phrases en est proche pour Solon (seuil 0,75) et que les chiffres
+  concordent. Sur 30 sujets : 9 sources ajoutées, 1 fait sauvé du rejet, 4 faits isolés sur 66
+  reclassés (dont « Paris accuse l'Iran » pour la cyberattaque). Le gain est réel mais limité :
+  la plupart des affirmations isolées le sont vraiment dans les titres et extraits. Un seuil
+  plus bas (0,72) en reclasse 8, au prix d'un rattachement faux observé sur 33.
+
+Reste à faire, dans l'ordre : la grille de positionnement des médias adossée à des sources
+externes.

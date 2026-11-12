@@ -29,7 +29,7 @@ def _collecter(cfg, base: Base) -> list[str]:
     return erreurs
 
 
-def _sujets(cfg, base: Base, max_sujets: int | None = None) -> tuple[list[Sujet], int]:
+def _sujets(cfg, base: Base, max_sujets: int | None = None, encodeur=None) -> tuple[list[Sujet], int]:
     from .plongements import encodeur_depuis, vecteurs_articles
     from .regroupement import construire_sujets
 
@@ -40,7 +40,7 @@ def _sujets(cfg, base: Base, max_sujets: int | None = None) -> tuple[list[Sujet]
         return [], 0
     modele = cfg.modele_embeddings
     _dire(f"Embeddings ({modele['cle']}) : {len(articles)} articles sur {r['collecte']['fenetre_heures']} h")
-    vecteurs = vecteurs_articles(base, encodeur_depuis(cfg), articles)
+    vecteurs = vecteurs_articles(base, encodeur or encodeur_depuis(cfg), articles)
     g = r["regroupement"]
     tous = construire_sujets(
         articles,
@@ -66,6 +66,7 @@ def _sujets(cfg, base: Base, max_sujets: int | None = None) -> tuple[list[Sujet]
 def executer(options) -> int:
     from .faits import extraire
     from .llm import creer_client
+    from .plongements import encodeur_depuis
 
     cfg = configuration.charger()
     base = Base(cfg.base)
@@ -73,7 +74,8 @@ def executer(options) -> int:
     erreurs = [] if options.sans_collecte else _collecter(cfg, base)
     base.purger(cfg.reglages["collecte"]["conservation_jours"])
 
-    sujets, nb_articles = _sujets(cfg, base, options.max_sujets)
+    encodeur = encodeur_depuis(cfg)
+    sujets, nb_articles = _sujets(cfg, base, options.max_sujets, encodeur)
     if not sujets:
         _dire("Aucun sujet : pas assez d'articles récents (lancer sans --sans-collecte ?).")
         return 1
@@ -90,14 +92,21 @@ def executer(options) -> int:
         _dire("  ⚠ La revue sera produite sans faits extraits (regroupement et couverture seulement).")
 
     noms = {m.id: m.nom for m in cfg.medias.values()}
+    seuil_faits = cfg.modele_embeddings.get("seuil_faits")
+    if client is not None:
+        _dire(f"Recoupement par le sens : {f'seuil {seuil_faits}' if seuil_faits else 'désactivé (pas de seuil_faits pour ce modèle)'}")
     for rang, sujet in enumerate(sujets, 1):
         t0 = time.time()
-        sujet.extraction = extraire(sujet.articles, client, noms, cfg.reglages["faits"], cache=base, signature=sujet.signature)
+        sujet.extraction = extraire(
+            sujet.articles, client, noms, cfg.reglages["faits"], cache=base, signature=sujet.signature,
+            encodeur=encodeur, seuil_semantique=seuil_faits,
+        )  # fmt: skip
         if client is not None:
             e = sujet.extraction
             _dire(
                 f"  {rang}/{len(sujets)} « {e.titre[:60]} » : {len(e.faits)} faits, "
-                f"{len(e.rejets)} rejetés, {len(e.hors_sujet)} hors sujet ({time.time() - t0:.0f} s)"
+                f"{e.rapproches} sources rapprochées par le sens, {len(e.rejets)} rejetés, "
+                f"{len(e.hors_sujet)} hors sujet ({time.time() - t0:.0f} s)"
             )
 
     stats = {

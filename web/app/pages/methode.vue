@@ -37,7 +37,10 @@ useSeoMeta({
       vérifie ensuite chaque proposition :
     </p>
     <ul>
-      <li>une source n'est conservée que si son texte contient bien les mots, les noms propres et les chiffres du fait ;</li>
+      <li>
+        une source n'est conservée que si son texte contient bien les mots, les noms propres et les chiffres du
+        fait, ou si l'une de ses phrases dit la même chose autrement, chiffres identiques ;
+      </li>
       <li>un fait dont aucune source ne résiste à ce contrôle n'est pas publié ;</li>
       <li>un article qui énonce clairement un fait est ajouté à ses sources même si le modèle l'avait oublié ;</li>
       <li>le classement d'un fait dépend du nombre de médias distincts, jamais de l'avis du modèle.</li>
@@ -74,8 +77,9 @@ useSeoMeta({
         sont comparés : un autre média peut donner la même information plus bas dans son article.
       </li>
       <li>
-        <strong>La vérification est lexicale.</strong> Elle compare des mots, pas du sens : une reformulation
-        très libre peut échapper au recoupement, et une négation peut passer inaperçue.
+        <strong>La vérification reste approximative.</strong> Elle compare des mots et une mesure de
+        proximité de sens, réglée prudemment : une reformulation très libre peut encore échapper au
+        recoupement, et une négation peut passer inaperçue.
       </li>
       <li>
         <strong>Le modèle de langue se trompe.</strong> Il peut mal formuler un fait ou manquer une nuance.

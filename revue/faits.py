@@ -4,6 +4,11 @@ Le LLM propose des faits et les articles qui les énoncent. Le code ne lui fait 
 confiance : chaque rattachement fait → article est contrôlé sur le texte (mots et chiffres),
 les rattachements oubliés sont ajoutés, et le statut d'un fait (commun, recoupé, isolé)
 est calculé à partir du nombre de médias distincts, jamais déclaré par le LLM.
+
+Le contrôle lexical manque les reformulations (« le Premier ministre » pour « Sébastien
+Lecornu »). Si un modèle d'embeddings est fourni, un article est aussi rattaché quand une de
+ses phrases est très proche du fait par le sens, à condition que les chiffres concordent :
+deux phrases qui ne diffèrent que par un chiffre se ressemblent beaucoup.
 """
 
 from __future__ import annotations
@@ -111,11 +116,42 @@ def ancrage(fait: str, source: str) -> float:
     mots_fait = mots(fait)
     if not mots_fait:
         return 0.0
-    # L'année en cours est tolérée : le LLM complète volontiers « le 12 novembre » en
-    # « le 12 novembre 2026 », ce qui ne change pas le fait.
-    if not nombres(fait) - {str(date.today().year)} <= nombres(source):
+    if not chiffres_concordent(fait, source):
         return 0.0
     return len(mots_fait & mots(source)) / len(mots_fait)
+
+
+def chiffres_concordent(fait: str, source: str) -> bool:
+    """Vrai si tous les chiffres du fait figurent dans la source."""
+    # L'année en cours est tolérée : le LLM complète volontiers « le 12 novembre » en
+    # « le 12 novembre 2026 », ce qui ne change pas le fait.
+    return nombres(fait) - {str(date.today().year)} <= nombres(source)
+
+
+MOTIF_PHRASE = re.compile(r"(?<=[.!?…»])\s+(?=[A-ZÀ-Ý«\"“])")
+
+
+def phrases(article: Article) -> list[str]:
+    """Le titre et les phrases de l'extrait : un fait se compare à une phrase, pas à un bloc."""
+    return [article.titre] + [p.strip() for p in MOTIF_PHRASE.split(article.extrait or "") if len(p.strip()) >= 25]
+
+
+def rapprochements(faits: list[str], articles: list[Article], encodeur, seuil: float) -> list[set[str]]:
+    """Pour chaque fait, identifiants des articles dont une phrase dit la même chose.
+
+    `encodeur.encoder(textes)` renvoie des vecteurs normalisés. La proximité ne suffit pas :
+    « plus de 3 millions de personnes » et « plus de 2 millions de personnes » sont presque
+    identiques pour le modèle, d'où le contrôle des chiffres sur tout le texte de l'article.
+    """
+    if encodeur is None or not faits or not articles:
+        return [set() for _ in faits]
+    morceaux = [(a, p) for a in articles for p in phrases(a)]
+    vecteurs = encodeur.encoder(faits + [p for _, p in morceaux])
+    similarites = vecteurs[: len(faits)] @ vecteurs[len(faits) :].T
+    proches: list[set[str]] = []
+    for fait, ligne in zip(faits, similarites):
+        proches.append({a.id for (a, _), s in zip(morceaux, ligne) if s >= seuil and chiffres_concordent(fait, a.texte)})
+    return proches
 
 
 def construire_invite(articles: list[Article], noms_medias: dict[str, str], extrait_max: int = 400) -> str:
@@ -164,16 +200,26 @@ def statut(nb_medias_fait: int, nb_medias_sujet: int, part_majorite: float) -> s
     return "recoupe"
 
 
-def verifier(brut: dict, envoyes: list[Article], tous: list[Article], reglage: dict, titre_secours: str) -> Extraction:
+def verifier(
+    brut: dict,
+    envoyes: list[Article],
+    tous: list[Article],
+    reglage: dict,
+    titre_secours: str,
+    encodeur=None,
+    seuil_semantique: float | None = None,
+) -> Extraction:
     """Contrôle la réponse du LLM et construit l'extraction publiable.
 
     `envoyes` : articles numérotés dans l'invite. `tous` : tous les articles du sujet (ceux
-    que le LLM n'a pas vus servent aussi au recoupement).
+    que le LLM n'a pas vus servent aussi au recoupement). `encodeur` et `seuil_semantique` :
+    rapprochement par le sens, en plus du contrôle lexical (voir `rapprochements`).
     """
     extraction = Extraction()
     retenus: list[tuple[str, list[Article]]] = []
     corpus_complet = " ".join(a.texte for a in tous)
 
+    proposes: list[tuple[str, list[Article]]] = []
     for element in brut.get("faits", []):
         if not isinstance(element, dict):
             continue
@@ -185,16 +231,24 @@ def verifier(brut: dict, envoyes: list[Article], tous: list[Article], reglage: d
         for numero in element.get("sources") or []:
             if isinstance(numero, (int, str)) and str(numero).isdigit() and 1 <= int(numero) <= len(envoyes):
                 cites.append(envoyes[int(numero) - 1])
+        proposes.append((texte, cites))
+    semantique = encodeur if seuil_semantique else None
+    proches = rapprochements([texte for texte, _ in proposes], tous, semantique, seuil_semantique or 1.0)
+
+    for (texte, cites), memes in zip(proposes, proches):
         # 1. Une source citée n'est gardée que si son texte porte bien le fait.
         propres = noms_propres(texte, corpus_complet)
-        sources = [a for a in dict.fromkeys(cites) if porte(texte, a.texte, propres, reglage["ancrage_min"])]
+        sources = [a for a in dict.fromkeys(cites) if a.id in memes or porte(texte, a.texte, propres, reglage["ancrage_min"])]
         if not sources:
             extraction.rejets.append(f"aucune source ne porte ce fait : {texte!r}")
             continue
         # 2. Un article non cité qui énonce clairement le fait est ajouté : sans cela, un
         #    oubli du LLM ferait passer un fait partagé pour une affirmation isolée.
         if len(mots(texte)) >= 4:
-            sources += [a for a in tous if a not in sources and porte(texte, a.texte, propres, reglage["ancrage_ajout"], 1.0)]
+            lexicales = [a for a in tous if a not in sources and porte(texte, a.texte, propres, reglage["ancrage_ajout"], 1.0)]
+            ajouts = [a for a in tous if a not in sources and a not in lexicales and a.id in memes]
+            extraction.rapproches += len(ajouts)
+            sources += lexicales + ajouts
         # 3. Fusion des doublons (même fait reformulé).
         for i, (autre, autres_sources) in enumerate(retenus):
             a, b = mots(texte), mots(autre)
@@ -243,7 +297,16 @@ def verifier(brut: dict, envoyes: list[Article], tous: list[Article], reglage: d
     return extraction
 
 
-def extraire(articles: list[Article], client, noms_medias: dict[str, str], reglage: dict, cache=None, signature: str = "") -> Extraction:
+def extraire(
+    articles: list[Article],
+    client,
+    noms_medias: dict[str, str],
+    reglage: dict,
+    cache=None,
+    signature: str = "",
+    encodeur=None,
+    seuil_semantique: float | None = None,
+) -> Extraction:
     """Analyse un sujet. Un seul appel au LLM par sujet (deux si la première réponse est illisible).
 
     `cache` : objet avec `extraction(cle)` / `enregistrer_extraction(cle, dict)` ; la réponse
@@ -271,4 +334,4 @@ def extraire(articles: list[Article], client, noms_medias: dict[str, str], regla
             return Extraction(titre=titre_secours, etat="echec", rejets=[f"pas de réponse exploitable : {erreur}"])
         if cache is not None and cle:
             cache.enregistrer_extraction(cle, brut)
-    return verifier(brut, envoyes, articles, reglage, titre_secours)
+    return verifier(brut, envoyes, articles, reglage, titre_secours, encodeur, seuil_semantique)
