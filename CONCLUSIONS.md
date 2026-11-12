@@ -252,3 +252,123 @@ et n'en rapporte aucun chiffre ici. Il lui faut 14 éditions (`affinites.min_edi
 - Relire `config/medias.yaml`, en commençant par les huit médias du tableau.
 - Laisser tourner `make quotidien` deux semaines avant de lancer `make affinites`.
 - Choisir le LLM, déployer, installer le timer : inchangé depuis le premier bilan.
+
+---
+
+# Suite du 12 novembre, tard — sources recoupées, sport et dépêches écartés, cinq blocs
+
+Trois commits de plus, rien de poussé ni de déployé. Édition du 11 novembre rejouée, site
+régénéré. Aucun positionnement modifié.
+
+## Ce qui a été vérifié
+
+- **Tests** : les 52 passent ; vérification de types du site sans erreur ; 38 pages générées ;
+  page Angles morts contrôlée sur capture.
+- **Sources ajoutées** : 22, chacune rechargée et sa citation retrouvée mot pour mot. Le
+  fichier en compte 141.
+
+## 1. Sources : aucune ne suffit seule
+
+Règle inscrite en tête de `config/medias.yaml`, et dans le chargeur pour Wikipédia : une page
+Wikipédia ne peut ni confirmer ni contredire un classement (7 verdicts ramenés à « ne tranche
+pas »). Je suis remonté aux sources qu'elle cite pour les quatre médias concernés.
+
+| Média | Classement | Ce que disent les sources d'origine lues |
+|---|---|---|
+| CNews | droite | Aucune ne la dit « d'extrême droite ». France 24 : « ancrée très à droite » ; RSF : invités « majoritairement de droite et d'extrême-droite » ; le Conseil d'État et l'Arcom ne la qualifient pas. |
+| Valeurs actuelles | droite | franceinfo écrit « journal d'extrême-droite » le 27 avril 2021 et « hebdomadaire conservateur » le 10 mai 2021 ; Public Sénat : « ultraconservateur » ; Acrimed : « droite décomplexée ». |
+| Causeur | droite | franceinfo : « magazine d'extrême droite » (2023, en incise) ; Politis : « mensuel réactionnaire » (2017) ; Acrimed : « droite décomplexée » (2017) ; eurotopics : « très vers la droite ». |
+| L'Express | centre-droit | Rien de lu : la seule note de Wikipédia renvoie à La Montagne, qui refuse les robots. |
+
+- **Slate.fr** : l'étiquette « libéral-conservateur » d'eurotopics reste isolée. Les fiches
+  française et allemande disent la même chose (une seule source), sans justification, et la
+  fiche se contredit sur l'actionnariat. Aucune autre source lue ne qualifie Slate.fr.
+- **France Inter** : le rapport Thomas More est une source engagée (son auteur dit « nous ne
+  sommes pas neutres ») et la note est attribuée par une IA « sans intervention humaine ». Les
+  contrepoids lus : la commission d'enquête parlementaire, une mise en demeure de l'Arcom sur
+  les horaires de parole du RN, Acrimed (2008, conclusion inverse, codage maison lui aussi), le
+  baromètre de Radio France. Aucun ne mesure la ligne de façon indépendante.
+
+**Il reste six sources marquées « contredit »**, aucune corroborée par une seconde source
+indépendante : trois fiches eurotopics (L'Humanité, Le Nouvel Obs, Slate.fr), le rapport Thomas
+More (France Inter) et deux articles de franceinfo (Valeurs actuelles, Causeur). Comme vous le
+notez, cinq sur six portent sur le degré, pas sur le bord ; seule Slate.fr changerait de côté,
+sur une étiquette douteuse.
+
+**Une précision sur la grille** : elle a déjà les catégories « extrême gauche » et « extrême
+droite ». Boulevard Voltaire et L'Incorrect sont classés extrême droite ; aucun média n'est
+classé extrême gauche. La question n'est donc pas d'ajouter ces catégories mais de savoir à
+qui les appliquer, ou s'il faut cesser de les afficher.
+
+**Ce qui n'a pas pu être lu** : la plupart des articles du Monde, de Libération, du Figaro et
+de L'Obs que Wikipédia cite, et deux études universitaires (Labarre 2024 sur CNews ; Marty,
+Ouakrat et Pacouret 2022 sur Valeurs actuelles). Accès refusé aux robots, non contourné.
+
+## 2. Effet de volume : sport et dépêches écartés
+
+- **Sport** : un sujet dont au moins la moitié des articles est en rubrique sportive (segment
+  de l'adresse : `/sport/`, `/football/`…) n'est pas classé. 7 sujets sur 80 le 11 novembre,
+  dont 2 parmi les 30 publiés.
+- **Dépêches** : un article dont le titre est repris presque mot pour mot par un autre média
+  du sujet (75 % de mots communs) est traité comme une dépêche. Un média ne compte pour son
+  bord que s'il publie au moins un article au titre propre. La page l'indique (« plus 1 par
+  dépêche reprise »).
+
+J'ai choisi le niveau de l'article plutôt que celui du sujet : un sujet majeur contient souvent
+la dépêche et des articles originaux, et l'écarter en bloc aurait fait disparaître l'interdiction
+de territoire russe (72 % de titres repris) sans attraper les 5 000 places en licence (44 %).
+
+**Résultat : 3 sujets en asymétrie au lieu de 6.**
+
+| Écart | Sujet | Gauche | Droite | Lecture |
+|---|---|---|---|---|
+| 29 points | Grève générale en Espagne | 2 sur 7 | 0 sur 12 | Inchangé. Libération et L'Humanité. |
+| 25 points | Christophe Gleizes détenu en Algérie | 0 sur 7 | 3 sur 12 | Inchangé. Trois médias de centre gauche en parlent ; la barre le montre maintenant. |
+| 25 points | Affaire Nvidia | 0 sur 7 | 3 sur 12 | Inchangé. CNews, Europe 1, Atlantico. |
+
+Sortis : Mbappé (sport), les 5 000 places en licence (les trois médias de droite publiaient
+le même titre), la menace iranienne (Le Figaro reprenait le titre de CNews ; il reste 2 médias
+sur 12, sous le seuil).
+
+## 3. Les deux « gauche » : cinq blocs
+
+La barre de couverture a cinq segments : gauche, centre gauche, centre, centre droit, droite.
+Les deux bords comparés sont les blocs gauche et droite, donc la barre et le détail comptent
+les mêmes médias. Le réglage séparé `couverture.asymetrie.bords` a disparu. La page Médias et
+la page d'un sujet suivent les cinq blocs.
+
+## 4. Ifop
+
+Téléchargement tenté une fois : le site ifop.com échoue à la vérification de son certificat.
+Je n'ai pas forcé. En attente, comme convenu.
+
+## Ce qui marche moins bien
+
+- **La détection des dépêches est grossière.** Elle ne voit que les titres identiques : une
+  dépêche retitrée passe pour un article propre (Europe 1 sur l'Iran). À l'inverse, deux
+  médias qui choisissent le même titre factuel sont écartés à tort.
+- **Le sport se reconnaît à l'adresse.** Un média sans rubrique dans ses adresses y échappe.
+- **Trois sujets sur un seul jour** : trop peu pour dire si la mesure est juste.
+- **Sources** : la presse nationale et les revues universitaires, qui portent l'essentiel des
+  qualifications, restent fermées aux robots.
+
+## Décisions prises sans validation préalable
+
+- Dépêches écartées article par article, pas sujet par sujet (raison ci-dessus).
+- Seuils : moitié des articles pour le sport, 75 % de mots communs pour un titre repris.
+- Les verdicts Wikipédia « confirme » ont été ramenés à « ne tranche pas » comme les
+  « contredit » : la règle vaut dans les deux sens.
+- Couleurs des deux nouveaux segments : teintes intermédiaires, contraste AA vérifié en clair.
+- Le contrôle par la couverture (`make affinites`) compare maintenant aux cinq blocs.
+
+## Questions pour Franck
+
+1. **Étiquettes extrêmes** : garder « extrême droite » pour Boulevard Voltaire et L'Incorrect,
+   l'étendre, ou ne plus afficher que cinq blocs avec les descriptions sourcées à côté ? Le
+   calcul ne change pas dans les trois cas : gauche et extrême gauche sont déjà dans le même
+   bloc, droite et extrême droite aussi.
+2. **Afficher les descriptions sourcées plutôt qu'une étiquette maison** : sur la page Médias
+   seulement, ou partout où un média est nommé ? La page Médias liste déjà les sources ; elle
+   n'affiche pas encore les citations.
+3. **Sources fermées aux robots** : voulez-vous déposer vous-même les articles ou études clés
+   (par exemple l'étude Quaderni 2022 sur Valeurs actuelles), comme pour l'Ifop ?
