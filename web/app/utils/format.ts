@@ -31,6 +31,16 @@ export function heure(iso: string): string {
 }
 
 /** pluriel(3, 'média') → « 3 médias » ; pluriel(1, 'fait commun', 'faits communs') → « 1 fait commun » */
+/** « 29 % » à partir de 0.286 */
+export function pourcent(part: number): string {
+  return `${Math.round(part * 100)} %`
+}
+
+/** « 29 points » à partir d'un écart de −0.286 ou 0.286 */
+export function points(ecart: number): string {
+  return pluriel(Math.round(Math.abs(ecart) * 100), 'point')
+}
+
 export function pluriel(n: number, singulier: string, plurielExplicite?: string): string {
   return `${n} ${n > 1 ? (plurielExplicite ?? `${singulier}s`) : singulier}`
 }

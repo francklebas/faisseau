@@ -5,7 +5,8 @@ useSeoMeta({
   description: 'L\'actualité française recoupée entre une quarantaine de médias : faits communs, affirmations isolées, répartition de la couverture et angles morts.',
 })
 
-const anglesMorts = computed(() => edition.value?.sujets.filter(s => s.angle_mort) ?? [])
+const anglesMorts = computed(() => (edition.value?.sujets.filter(s => s.asymetrie.notable) ?? [])
+  .toSorted((a, b) => Math.abs(b.asymetrie.ecart) - Math.abs(a.asymetrie.ecart)))
 </script>
 
 <template>
@@ -17,7 +18,7 @@ const anglesMorts = computed(() => edition.value?.sujets.filter(s => s.angle_mor
         Angles morts du jour
         <NuxtLink to="/angles-morts" class="bloc__suite">{{ pluriel(anglesMorts.length, 'sujet') }}</NuxtLink>
       </h2>
-      <p class="bloc__aide">Des sujets couverts surtout par un bord, et presque pas par l'autre.</p>
+      <p class="bloc__aide">Les sujets que les médias de gauche et de droite couvrent le plus inégalement.</p>
       <ListeSujets :sujets="anglesMorts.slice(0, 3)" :date="edition.date" />
     </section>
 

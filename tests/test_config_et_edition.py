@@ -43,7 +43,7 @@ def test_edition_chaque_fait_renvoie_a_un_article_liste(cfg, tmp_path, monkeypat
     sujet = Sujet(articles=articles, signature=signature(articles))
     sujet.extraction = extraire(articles, FauxLLM(reponse), {}, cfg.reglages["faits"])
 
-    chemin = ecrire_edition([sujet], cfg, {"nb_articles": 5})
+    chemin = ecrire_edition([sujet], cfg, {"nb_articles": 5}, {"gauche": 6, "droite": 10})
     edition = json.loads(chemin.read_text(encoding="utf-8"))
     (publie,) = edition["sujets"]
 
@@ -54,9 +54,13 @@ def test_edition_chaque_fait_renvoie_a_un_article_liste(cfg, tmp_path, monkeypat
     assert [f["medias"] for f in publie["affirmations_isolees"]] == [["liberation"]]
     assert len(publie["faits_communs"]) == 1
 
-    # Couverture : quatre médias du bloc gauche, aucun à droite → angle mort.
+    # Couverture : quatre médias du bloc gauche, aucun à droite. Pour l'asymétrie, Le Monde
+    # (centre-gauche) ne compte pas : 3 médias de gauche sur 6 présents, 0 sur 10 à droite.
     assert publie["couverture"] == {"gauche": ["humanite", "liberation", "mediapart", "lemonde"], "centre": [], "droite": []}
-    assert publie["angle_mort"]["bord_absent"] == "droite"
+    assert publie["asymetrie"]["gauche"] == {"medias": ["humanite", "liberation", "mediapart"], "total": 6, "part": 0.5}
+    assert publie["asymetrie"]["droite"] == {"medias": [], "total": 10, "part": 0.0}
+    assert publie["asymetrie"]["ecart"] == 0.5 and publie["asymetrie"]["notable"]
+    assert edition["stats"]["nb_asymetries"] == 1 and edition["stats"]["effectif_bords"] == {"gauche": 6, "droite": 10}
 
     # Ce qui est publié : titres et liens, pas les extraits.
     assert set(publie["articles"][0]) == {"n", "media", "titre", "url", "publie_le"}

@@ -20,7 +20,7 @@ defineProps<{ sujet: ResumeSujet, date: string, rang?: number }>()
         <template v-if="sujet.nb_affirmations_isolees">
           · {{ pluriel(sujet.nb_affirmations_isolees, 'affirmation isolée', 'affirmations isolées') }}
         </template>
-        <EtiquetteAngleMort v-if="sujet.angle_mort" :angle="sujet.angle_mort" class="carte__angle" />
+        <EtiquetteAsymetrie v-if="sujet.asymetrie.notable" :asymetrie="sujet.asymetrie" class="carte__angle" />
       </p>
     </div>
     <BarreCouverture class="carte__couverture" :couverture="sujet.couverture" compact />

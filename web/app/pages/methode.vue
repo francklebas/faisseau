@@ -56,14 +56,21 @@ useSeoMeta({
     <p>
       Chaque média est rangé dans un bloc — gauche, centre ou droite — selon un
       <NuxtLink to="/medias">classement public et justifié</NuxtLink>. Pour chaque sujet, on compte les
-      médias de chaque bloc, un média ne comptant qu'une fois quel que soit son nombre d'articles. Un sujet
-      est signalé comme angle mort lorsqu'un bord fournit au moins 60 % des médias qui en parlent et que
-      l'autre en fournit 10 % au plus, avec quatre médias au minimum.
+      médias de chaque bloc, un média ne comptant qu'une fois quel que soit son nombre d'articles.
     </p>
     <p>
-      Pour ce signalement, les médias classés centre-gauche ou centre-droit ne comptent pour aucun bord,
+      La page <NuxtLink to="/angles-morts">Angles morts</NuxtLink> compare ensuite les deux bords. Pour
+      chaque sujet, on calcule la part des médias de gauche qui en parlent et la part des médias de droite
+      qui en parlent, parmi ceux qui ont publié ce jour-là. On compare des parts et non des nombres, parce
+      que les deux bords ne comptent pas autant de médias. Les sujets sont classés par écart décroissant.
+      Un écart n'est affiché qu'à partir de 25 points et de deux médias du bord qui domine : en dessous, le
+      choix d'un seul média suffirait à le créer.
+    </p>
+    <p>
+      Pour cette comparaison, les médias classés centre-gauche ou centre-droit ne comptent pour aucun bord,
       bien qu'ils figurent à gauche et à droite dans la répartition affichée : deux généralistes modérés
-      ne suffisent pas à faire d'un sujet l'angle mort du camp d'en face.
+      ne suffisent pas à faire pencher un sujet. Un écart ne dit rien de l'importance du sujet ni d'une
+      intention : les médias des deux bords n'ont ni la même taille ni les mêmes rubriques.
     </p>
 
     <h2>Ce que cela ne sait pas faire</h2>

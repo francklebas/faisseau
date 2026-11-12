@@ -10,7 +10,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from .config import BLOCS, Config
-from .couverture import angle_mort, repartition
+from .couverture import asymetrie, repartition
 from .modeles import Sujet
 
 PARIS = ZoneInfo("Europe/Paris")
@@ -22,7 +22,7 @@ def slug(texte: str, suffixe: str) -> str:
     return f"{mots}-{suffixe[:6]}" if mots else suffixe
 
 
-def sujet_en_json(sujet: Sujet, config: Config) -> dict:
+def sujet_en_json(sujet: Sujet, config: Config, effectif: dict[str, int]) -> dict:
     extraction = sujet.extraction
     articles = [a for a in sujet.articles if a.id not in extraction.hors_sujet]
     blocs = repartition([a.media_id for a in articles], config)
@@ -41,7 +41,7 @@ def sujet_en_json(sujet: Sujet, config: Config) -> dict:
         "nb_articles": len(articles),
         "nb_medias": sum(len(m) for m in blocs.values()),
         "couverture": {b: blocs[b] for b in BLOCS},
-        "angle_mort": angle_mort([a.media_id for a in articles], config),
+        "asymetrie": asymetrie([a.media_id for a in articles], effectif, config),
         "faits_communs": faits["commun"],
         "faits_recoupes": faits["recoupe"],
         "affirmations_isolees": faits["isole"],
@@ -72,17 +72,24 @@ def medias_en_json(config: Config) -> list[dict]:
     ]
 
 
-def ecrire_edition(sujets: list[Sujet], config: Config, stats: dict, maintenant: datetime | None = None) -> Path:
+def ecrire_edition(
+    sujets: list[Sujet], config: Config, stats: dict, effectif: dict[str, int], maintenant: datetime | None = None
+) -> Path:
     """Écrit data/editions/AAAA-MM-JJ.json et met à jour l'index des éditions."""
     maintenant = (maintenant or datetime.now(PARIS)).astimezone(PARIS)
     date = maintenant.date().isoformat()
     min_medias = config.reglages["regroupement"]["min_medias"]
-    publies = [s for s in (sujet_en_json(s, config) for s in sujets) if s["nb_medias"] >= min_medias]
+    publies = [s for s in (sujet_en_json(s, config, effectif) for s in sujets) if s["nb_medias"] >= min_medias]
     publies.sort(key=lambda s: (-s["nb_medias"], -s["nb_articles"], s["id"]))
     edition = {
         "date": date,
         "genere_le": maintenant.isoformat(timespec="seconds"),
-        "stats": {**stats, "nb_sujets": len(publies), "nb_angles_morts": sum(1 for s in publies if s["angle_mort"])},
+        "stats": {
+            **stats,
+            "nb_sujets": len(publies),
+            "nb_asymetries": sum(1 for s in publies if s["asymetrie"]["notable"]),
+            "effectif_bords": effectif,
+        },
         "sujets": publies,
         "medias": medias_en_json(config),
     }

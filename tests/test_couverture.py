@@ -1,35 +1,65 @@
-"""Répartition gauche / centre / droite et angles morts."""
+"""Répartition gauche / centre / droite et asymétrie de couverture entre les deux bords."""
 
-from revue.couverture import angle_mort, repartition
+from revue.couverture import asymetrie, effectifs, repartition
+
+GAUCHE = ["humanite", "liberation", "mediapart", "politis", "reporterre", "basta"]  # 6 médias
+DROITE = ["lefigaro", "cnews", "europe1", "lejdd", "valeursactuelles", "causeur", "atlantico", "sudradio", "bvoltaire"]  # 9
+CENTRE = ["franceinfo", "rfi", "lcp", "bfmtv"]
+EFFECTIF = {"gauche": 6, "droite": 9}
+
 
 def test_repartition_compte_les_medias_pas_les_articles(cfg):
     resultat = repartition(["humanite", "humanite", "lefigaro", "franceinfo", "lemonde"], cfg)
     assert resultat == {"gauche": ["humanite", "lemonde"], "centre": ["franceinfo"], "droite": ["lefigaro"]}
 
 
-def test_angle_mort_quand_un_bord_domine_et_l_autre_est_absent(cfg):
-    gauche = ["humanite", "liberation", "mediapart", "politis"]
-    assert angle_mort([*gauche, "franceinfo"], cfg) == {"bord_dominant": "gauche", "bord_absent": "droite", "part": 0.8}
-    assert angle_mort(["lefigaro", "cnews", "europe1", "franceinfo", "rfi"], cfg)["bord_absent"] == "gauche"
-    assert angle_mort([*gauche, *gauche, "franceinfo"], cfg)["part"] == 0.8  # un média = une voix
+def test_effectifs_comptent_les_medias_presents_par_bord(cfg):
+    assert effectifs(GAUCHE + DROITE + CENTRE + ["lemonde", "lexpress", "humanite"], cfg) == EFFECTIF
 
 
-def test_pas_d_angle_mort_si_couverture_partagee_ou_trop_mince(cfg):
-    assert angle_mort(["humanite", "liberation", "mediapart", "franceinfo", "rfi", "lefigaro", "cnews"], cfg) is None
-    assert angle_mort(["franceinfo", "rfi", "lcp", "bfmtv", "lacroix", "20minutes"], cfg) is None  # le centre n'est pas un « bord »
-    assert angle_mort(["humanite", "liberation", "mediapart"], cfg) is None  # moins de 4 médias : on ne conclut pas
-    # 22 % à droite : couvert par l'autre bord
-    assert angle_mort(["humanite", "liberation", "mediapart", "politis", "basta", "franceinfo", "rfi", "lefigaro", "cnews"], cfg) is None
+def test_asymetrie_compare_des_parts_et_non_des_nombres(cfg):
+    """Deux médias de gauche sur 6 pèsent autant que trois médias de droite sur 9."""
+    a = asymetrie(["humanite", "liberation", "lefigaro", "cnews", "europe1", "franceinfo"], EFFECTIF, cfg)
+    assert a["gauche"] == {"medias": ["humanite", "liberation"], "total": 6, "part": 0.333}
+    assert a["droite"]["part"] == 0.333
+    assert a["ecart"] == 0 and a["bord_dominant"] is None and not a["notable"]
+
+
+def test_asymetrie_notable_quand_un_bord_couvre_nettement_plus(cfg):
+    a = asymetrie(["humanite", "liberation", "mediapart", "franceinfo"], EFFECTIF, cfg)
+    assert a["ecart"] == 0.5 and a["bord_dominant"] == "gauche" and a["notable"]
+    b = asymetrie(["lefigaro", "cnews", "europe1", "lejdd", "rfi", "humanite"], EFFECTIF, cfg)
+    assert b["ecart"] == round(1 / 6 - 4 / 9, 3) and b["bord_dominant"] == "droite" and b["notable"]
+    # un média = une voix, quel que soit son nombre d'articles
+    assert asymetrie(["humanite"] * 5 + ["liberation", "mediapart"], EFFECTIF, cfg)["ecart"] == 0.5
+
+
+def test_asymetrie_sous_les_seuils_n_est_pas_notable(cfg):
+    # un seul média : écart de 17 points, sous le seuil
+    assert not asymetrie(["humanite", "franceinfo", "rfi"], EFFECTIF, cfg)["notable"]
+    # écart de 33 − 11 = 22 points : un seul média de différence, sous le seuil
+    assert not asymetrie(["humanite", "liberation", "lefigaro", "franceinfo"], EFFECTIF, cfg)["notable"]
+    # le centre seul ne penche d'aucun côté
+    assert asymetrie(CENTRE, EFFECTIF, cfg)["ecart"] == 0
+
+
+def test_min_medias_bord_ecarte_un_bord_reduit_a_un_media(cfg):
+    """Si un bord n'a que 3 médias présents, un seul d'entre eux fait 33 points : pas notable pour autant."""
+    a = asymetrie(["humanite", "franceinfo", "rfi"], {"gauche": 3, "droite": 9}, cfg)
+    assert a["ecart"] == 0.333 and not a["notable"]
 
 
 def test_centre_gauche_et_centre_droit_ne_font_pas_un_bord(cfg):
-    """Rangés à gauche et à droite à l'affichage, ils ne suffisent pas à créer un angle mort."""
-    medias = ["humanite", "lemonde", "huffpost", "franceinfo"]
+    """Rangés à gauche et à droite à l'affichage, ils ne comptent pour aucun bord ici."""
+    medias = ["humanite", "lemonde", "huffpost", "lexpress", "franceinfo"]
     assert len(repartition(medias, cfg)["gauche"]) == 3
-    assert angle_mort(medias, cfg) is None
-    assert angle_mort(["lefigaro", "cnews", "lexpress", "lopinion", "franceinfo"], cfg) is None  # 40 % de droite
-    # … et ne comptent pas non plus comme couverture du bord d'en face
-    assert angle_mort(["humanite", "liberation", "mediapart", "lexpress"], cfg)["bord_absent"] == "droite"
+    a = asymetrie(medias, EFFECTIF, cfg)
+    assert a["gauche"]["medias"] == ["humanite"] and a["droite"]["medias"] == []
+
+
+def test_bord_sans_media_present_ne_fait_pas_d_erreur(cfg):
+    a = asymetrie(["lefigaro", "cnews", "europe1"], {"gauche": 0, "droite": 9}, cfg)
+    assert a["gauche"]["part"] == 0 and a["ecart"] == -0.333
 
 
 def test_les_bords_viennent_de_la_configuration(cfg):
@@ -37,8 +67,8 @@ def test_les_bords_viennent_de_la_configuration(cfg):
 
     large = copy.copy(cfg)
     large.reglages = copy.deepcopy(cfg.reglages)
-    large.reglages["couverture"]["angle_mort"]["bords"]["gauche"].append("centre-gauche")
-    assert angle_mort(["humanite", "lemonde", "huffpost", "franceinfo"], large)["bord_absent"] == "droite"
+    large.reglages["couverture"]["asymetrie"]["bords"]["gauche"].append("centre-gauche")
+    assert asymetrie(["humanite", "lemonde", "franceinfo"], EFFECTIF, large)["gauche"]["medias"] == ["humanite", "lemonde"]
 
 
 def test_la_frontiere_des_blocs_vient_de_la_configuration(cfg):

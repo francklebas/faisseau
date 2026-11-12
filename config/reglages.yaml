@@ -33,7 +33,7 @@ regroupement:
   liaison: average              # average | complete (complete = plus strict)
   min_medias: 3                 # un sujet = au moins 3 médias distincts
   max_sujets: 30                # sujets publiés par édition (les plus couverts)
-  max_angles_morts: 8           # angles morts ajoutés au-delà de ce classement
+  max_asymetries: 8             # sujets les plus asymétriques ajoutés au-delà de ce classement
   max_articles_par_media: 3     # au-delà, on garde les plus proches du centre du sujet
 
 faits:
@@ -61,13 +61,16 @@ couverture:
     gauche: [extreme-gauche, gauche, centre-gauche]
     centre: [centre]
     droite: [centre-droit, droite, extreme-droite]
-  angle_mort:
-    # Orientations qui comptent comme un « bord » pour les angles morts. Plus strict que
-    # les blocs affichés : centre-gauche et centre-droit n'y figurent pas, sinon un sujet
-    # porté par deux généralistes modérés passe pour l'angle mort du bord d'en face.
+  asymetrie:
+    # Un sujet est-il couvert autant par les médias de gauche que par ceux de droite ?
+    # On compare la part des médias de chaque bord qui en parlent (3 médias de gauche sur 7
+    # = 43 %), pas leur nombre : les deux bords n'ont pas le même effectif.
+    # Orientations qui forment un bord. Plus strict que les blocs affichés : centre-gauche
+    # et centre-droit n'y figurent pas, sinon deux généralistes modérés suffisent à
+    # faire pencher un sujet.
     bords:
       gauche: [extreme-gauche, gauche]
       droite: [droite, extreme-droite]
-    min_medias: 4               # en dessous, trop peu de sources pour conclure
-    part_dominante: 0.6         # part minimale du bord dominant (gauche ou droite)
-    part_opposee_max: 0.1       # part maximale du bord opposé
+    # En dessous de ces deux seuils, l'écart n'est pas affiché (bruit) :
+    ecart_min: 0.25             # écart minimal entre les deux parts (0,25 = 25 points)
+    min_medias_bord: 2          # le bord dominant doit compter au moins 2 médias sur le sujet

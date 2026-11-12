@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from . import config as configuration
 from .base import Base
 from .collecte import collecter
-from .couverture import angle_mort
+from .couverture import asymetrie, effectifs
 from .edition import ecrire_edition
 from .modeles import Sujet
 
@@ -29,15 +29,18 @@ def _collecter(cfg, base: Base) -> list[str]:
     return erreurs
 
 
-def _sujets(cfg, base: Base, max_sujets: int | None = None, encodeur=None) -> tuple[list[Sujet], int]:
+def _sujets(
+    cfg, base: Base, max_sujets: int | None = None, encodeur=None, reference: datetime | None = None
+) -> tuple[list[Sujet], int, dict[str, int]]:
     from .plongements import encodeur_depuis, vecteurs_articles
     from .regroupement import construire_sujets
 
     r = cfg.reglages
-    debut = datetime.now(timezone.utc) - timedelta(hours=r["collecte"]["fenetre_heures"])
-    articles = base.articles_depuis(debut, medias={m.id for m in cfg.medias_actifs})
+    fin = reference or datetime.now(timezone.utc)
+    debut = fin - timedelta(hours=r["collecte"]["fenetre_heures"])
+    articles = base.articles_depuis(debut, fin, medias={m.id for m in cfg.medias_actifs})
     if not articles:
-        return [], 0
+        return [], 0, {}
     modele = cfg.modele_embeddings
     _dire(f"Embeddings ({modele['cle']}) : {len(articles)} articles sur {r['collecte']['fenetre_heures']} h")
     vecteurs = vecteurs_articles(base, encodeur or encodeur_depuis(cfg), articles)
@@ -50,17 +53,20 @@ def _sujets(cfg, base: Base, max_sujets: int | None = None, encodeur=None) -> tu
         min_medias=g["min_medias"],
         max_articles_par_media=g["max_articles_par_media"],
     )
-    # Édition = les sujets les plus couverts, plus les angles morts trouvés au-delà : par
-    # nature, un sujet porté par un seul bord est rarement parmi les plus couverts.
+    # Édition = les sujets les plus couverts, plus les plus asymétriques trouvés au-delà :
+    # par nature, un sujet porté par un seul bord est rarement parmi les plus couverts.
     limite = max_sujets or g["max_sujets"]
     sujets = tous[:limite]
-    angles = [s for s in tous[limite:] if angle_mort(s.medias, cfg)]
-    sujets += angles[: g["max_angles_morts"]]
+    effectif = effectifs((a.media_id for a in articles), cfg)
+    ecarts = [(asymetrie(s.medias, effectif, cfg), s) for s in tous[limite:]]
+    penches = sorted((e for e in ecarts if e[0]["notable"]), key=lambda e: -abs(e[0]["ecart"]))
+    sujets += [s for _, s in penches[: g["max_asymetries"]]]
     _dire(
-        f"Regroupement : {len(tous)} sujets d'au moins {g['min_medias']} médias ; "
-        f"{len(sujets)} retenus dont {len(sujets) - min(limite, len(tous))} angles morts hors classement"
+        f"Regroupement : {len(tous)} sujets d'au moins {g['min_medias']} médias ; {len(sujets)} retenus "
+        f"dont {len(sujets) - min(limite, len(tous))} asymétriques hors classement "
+        f"(médias présents : {effectif['gauche']} à gauche, {effectif['droite']} à droite)"
     )
-    return sujets, len(articles)
+    return sujets, len(articles), effectif
 
 
 def executer(options) -> int:
@@ -71,11 +77,12 @@ def executer(options) -> int:
     cfg = configuration.charger()
     base = Base(cfg.base)
     debut = time.time()
-    erreurs = [] if options.sans_collecte else _collecter(cfg, base)
+    reference = datetime.fromisoformat(options.reference).astimezone(timezone.utc) if options.reference else None
+    erreurs = [] if options.sans_collecte or reference else _collecter(cfg, base)
     base.purger(cfg.reglages["collecte"]["conservation_jours"])
 
     encodeur = encodeur_depuis(cfg)
-    sujets, nb_articles = _sujets(cfg, base, options.max_sujets, encodeur)
+    sujets, nb_articles, effectif = _sujets(cfg, base, options.max_sujets, encodeur, reference)
     if not sujets:
         _dire("Aucun sujet : pas assez d'articles récents (lancer sans --sans-collecte ?).")
         return 1
@@ -117,7 +124,7 @@ def executer(options) -> int:
         "llm": message,
         "flux_en_erreur": erreurs,
     }
-    chemin = ecrire_edition(sujets, cfg, stats)
+    chemin = ecrire_edition(sujets, cfg, stats, effectif, reference)
     _dire(f"Édition écrite : {chemin} ({time.time() - debut:.0f} s)")
     base.fermer()
     return 0
@@ -140,7 +147,7 @@ def sujets(options) -> int:
     """Affiche les sujets regroupés, sans LLM ni écriture : pour régler le seuil."""
     cfg = configuration.charger()
     base = Base(cfg.base)
-    trouves, _ = _sujets(cfg, base, options.max_sujets)
+    trouves, _, _ = _sujets(cfg, base, options.max_sujets)
     for rang, sujet in enumerate(trouves, 1):
         print(f"\n## {rang}. {len(sujet.articles)} articles, {len(sujet.medias)} médias")
         for a in sujet.articles:
@@ -157,6 +164,11 @@ def main() -> None:
     c.add_argument("--sans-llm", action="store_true", help="pas d'extraction des faits")
     c.add_argument("--exiger-llm", action="store_true", help="échoue si le LLM configuré est injoignable (passage planifié)")
     c.add_argument("--max-sujets", type=int, help="surcharge regroupement.max_sujets")
+    c.add_argument(
+        "--reference",
+        metavar="DATE_ISO",
+        help="rejoue l'édition telle qu'à cette date (ex. 2026-11-11T21:55:00+01:00), sans collecte, à partir de la base",
+    )
     c.set_defaults(fonction=executer)
 
     c = commandes.add_parser("flux", help="vérifie l'état de chaque flux RSS")

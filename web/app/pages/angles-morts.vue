@@ -3,17 +3,13 @@ const { data: edition } = await useFetch('/api/editions/derniere')
 
 useSeoMeta({
   title: 'Angles morts',
-  description: 'Les sujets du jour couverts surtout par des médias d\'un seul bord politique.',
+  description: 'Les sujets du jour que les médias de gauche et de droite couvrent le plus inégalement.',
 })
 
-const parBord = computed(() => ({
-  droite: edition.value?.sujets.filter(s => s.angle_mort?.bord_absent === 'droite') ?? [],
-  gauche: edition.value?.sujets.filter(s => s.angle_mort?.bord_absent === 'gauche') ?? [],
-}))
-const libelles = {
-  droite: { titre: 'Peu couverts à droite', aide: 'Sujets portés surtout par des médias classés à gauche.' },
-  gauche: { titre: 'Peu couverts à gauche', aide: 'Sujets portés surtout par des médias classés à droite.' },
-} as const
+// Du plus asymétrique au moins asymétrique ; le seuil d'affichage est appliqué par le pipeline.
+const sujets = computed(() => (edition.value?.sujets.filter(s => s.asymetrie.notable) ?? [])
+  .toSorted((a, b) => Math.abs(b.asymetrie.ecart) - Math.abs(a.asymetrie.ecart)))
+const BORDS = ['gauche', 'droite'] as const
 </script>
 
 <template>
@@ -21,39 +17,75 @@ const libelles = {
     <p v-if="edition" class="etiquette">Édition du {{ dateLongue(edition.date) }}</p>
     <h1 class="titre-page">Angles morts</h1>
     <p class="chapo">
-      Un angle mort est un sujet dont la couverture vient très majoritairement d'un seul bord, tandis que
-      l'autre n'en parle presque pas. Cela ne dit rien de l'importance du sujet : seulement de qui le traite.
+      Les sujets du jour que les médias de gauche et de droite couvrent le plus inégalement, du plus grand
+      écart au plus petit. Cela ne dit rien de l'importance du sujet : seulement de qui le traite.
     </p>
   </header>
 
   <template v-if="edition">
-    <section v-for="bord in (['droite', 'gauche'] as const)" :key="bord" class="bord" :aria-labelledby="`titre-${bord}`">
-      <h2 :id="`titre-${bord}`" class="titre-section">{{ libelles[bord].titre }}</h2>
-      <p class="bord__aide">{{ libelles[bord].aide }}</p>
-      <ListeSujets v-if="parBord[bord].length" :sujets="parBord[bord]" :date="edition.date" />
-      <p v-else class="bord__vide">Aucun sujet dans ce cas aujourd'hui.</p>
-    </section>
+    <p class="ecarts__aide">
+      Ce jour-là, {{ pluriel(edition.stats.effectif_bords.gauche, 'média') }} de gauche et
+      {{ pluriel(edition.stats.effectif_bords.droite, 'média') }} de droite ont publié. Pour chaque sujet, on
+      compare la part de chaque bord qui en parle.
+    </p>
 
-    <p class="note bord__note">
-      Le calcul dépend entièrement du classement des médias, qui est provisoire et consultable sur la page
-      <NuxtLink to="/medias">Médias</NuxtLink>. Un flux RSS ne reflète pas toujours tout ce qu'un média publie.
+    <ol v-if="sujets.length" class="ecarts">
+      <li v-for="(sujet, i) in sujets" :key="sujet.id" class="ecarts__sujet">
+        <CarteSujet :sujet="sujet" :date="edition.date" :rang="i + 1" />
+        <dl class="ecarts__detail">
+          <div v-for="bord in BORDS" :key="bord">
+            <dt><span class="pastille" :class="`pastille--${bord}`" aria-hidden="true" />Médias de {{ bord }}</dt>
+            <dd>
+              {{ sujet.asymetrie[bord].medias.length }} sur {{ sujet.asymetrie[bord].total }}
+              ({{ pourcent(sujet.asymetrie[bord].part) }})
+            </dd>
+          </div>
+          <div>
+            <dt>Écart</dt>
+            <dd>{{ points(sujet.asymetrie.ecart) }}</dd>
+          </div>
+        </dl>
+      </li>
+    </ol>
+    <p v-else class="ecarts__vide">Aucun sujet ne dépasse le seuil d'affichage aujourd'hui.</p>
+
+    <p class="note ecarts__note">
+      Un écart n'est affiché qu'à partir de 25 points et de deux médias du bord qui domine. Les médias de
+      centre gauche et de centre droit ne sont pas comptés. Le calcul dépend entièrement du classement des
+      médias, qui est provisoire et consultable sur la page <NuxtLink to="/medias">Médias</NuxtLink>. Un
+      flux RSS ne reflète pas toujours tout ce qu'un média publie, et les médias des deux bords n'ont ni la
+      même taille ni les mêmes rubriques : voir la <NuxtLink to="/methode">méthode</NuxtLink>.
     </p>
   </template>
 </template>
 
 <style lang="scss" scoped>
-.bord {
-  margin-top: 3rem;
+.ecarts {
+  margin-top: 2rem;
+
+  &__sujet:first-child :deep(.carte) { border-top: 0; }
 
   &__aide,
   &__vide {
-    margin-top: 0.3rem;
+    max-width: var(--mesure);
+    margin-top: 1.5rem;
     font-family: var(--police-interface);
     font-size: 0.9rem;
     color: var(--encre-douce);
   }
 
-  &__vide { margin-top: 1.25rem; }
+  &__detail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 2rem;
+    margin-bottom: 1.4rem;
+    font-family: var(--police-interface);
+    font-size: 0.9rem;
+
+    div { display: flex; gap: 0.5rem; }
+    dt { color: var(--encre-douce); }
+    dd { font-weight: 600; }
+  }
 
   &__note {
     max-width: var(--mesure);

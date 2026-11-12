@@ -30,10 +30,26 @@ export interface ArticleSource {
   publie_le: string
 }
 
-export interface AngleMort {
-  bord_dominant: 'gauche' | 'droite'
-  bord_absent: 'gauche' | 'droite'
+export type Bord = 'gauche' | 'droite'
+
+export interface CouvertureBord {
+  /** Médias de ce bord qui couvrent le sujet. */
+  medias: string[]
+  /** Médias de ce bord ayant publié ce jour-là. */
+  total: number
+  /** medias.length / total, entre 0 et 1. */
   part: number
+}
+
+/** Écart de couverture entre les médias de gauche et de droite (centre-gauche et centre-droit exclus). */
+export interface Asymetrie {
+  gauche: CouvertureBord
+  droite: CouvertureBord
+  /** Part à gauche − part à droite, entre −1 et 1. */
+  ecart: number
+  bord_dominant: Bord | null
+  /** L'écart dépasse le seuil d'affichage. */
+  notable: boolean
 }
 
 export interface Sujet {
@@ -45,7 +61,7 @@ export interface Sujet {
   nb_articles: number
   nb_medias: number
   couverture: Record<Bloc, string[]>
-  angle_mort: AngleMort | null
+  asymetrie: Asymetrie
   faits_communs: Fait[]
   faits_recoupes: Fait[]
   affirmations_isolees: Fait[]
@@ -58,7 +74,8 @@ export interface Stats {
   nb_articles: number
   nb_medias_actifs: number
   nb_sujets: number
-  nb_angles_morts: number
+  nb_asymetries: number
+  effectif_bords: Record<Bord, number>
   fenetre_heures: number
   modele_embeddings: string
   llm: string
@@ -81,7 +98,7 @@ export interface ResumeSujet {
   nb_articles: number
   nb_medias: number
   couverture: Record<Bloc, number>
-  angle_mort: AngleMort | null
+  asymetrie: Asymetrie
   nb_faits_communs: number
   nb_faits_recoupes: number
   nb_affirmations_isolees: number

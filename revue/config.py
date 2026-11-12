@@ -73,9 +73,9 @@ class Config:
         raise ValueError(f"orientation « {orientation} » absente de couverture.blocs")
 
     def bord(self, media_id: str) -> str | None:
-        """Bord (gauche, droite) d'un média pour les angles morts, None s'il n'en a pas."""
+        """Bord (gauche, droite) d'un média pour la mesure d'asymétrie, None s'il n'en a pas."""
         orientation = self.medias[media_id].orientation
-        for bord, orientations in self.reglages["couverture"]["angle_mort"]["bords"].items():
+        for bord, orientations in self.reglages["couverture"]["asymetrie"]["bords"].items():
             if orientation in orientations:
                 return bord
         return None

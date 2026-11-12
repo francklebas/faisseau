@@ -7,7 +7,7 @@ qui montre, pour chaque sujet :
 - les **faits communs** (rapportés par la majorité des médias) et les **faits recoupés** (au moins deux) ;
 - les **affirmations isolées** (un seul média), signalées comme telles ;
 - la **répartition de la couverture** entre gauche, centre et droite ;
-- les **angles morts** : sujets couverts surtout par un seul bord.
+- les **angles morts** : les sujets que les médias de gauche et de droite couvrent le plus inégalement.
 
 Chaque fait affiché renvoie aux articles qui l'énoncent. Le site ne contient ni compte, ni
 cookie, ni script, ni ressource tierce.
@@ -36,6 +36,7 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
 | `make test` | tests (le test sur vrai modèle est sauté si le modèle n'est pas en cache) |
 | `make flux` | état de chaque flux RSS |
 | `make sujets` | affiche les sujets regroupés, sans LLM (pour régler un seuil) |
+| `uv run revue executer --reference 2026-11-11T21:55:00+01:00` | rejoue une édition passée à partir de la base, sans collecte |
 | `make comparer-embeddings` | compare Solon et E5 sur l'échantillon étiqueté |
 | `make deployer` | publie sur Cloudflare (jamais lancé automatiquement) |
 
@@ -46,7 +47,7 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
   ce sont des propositions rédigées de mémoire, à relire une par une. Tant qu'un média est
   `a_valider`, le site l'affiche comme provisoire. Passer `statut: valide` après relecture.
 - **`config/reglages.yaml`** : fenêtre de collecte, modèle d'embeddings et seuils, définition
-  des trois blocs (quelle nuance va dans quel bloc), seuils des angles morts, fournisseur LLM.
+  des trois blocs (quelle nuance va dans quel bloc), seuils d'asymétrie, fournisseur LLM.
 - **`.env`** (voir `.env.example`) : clé Mistral et surcharges ponctuelles.
 
 ### Extraction des faits
@@ -97,7 +98,7 @@ flux RSS ──► collecte ──► embeddings ──► regroupement ──�
 | Embeddings | `revue/plongements.py` | `sentence-transformers` sur CPU, 4 fils, vecteurs en cache. |
 | Regroupement | `revue/regroupement.py` | Classification ascendante hiérarchique, distance cosinus, **liaison moyenne** : deux groupes ne fusionnent que si leurs articles se ressemblent en moyenne, ce qui empêche un article « pont » de souder deux sujets voisins. Sujet = au moins 3 médias distincts. |
 | Faits | `revue/faits.py` | Le LLM propose faits et sources ; le code contrôle chaque rattachement (mots, noms propres, chiffres), retire les sources non fondées, ajoute les sources oubliées — y compris celles qui disent la même chose autrement, repérées par Solon — et calcule seul le statut à partir du nombre de **médias** distincts. |
-| Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Angle mort : un bord ≥ 60 %, l'autre ≤ 10 %, au moins 4 médias ; centre-gauche et centre-droit ne comptent pour aucun bord. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 angles morts trouvés au-delà. |
+| Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Asymétrie : part des médias de gauche qui couvrent le sujet moins part des médias de droite, parmi ceux qui ont publié ce jour-là ; centre-gauche et centre-droit ne comptent pour aucun bord. Affichée à partir de 25 points d'écart et de 2 médias du bord dominant. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 sujets asymétriques trouvés au-delà. |
 | Site | `web/` | Nuxt 4, `nuxt generate`, **zéro JavaScript** côté lecteur (`features.noScripts`). |
 
 ### Solon ou E5 ?
@@ -166,9 +167,7 @@ qu'une fausse fusion.
   internationale qu'ils couvrent est incluse.
 - **Centre-gauche compte à gauche, centre-droit à droite** dans la répartition affichée (comme
   Ground News), mais **pas pour les angles morts** : seuls gauche, droite et extrêmes y font un
-  bord (`couverture.angle_mort.bords`). Sur la journée du 11 novembre, les deux angles morts
-  trouvés avec la définition large (une critique de film, un sujet à quatre médias) tenaient à
-  des médias modérés et disparaissent ; la définition stricte en trouve donc peu.
+  bord (`couverture.asymetrie.bords`).
 - Le dossier s'appelle `faisseau/` comme demandé ; le dépôt git est initialisé, rien n'est commité.
 
 ## Accessibilité

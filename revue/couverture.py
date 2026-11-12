@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from .config import BLOCS, Config
 
-OPPOSE = {"gauche": "droite", "droite": "gauche"}
+BORDS = ("gauche", "droite")
 
 
 def repartition(media_ids: list[str], config: Config) -> dict[str, list[str]]:
@@ -15,20 +15,35 @@ def repartition(media_ids: list[str], config: Config) -> dict[str, list[str]]:
     return blocs
 
 
-def angle_mort(media_ids: list[str], config: Config) -> dict | None:
-    """Sujet couvert surtout par un bord et presque pas par l'autre.
+def effectifs(media_ids, config: Config) -> dict[str, int]:
+    """Nombre de médias de chaque bord parmi ceux donnés (ceux qui ont publié dans la fenêtre)."""
+    bords = [config.bord(m) for m in set(media_ids)]
+    return {b: bords.count(b) for b in BORDS}
 
-    Renvoie {"bord_dominant", "bord_absent", "part"} ou None. Les parts sont calculées sur
-    le nombre de médias distincts, pas d'articles : un média très prolixe ne pèse qu'une fois.
-    Les bords sont ceux de couverture.angle_mort.bords, plus étroits que les blocs affichés.
+
+def asymetrie(media_ids: list[str], effectif: dict[str, int], config: Config) -> dict:
+    """Écart de couverture d'un sujet entre les médias de gauche et ceux de droite.
+
+    Pour chaque bord : la part de ses médias qui couvrent le sujet (`effectif` donne le
+    nombre de médias du bord ayant publié ce jour-là). `ecart` = part à gauche − part à
+    droite, entre −1 et 1. Comparer des parts plutôt que des nombres neutralise le
+    déséquilibre d'effectif entre les deux bords. Un média ne compte qu'une fois.
+
+    `notable` : l'écart dépasse le bruit (voir couverture.asymetrie dans reglages.yaml).
     """
-    reglage = config.reglages["couverture"]["angle_mort"]
-    medias = list(dict.fromkeys(media_ids))
-    if len(medias) < reglage["min_medias"]:
-        return None
-    bords = [config.bord(m) for m in medias]
-    for bord, oppose in OPPOSE.items():
-        part = bords.count(bord) / len(medias)
-        if part >= reglage["part_dominante"] and bords.count(oppose) / len(medias) <= reglage["part_opposee_max"]:
-            return {"bord_dominant": bord, "bord_absent": oppose, "part": round(part, 2)}
-    return None
+    reglage = config.reglages["couverture"]["asymetrie"]
+    couvrent = {b: [m for m in dict.fromkeys(media_ids) if config.bord(m) == b] for b in BORDS}
+    part = {b: len(couvrent[b]) / effectif[b] if effectif.get(b) else 0.0 for b in BORDS}
+    ecart = part["gauche"] - part["droite"]
+    dominant = "gauche" if ecart > 0 else "droite" if ecart < 0 else None
+    notable = (
+        dominant is not None
+        and abs(ecart) >= reglage["ecart_min"] - 1e-9
+        and len(couvrent[dominant]) >= reglage["min_medias_bord"]
+    )
+    return {
+        **{b: {"medias": couvrent[b], "total": effectif.get(b, 0), "part": round(part[b], 3)} for b in BORDS},
+        "ecart": round(ecart, 3),
+        "bord_dominant": dominant,
+        "notable": notable,
+    }

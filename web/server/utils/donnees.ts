@@ -43,7 +43,7 @@ export function resumer(edition: Edition): ResumeEdition {
         centre: s.couverture.centre.length,
         droite: s.couverture.droite.length,
       },
-      angle_mort: s.angle_mort,
+      asymetrie: s.asymetrie,
       nb_faits_communs: s.faits_communs.length,
       nb_faits_recoupes: s.faits_recoupes.length,
       nb_affirmations_isolees: s.affirmations_isolees.length,

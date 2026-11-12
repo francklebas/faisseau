@@ -45,10 +45,13 @@ const aDesFaits = computed(() => sujet.value.faits_communs.length + sujet.value.
     <section class="sujet__section" aria-labelledby="t-couverture">
       <h2 id="t-couverture" class="titre-section">Qui en parle</h2>
       <BarreCouverture class="sujet__barre" :couverture="compte" />
-      <p v-if="sujet.angle_mort" class="note sujet__angle">
-        <strong>Angle mort à {{ sujet.angle_mort.bord_absent }}.</strong>
-        {{ Math.round(sujet.angle_mort.part * 100) }} % des médias qui couvrent ce sujet sont classés à
-        {{ sujet.angle_mort.bord_dominant }} ; presque aucun à {{ sujet.angle_mort.bord_absent }}.
+      <p v-if="sujet.asymetrie.notable" class="note sujet__angle">
+        <strong>Surtout couvert à {{ sujet.asymetrie.bord_dominant }}.</strong>
+        {{ sujet.asymetrie.gauche.medias.length }} des {{ pluriel(sujet.asymetrie.gauche.total, 'média') }} de gauche
+        en parlent ({{ pourcent(sujet.asymetrie.gauche.part) }}), contre
+        {{ sujet.asymetrie.droite.medias.length }} des {{ pluriel(sujet.asymetrie.droite.total, 'média') }} de droite
+        ({{ pourcent(sujet.asymetrie.droite.part) }}). Les médias de centre gauche et de centre droit ne
+        sont pas comptés dans cette comparaison.
       </p>
       <div class="sujet__blocs">
         <div v-for="bloc in BLOCS" :key="bloc">
