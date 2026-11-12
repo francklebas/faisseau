@@ -74,3 +74,10 @@ couverture:
     # En dessous de ces deux seuils, l'écart n'est pas affiché (bruit) :
     ecart_min: 0.25             # écart minimal entre les deux parts (0,25 = 25 points)
     min_medias_bord: 2          # le bord dominant doit compter au moins 2 médias sur le sujet
+
+affinites:
+  # Contrôle du classement par la couverture (commande : revue affinites). Signale les
+  # médias qui couvrent plutôt les sujets d'un autre bloc que le leur. Ne classe rien.
+  min_editions: 14              # en dessous, le rapport se déclare non concluant
+  min_sujets: 20                # un média avec moins de sujets n'est pas comparé
+  marge: 0.05                   # avance minimale d'un autre bloc pour signaler un média

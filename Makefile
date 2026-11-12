@@ -7,7 +7,7 @@
 PORT ?= 4173
 SITE := web/.output/public
 
-.PHONY: revue installer pipeline site servir quotidien test flux sujets comparer-embeddings deployer
+.PHONY: revue installer pipeline site servir quotidien test flux sujets affinites comparer-embeddings deployer
 
 revue: installer pipeline site servir
 
@@ -39,6 +39,9 @@ flux:
 
 sujets:
 	uv run revue sujets
+
+affinites:
+	uv run revue affinites
 
 comparer-embeddings:
 	uv run python scripts/comparer_embeddings.py --avec-extraits

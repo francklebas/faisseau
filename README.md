@@ -37,6 +37,7 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
 | `make flux` | état de chaque flux RSS |
 | `make sujets` | affiche les sujets regroupés, sans LLM (pour régler un seuil) |
 | `uv run revue executer --reference 2026-11-11T21:55:00+01:00` | rejoue une édition passée à partir de la base, sans collecte |
+| `make affinites` | compare la couverture des médias sur l'historique et signale ceux qui s'écartent de leur bloc (ne classe rien) |
 | `make comparer-embeddings` | compare Solon et E5 sur l'échantillon étiqueté |
 | `make deployer` | publie sur Cloudflare (jamais lancé automatiquement) |
 
@@ -120,6 +121,14 @@ d'E5 sont tassées entre 0,80 et 0,95, un centième de trop suffit à fusionner)
 alternative honnête sur une machine lente : `REVUE_EMBEDDINGS=e5-small`. Les seuils configurés
 sont volontairement plus stricts que l'optimum mesuré : mieux vaut un sujet scindé en deux
 qu'une fausse fusion.
+
+### Contrôle du classement par la couverture
+
+Chaque passage archive dans `data/couvertures/` tous les sujets du jour et les médias qui les
+couvrent. `make affinites` mesure, sur cet historique, quels médias couvrent les mêmes sujets
+que quels autres, et signale ceux qui sont plus proches d'un autre bloc que du leur
+(`affinites` dans `reglages.yaml`). Ce n'est pas un classement : couvrir les mêmes sujets ne
+dit rien de ce qu'on en écrit. Le rapport se déclare non concluant en dessous de 14 éditions.
 
 ## Limites
 

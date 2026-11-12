@@ -11,6 +11,7 @@ from . import config as configuration
 from .base import Base
 from .collecte import collecter
 from .couverture import asymetrie, effectifs
+from .affinites import analyser, ecrire_couvertures, en_markdown, lire_couvertures
 from .edition import ecrire_edition
 from .modeles import Sujet
 
@@ -31,7 +32,7 @@ def _collecter(cfg, base: Base) -> list[str]:
 
 def _sujets(
     cfg, base: Base, max_sujets: int | None = None, encodeur=None, reference: datetime | None = None
-) -> tuple[list[Sujet], int, dict[str, int]]:
+) -> tuple[list[Sujet], int, dict[str, int], list[Sujet]]:
     from .plongements import encodeur_depuis, vecteurs_articles
     from .regroupement import construire_sujets
 
@@ -40,7 +41,7 @@ def _sujets(
     debut = fin - timedelta(hours=r["collecte"]["fenetre_heures"])
     articles = base.articles_depuis(debut, fin, medias={m.id for m in cfg.medias_actifs})
     if not articles:
-        return [], 0, {}
+        return [], 0, {}, []
     modele = cfg.modele_embeddings
     _dire(f"Embeddings ({modele['cle']}) : {len(articles)} articles sur {r['collecte']['fenetre_heures']} h")
     vecteurs = vecteurs_articles(base, encodeur or encodeur_depuis(cfg), articles)
@@ -66,7 +67,7 @@ def _sujets(
         f"dont {len(sujets) - min(limite, len(tous))} asymétriques hors classement "
         f"(médias présents : {effectif['gauche']} à gauche, {effectif['droite']} à droite)"
     )
-    return sujets, len(articles), effectif
+    return sujets, len(articles), effectif, tous
 
 
 def executer(options) -> int:
@@ -82,7 +83,7 @@ def executer(options) -> int:
     base.purger(cfg.reglages["collecte"]["conservation_jours"])
 
     encodeur = encodeur_depuis(cfg)
-    sujets, nb_articles, effectif = _sujets(cfg, base, options.max_sujets, encodeur, reference)
+    sujets, nb_articles, effectif, tous = _sujets(cfg, base, options.max_sujets, encodeur, reference)
     if not sujets:
         _dire("Aucun sujet : pas assez d'articles récents (lancer sans --sans-collecte ?).")
         return 1
@@ -125,6 +126,8 @@ def executer(options) -> int:
         "flux_en_erreur": erreurs,
     }
     chemin = ecrire_edition(sujets, cfg, stats, effectif, reference)
+    # Tous les sujets du jour, publiés ou non : matière du contrôle par la couverture.
+    ecrire_couvertures(tous, cfg, chemin.stem)
     _dire(f"Édition écrite : {chemin} ({time.time() - debut:.0f} s)")
     base.fermer()
     return 0
@@ -147,11 +150,24 @@ def sujets(options) -> int:
     """Affiche les sujets regroupés, sans LLM ni écriture : pour régler le seuil."""
     cfg = configuration.charger()
     base = Base(cfg.base)
-    trouves, _, _ = _sujets(cfg, base, options.max_sujets)
+    trouves, _, _, _ = _sujets(cfg, base, options.max_sujets)
     for rang, sujet in enumerate(trouves, 1):
         print(f"\n## {rang}. {len(sujet.articles)} articles, {len(sujet.medias)} médias")
         for a in sujet.articles:
             print(f"   [{a.media_id}] {a.titre[:110]}")
+    return 0
+
+
+def affinites(_options) -> int:
+    """Compare la couverture des médias sur l'historique et signale ceux qui s'écartent de leur bloc."""
+    cfg = configuration.charger()
+    rapport = analyser(*lire_couvertures(cfg.dossier_donnees / "couvertures"), cfg)
+    texte = en_markdown(rapport, cfg)
+    print(texte)
+    sortie = cfg.dossier_donnees / "affinites.md"
+    sortie.parent.mkdir(parents=True, exist_ok=True)
+    sortie.write_text(texte, encoding="utf-8")
+    print(f"Rapport écrit dans {sortie}")
     return 0
 
 
@@ -177,6 +193,9 @@ def main() -> None:
     c = commandes.add_parser("sujets", help="affiche les sujets regroupés (réglage du seuil)")
     c.add_argument("--max-sujets", type=int)
     c.set_defaults(fonction=sujets)
+
+    c = commandes.add_parser("affinites", help="compare la couverture des médias sur l'historique des éditions")
+    c.set_defaults(fonction=affinites)
 
     options = analyse.parse_args()
     sys.exit(options.fonction(options))
