@@ -152,7 +152,9 @@ pas d'une université. Pour Valeurs actuelles et Causeur, une autre source confi
 - **Capital** : contrôlé par Bolloré via Prisma ; clause de conscience ouverte fin 2025 parce
   que « la direction s'éloigne de la ligne éditoriale historique du titre » (Ozap).
 - **Front Populaire** : racheté à 90 % par Lagardère Media News en août 2026 (Ozap).
-- **Boulevard Voltaire, L'Incorrect** : aucune source lue n'emploie « extrême droite ».
+- **Boulevard Voltaire** (classé extrême droite) : aucune des deux pages lues n'emploie ce terme.
+  **L'Incorrect** (classé extrême droite) : Public Sénat le dit lancé par des personnalités
+  « entre droite et extrême droite ».
 
 **Audience (information, pas un critère).** Moyenne du public sur une échelle de 1 (très à
 gauche) à 7 (très à droite), en 2020 : population 3,96 ; CNews 4,33 ; BFM TV 4,34 ; TF1 4,44.
