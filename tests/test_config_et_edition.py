@@ -99,3 +99,6 @@ def test_source_incomplete_refusee(tmp_path):
     chemin.write_text(base % "{url: 'https://x.example', type: rumeur, titre: t, citation: c, verdict: confirme}", encoding="utf-8")
     with pytest.raises(ValueError, match="type ou verdict"):
         lire_medias(chemin)
+    chemin.write_text(base % "{url: 'https://fr.wikipedia.org/wiki/A', type: presse, titre: t, citation: c, verdict: confirme}", encoding="utf-8")
+    with pytest.raises(ValueError, match="Wikipédia"):
+        lire_medias(chemin)

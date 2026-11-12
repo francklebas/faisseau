@@ -21,7 +21,13 @@
 #                   note     pour un « contredit » : ce que dit la source
 #                 Les verdicts « confirme » et « ne tranche pas » sont une première lecture ;
 #                 seuls les « contredit » ont été recontrôlés un par un dans la page.
-#                 Une source qui contredit ne change rien toute seule : c'est un point à relire.
+#                 Aucune source ne suffit seule à contredire un classement :
+#                   - Wikipédia est un point d'entrée, jamais une preuve : son verdict est
+#                     toujours « ne tranche pas » (le chargeur le vérifie) ; on remonte aux
+#                     sources qu'elle cite ;
+#                   - une fiche eurotopics est courte et non argumentée ;
+#                   - un think tank ou un observatoire engagé ne vaut qu'équilibré par une
+#                     source d'une autre origine.
 #   audience      orientation moyenne du public (optionnel). Information seulement : ce n'est
 #                 pas un critère de classement, le public d'un média n'est pas sa ligne.
 #   actif         false pour désactiver sans supprimer (optionnel, true par défaut)
@@ -354,7 +360,7 @@ medias:
       date: non datée
       citation: 'Political orientation: Liberal-conservative'
       verdict: contredit
-      note: 'La fiche porte « Political orientation: Liberal-conservative » ; le fichier dit « centre-gauche ».'
+      note: "La fiche porte « Political orientation: Liberal-conservative » ; le fichier dit « centre-gauche ». Étiquette isolée : les fiches française et allemande disent la même chose (une seule source), sans justification, et aucune autre source lue ne qualifie Slate.fr. La fiche se contredit sur l'actionnariat (« The founders still have a majority stake » et Rothschild majoritaire depuis 2017)."
     - url: https://www.ozap.com/actu/ariane-et-benjamin-de-rothschild-prennent-le-controle-de-slate-fr/534597
       type: propriete
       titre: Ariane et Benjamin de Rothschild prennent le contrôle de Slate.fr
@@ -366,6 +372,26 @@ medias:
       titre: Slate.fr sous pavillon luxembourgeois
       date: non datée (la page affiche la date du jour ; faits de 2017)
       citation: les deux banquiers genevois ont ainsi pris le contrôle majoritaire du média français
+      verdict: ne tranche pas
+    - url: https://www.rtbf.be/article/presidentielles-francaises-mediapart-lance-frenchleaks-slate-fr-lance-wikipol-5750783
+      type: presse
+      titre: 'Présidentielles françaises: Mediapart lance FrenchLeaks, Slate.fr lance Wikipol'
+      date: '2011-03-10'
+      citation: C'est un site généraliste, mais on essaye de trouver des angles impertinents, subjectifs. On y vient
+        pour comprendre, être surpris et s'amuser.
+      verdict: ne tranche pas
+    - url: https://www.presse-citron.net/slatefr-modestement
+      type: presse
+      titre: Slate.fr, modestement
+      date: '2009-02-11'
+      citation: J'ignore quel est le bord politique de Slate, ou si le site se veut neutre
+      verdict: ne tranche pas
+    - url: https://fr.wikipedia.org/wiki/Slate_(magazine)
+      type: propriete
+      titre: Slate (magazine) — Wikipédia
+      date: non datée
+      citation: Fin 2024, Cattleya Finance, actionnaire majoritaire à 93 %, décide de cesser d'alimenter le déficit
+        permanent du site et annonce vouloir revendre ses parts
       verdict: ne tranche pas
 
   - id: ladepeche
@@ -417,6 +443,7 @@ medias:
       date: 2026-02
       citation: Seules les deux chaînes d'information du service public sont proches de la neutralité (-1,9 et +3,3).
       verdict: confirme
+      note: "Le rapport note 56 chroniques sur 64 « à gauche » ; le fichier dit « centre ». Source engagée : la note est attribuée par une IA « en parfaite autonomie, sans intervention humaine », et son auteur dit de l'institut « nous nous présentons comme libéraux et conservateurs » (audition du 26 mars 2026). À équilibrer par les sources d'autre origine ci-dessous ; aucune ne mesure la ligne de façon indépendante."
     - url: https://www.cbnews.fr/node/82483
       type: presse
       titre: Franceinfo lance une rubrique dédiée à la transparence de l'information
@@ -461,6 +488,68 @@ medias:
       date: 2023-11 (date du fichier)
       citation: Le journalisme s'exerce hors de toute pression, qu'elle soit politique, économique, idéologique, étrangère.
       verdict: confirme
+    - url: https://www.assemblee-nationale.fr/dyn/opendata/CRCANR5L17S2026PO874480N053.html
+      type: etude
+      titre: Compte rendu n° 53, jeudi 26 mars 2026
+      date: '2026-03-26'
+      citation: nous nous présentons comme libéraux et conservateurs. Nous ne sommes pas neutres, mais nous essayons
+        d'être honnêtes et rigoureux intellectuellement.
+      verdict: ne tranche pas
+      note: 'Audition contradictoire : l''auteur du rapport Thomas More y dit de son institut « Nous ne sommes pas neutres
+        ».'
+    - url: https://www.arcom.fr/se-documenter/espace-juridique/decisions/decision-du-10-juin-2026-mettant-en-demeure-la-societe-nationale-de-programme-radio-france
+      type: etude
+      titre: Décision du 10 juin 2026 mettant en demeure la société nationale de programme Radio France
+      date: '2026-06-10'
+      citation: Près de 60% du temps de parole total des membres de cette formation politique ont ainsi été diffusés
+        au cours de cette tranche horaire
+      verdict: ne tranche pas
+      note: 'Mise en demeure sur la répartition horaire du temps de parole d''une formation : un déséquilibre d''accès
+        à l''antenne, pas une mesure de ligne.'
+    - url: https://conseil-etat.fr/Media/actualites/documents/2025/juillet-2025/cp_pluralisme_web.pdf
+      type: etude
+      titre: 'Pluralisme à la télévision et à la radio : le Conseil d''État précise les conditions dans lesquelles ce
+        principe doit être contrôlé par l''Arcom'
+      date: '2025-07-04'
+      citation: le Conseil d'État ne porte aujourd'hui aucune appréciation sur la programmation de ces chaînes
+      verdict: ne tranche pas
+    - url: https://www.wiwi.uni-bonn.de/bgsepapers/boncrc/CRCTR224_2024_537.pdf
+      type: etude
+      titre: 'Hosting Media Bias: Evidence from the Universe of French Broadcasts, 2002-2020 (CRC TR 224 Discussion
+        Paper n° 537)'
+      date: 2024-04
+      citation: the 24-hour news channel LCI devotes 40.2% of the time share to left-wing guests, compared to 63.4%
+        for France Culture
+      verdict: ne tranche pas
+    - url: https://www.acrimed.org/Pluralisme-anemie-sur-France-Inter-nouveaux-decomptes-des-cartons-d-invitation
+      type: etude
+      titre: 'Pluralisme anémié sur France Inter : nouveaux décomptes des cartons d''invitation'
+      date: '2008-06-12'
+      citation: 88,6% sont des adeptes de la pensée de marché et des zélateurs de la mondialisation libérale et 11,4%
+        y sont plus ou moins opposés
+      verdict: ne tranche pas
+      note: 'Observatoire classé à gauche, codage maison, données de 2008 : conclut à l''inverse du rapport Thomas More.'
+    - url: https://www.radiofrance.com/sites/default/files/2026-05/archives_barometre_invites_avril_2026.pdf
+      type: ligne_revendiquee
+      titre: Baromètre du pluralisme — Avril 2026
+      date: 2026-04
+      citation: Radio France rend ses données transparentes pour objectiver ces questions. Radio France publie chaque
+        mois son "Baromètre du pluralisme"
+      verdict: ne tranche pas
+    - url: https://fr.themedialeader.com/?p=208285
+      type: presse
+      titre: Radio France défend le « pluralisme » de ses antennes avec un nouveau baromètre fondé sur l'IA
+      date: '2025-12-18'
+      citation: La présidente de Radio France s'est dite « surprise par la méthodologie » de cette étude, qu'elle juge
+        « très réductrice ».
+      verdict: ne tranche pas
+    - url: https://lcp.fr/actualites/sibyle-veil-patronne-de-radio-france-france-inter-n-est-ni-de-droite-ni-de-gauche-425375
+      type: ligne_revendiquee
+      titre: 'Sibyle Veil, patronne de Radio France : "France Inter n''est ni de droite, ni de gauche"'
+      date: '2025-12-17'
+      citation: France Inter n'est ni de droite, ni de gauche
+      verdict: confirme
+      note: 'Déclaration de la présidente de Radio France : une position revendiquée, pas une mesure.'
     note: Classement particulièrement discutable (centre ou centre-gauche).
 
   - id: france24
@@ -631,7 +720,8 @@ medias:
       date: non datée
       citation: Depuis 2015, Le Parisien est détenu par le groupe LVMH appartenant au milliardaire français Bernard
         Arnault
-      verdict: confirme
+      verdict: ne tranche pas
+      note: "Point d'entrée seulement ; la page a été lue comme un appui au premier passage."
     note: Parfois classé centre-droit en raison de son actionnaire.
 
   - id: lacroix
@@ -860,8 +950,8 @@ medias:
       date: non datée
       citation: L'Express est détenu depuis septembre 2023 à 100 % par l'homme d'affaires Alain Weill via la société
         NextNow
-      verdict: contredit
-      note: La page dit le titre « orienté politiquement au centre » ; le fichier dit « centre-droit ».
+      verdict: ne tranche pas
+      note: "La page dit le titre « orienté politiquement au centre » ; le fichier dit « centre-droit ». Point d'entrée seulement, voir les sources d'origine."
     - url: https://www.cbnews.fr/node/79611
       type: presse
       titre: L’Express trace sa route
@@ -943,7 +1033,8 @@ medias:
       titre: Le Figaro — Wikipédia
       date: non datée
       citation: Depuis la Libération, sa ligne éditoriale est issue des trois grandes familles de la droite
-      verdict: confirme
+      verdict: ne tranche pas
+      note: "Point d'entrée seulement ; la page a été lue comme un appui au premier passage."
     - url: https://www.ozap.com/actu/-etonnement-et-inquietude-au-figaro-la-colere-gronde-apres-un-nouvel-edito-juge-pro-rn-d-alexis-brezet-directeur-des-redactions/644738
       type: presse
       titre: '"Étonnement et inquiétude" : Au "Figaro", la colère gronde après un nouvel édito jugé pro-RN d''Alexis
@@ -968,7 +1059,8 @@ medias:
       date: non datée
       citation: Depuis juillet 2020, le groupe Vivendi, détenu par Vincent Bolloré, est devenu le premier actionnaire
         du groupe Lagardère, propriétaire d'Europe 1
-      verdict: confirme
+      verdict: ne tranche pas
+      note: "Point d'entrée seulement ; la page a été lue comme un appui au premier passage."
     - url: https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2025-09-30/497187
       type: etude
       titre: Conseil d'État, décision n° 497187 du 30 septembre 2025 (Europe 1 Télécompagnie c. Arcom)
@@ -996,13 +1088,40 @@ medias:
       titre: CNews — Wikipédia
       date: non datée
       citation: une orientation marquée de plus en plus à l'extrême droite et identitaire
-      verdict: contredit
-      note: Le chapeau de la page dit « chaîne […] privée d'extrême droite » ; le fichier dit « droite ».
+      verdict: ne tranche pas
+      note: "Le chapeau de la page dit « chaîne […] privée d'extrême droite » ; le fichier dit « droite ». Point d'entrée seulement, voir les sources d'origine."
     - url: https://rsf.org/fr/contrôle-du-pluralisme-en-france-une-décision-sans-précédent-de-l-arcom-à-l-encontre-de-cnews
       type: presse
       titre: 'Contrôle du pluralisme en France : une décision sans précédent de l’Arcom à l’encontre de CNews'
       date: '2026-06-15'
       citation: surreprésentation de la droite et de l’extrême droite aux heures de grandes écoutes
+      verdict: ne tranche pas
+    - url: https://www.france24.com/fr/france/20211114-le-grand-remplacement-la-th%C3%A9orie-fran%C3%A7aise-qui-s%C3%A9duit-l-extr%C3%AAme-droite-mondiale
+      type: presse
+      titre: '« Le grand remplacement » : la théorie française qui séduit l''extrême droite mondiale'
+      date: '2021-11-14'
+      citation: Dans une interview récente accordée à la chaîne de télévision ancrée très à droite CNews, Renaud Camus
+        a affirmé que sa
+      verdict: ne tranche pas
+    - url: https://rsf.org/fr/décision-du-conseil-d-état-sur-la-requête-de-rsf-cqfd-dix-réponses-aux-contre-vérités
+      type: presse
+      titre: 'Décision du Conseil d''État sur la requête de RSF : CQFD, dix réponses aux contre-vérités'
+      date: '2024-02-15'
+      citation: dont les plateaux regroupent des invités majoritairement de droite et d'extrême-droite
+      verdict: ne tranche pas
+    - url: https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2024-02-13/463162
+      type: etude
+      titre: Conseil d'État, décision n° 463162 du 13 février 2024 (Reporters sans frontières c. Arcom)
+      date: '2024-02-13'
+      citation: la seule prise en compte du temps d'antenne accordé aux personnalités politiques
+      verdict: ne tranche pas
+    - url: https://www.arcom.fr/sites/default/files/2024-07/Arcom%20-%20Sanction%20p%C3%A9cuniaire%20Punchline%20Et%C3%A9%208%20ao%C3%BBt%202023.pdf
+      type: etude
+      titre: Arcom, décision n° 2024-656 du 3 juillet 2024 portant sanction à l'encontre de la S.E.S.I. (CNews, « Punchline
+        Été » du 8 août 2023)
+      date: '2024-07-03'
+      citation: L'intervenant a ainsi pu exprimer une thèse controversée et non vérifiée par les données acquises de
+        la science
       verdict: ne tranche pas
     audience:
       moyenne: 4.33
@@ -1053,14 +1172,35 @@ medias:
       titre: Valeurs actuelles — Wikipédia
       date: non datée
       citation: En décembre 2025, Valmonde est racheté par un trio d’investisseurs
-      verdict: contredit
-      note: La page dit le titre « classé à l'extrême droite » depuis 2012 ; le fichier dit « droite ».
+      verdict: ne tranche pas
+      note: "La page dit le titre « classé à l'extrême droite » depuis 2012 ; le fichier dit « droite ». Point d'entrée seulement, voir les sources d'origine."
     - url: https://www.cbnews.fr/medias/vente-valeurs-actuelles-trio-investisseurs-dont-pierre-edouard-sterin-finalisee
       type: presse
       titre: La vente de Valeurs actuelles à un trio d'investisseurs, dont Pierre-Edouard Stérin, finalisée
       date: '2025-12-02'
       citation: l'hebdomadaire de droite conservatrice Valeurs actuelles
       verdict: confirme
+    - url: https://www.franceinfo.fr/economie/emploi/metiers/armee-et-securite/tribune-de-valeurs-actuelles-toute-la-classe-politique-condamne-sauf-marine-le-pen_4602067.html
+      type: presse
+      titre: 'Tribune de Valeurs Actuelles : toute la classe politique condamne, sauf Marine Le Pen'
+      date: '2021-04-27'
+      citation: La tribune d'anciens généraux dans le journal d'extrême-droite, Valeurs Actuelles, fait polémique.
+      verdict: contredit
+      note: franceinfo écrit « le journal d'extrême-droite, Valeurs Actuelles » ; le fichier dit « droite ». Le même
+        média écrit « l'hebdomadaire conservateur » deux semaines plus tard (source suivante).
+    - url: https://www.franceinfo.fr/politique/quatre-questions-sur-la-nouvelle-tribune-de-militaires-publiee-par-valeurs-actuelles_4618261.html
+      type: presse
+      titre: Quatre questions sur la nouvelle tribune de militaires publiée par "Valeurs actuelles"
+      date: '2021-05-10'
+      citation: L'hebdomadaire conservateur a publié dimanche 9 mai un texte qui vient apporter son soutien aux militaires
+        à la retraite
+      verdict: confirme
+    - url: https://www.publicsenat.fr/article/parlementaire/tribune-de-militaires-ca-traduit-un-vrai-malaise-estime-roger-karoutchi-189069
+      type: presse
+      titre: 'Tribune de militaires : « ça traduit un vrai malaise », estime Roger Karoutchi'
+      date: '2021-05-10'
+      citation: publiée dans l'hebdomadaire ultraconservateur Valeurs actuelles
+      verdict: ne tranche pas
     note: Parfois classé extrême droite ; à trancher.
 
   - id: causeur
@@ -1077,15 +1217,41 @@ medias:
       titre: Causeur — Wikipédia
       date: non datée
       citation: Gérald Penciolelli, actionnaire de référence de Causeur avec 44 % des parts
-      verdict: contredit
-      note: La page dit le titre « le plus souvent classé à l'extrême droite » depuis 2019 ; le fichier dit « droite
-        ».
+      verdict: ne tranche pas
+      note: "La page dit le titre « le plus souvent classé à l'extrême droite » depuis 2019 ; le fichier dit « droite ». Point d'entrée seulement, voir les sources d'origine."
     - url: https://www.eurotopics.net/en/163150/causeur
       type: presse
       titre: Causeur | eurotopics.net
       date: non datée
       citation: controversial articles which often have a right-wing bias
       verdict: confirme
+    - url: https://www.franceinfo.fr/replay-jt/franceinfo/12-13-info/affaire-depardieu-yannis-ezziadi-l-auteur-de-la-tribune-prend-la-parole_6268617.html
+      type: presse
+      titre: 'Affaire Depardieu : Yannis Ezziadi, l''auteur de la tribune, prend la parole'
+      date: '2023-12-27'
+      citation: pour le magazine d'extrême droite Causeur
+      verdict: contredit
+      note: franceinfo écrit « le magazine d'extrême droite Causeur », en incise et sans argumenter ; le fichier dit
+        « droite ».
+    - url: https://www.politis.fr/articles/2017/12/causeur-farceurs-38090/
+      type: presse
+      titre: « Causeur », farceurs
+      date: '2017-12-13'
+      citation: le mensuel réactionnaire d'Élisabeth Lévy
+      verdict: confirme
+    - url: https://www.acrimed.org/Quand-Causeur-et-Valeurs-actuelles-s-essaient-a
+      type: presse
+      titre: Quand Causeur et Valeurs actuelles s'essaient à la critique des médias
+      date: '2017-02-15'
+      citation: Quand des médias de la droite décomplexée, tels Causeur ou Valeurs actuelles, s'adonnent à la critique
+        des médias
+      verdict: confirme
+    - url: https://www.eurotopics.net/fr/163150/causeur
+      type: presse
+      titre: Causeur (fiche média eurotopics)
+      date: non datée
+      citation: crée régulièrement la polémique par ses contributions controversées et tirant souvent très vers la droite.
+      verdict: ne tranche pas
 
   - id: atlantico
     nom: Atlantico

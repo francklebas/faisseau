@@ -142,6 +142,9 @@ def lire_medias(chemin: Path) -> dict[str, Media]:
                 raise ValueError(f"{media.id} : type ou verdict de source inconnu ({source.get('url')})")
             if source["verdict"] == "contredit" and not source.get("note"):
                 raise ValueError(f"{media.id} : une source qui contredit doit dire en quoi (note)")
+            # Wikipédia est un point d'entrée vers d'autres sources, pas une preuve.
+            if "wikipedia.org" in source["url"] and source["verdict"] != "ne tranche pas":
+                raise ValueError(f"{media.id} : Wikipédia ne peut ni confirmer ni contredire un classement")
         medias[media.id] = media
     return medias
 
