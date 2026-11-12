@@ -2,8 +2,14 @@ import type { Bloc } from '#shared/types/revue'
 
 const PARIS = 'Europe/Paris'
 
-export const NOM_BLOC: Record<Bloc, string> = { gauche: 'Gauche', centre: 'Centre', droite: 'Droite' }
-export const BLOCS: Bloc[] = ['gauche', 'centre', 'droite']
+export const NOM_BLOC: Record<Bloc, string> = {
+  'gauche': 'Gauche',
+  'centre-gauche': 'Centre gauche',
+  'centre': 'Centre',
+  'centre-droit': 'Centre droit',
+  'droite': 'Droite',
+}
+export const BLOCS: Bloc[] = ['gauche', 'centre-gauche', 'centre', 'centre-droit', 'droite']
 
 export const NOM_ORIENTATION: Record<string, string> = {
   'extreme-gauche': 'Extrême gauche',

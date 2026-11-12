@@ -1,6 +1,6 @@
 // Forme des fichiers data/editions/*.json écrits par le pipeline (revue/edition.py).
 
-export type Bloc = 'gauche' | 'centre' | 'droite'
+export type Bloc = 'gauche' | 'centre-gauche' | 'centre' | 'centre-droit' | 'droite'
 
 export interface Media {
   id: string

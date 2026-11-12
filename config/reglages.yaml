@@ -56,21 +56,21 @@ faits:
       modele: koboldcpp               # ignoré par KoboldCpp (modèle chargé au lancement)
 
 couverture:
-  # Regroupement des nuances de medias.yaml en trois blocs affichés.
+  # Regroupement des nuances de medias.yaml en cinq blocs affichés. Centre-gauche et
+  # centre-droit ont leur propre bloc : la barre de couverture et la comparaison des deux
+  # bords parlent ainsi de la même « gauche » et de la même « droite ».
   blocs:
-    gauche: [extreme-gauche, gauche, centre-gauche]
+    gauche: [extreme-gauche, gauche]
+    centre-gauche: [centre-gauche]
     centre: [centre]
-    droite: [centre-droit, droite, extreme-droite]
+    centre-droit: [centre-droit]
+    droite: [droite, extreme-droite]
   asymetrie:
     # Un sujet est-il couvert autant par les médias de gauche que par ceux de droite ?
     # On compare la part des médias de chaque bord qui en parlent (3 médias de gauche sur 7
-    # = 43 %), pas leur nombre : les deux bords n'ont pas le même effectif.
-    # Orientations qui forment un bord. Plus strict que les blocs affichés : centre-gauche
-    # et centre-droit n'y figurent pas, sinon deux généralistes modérés suffisent à
-    # faire pencher un sujet.
-    bords:
-      gauche: [extreme-gauche, gauche]
-      droite: [droite, extreme-droite]
+    # = 43 %), pas leur nombre : les deux bords n'ont pas le même effectif. Les deux bords
+    # sont les blocs « gauche » et « droite » ci-dessus ; les trois blocs du milieu ne
+    # comptent pour aucun, sinon deux généralistes modérés suffisent à faire pencher un sujet.
     # En dessous de ces deux seuils, l'écart n'est pas affiché (bruit) :
     ecart_min: 0.25             # écart minimal entre les deux parts (0,25 = 25 points)
     min_medias_bord: 2          # le bord dominant doit compter au moins 2 médias sur le sujet

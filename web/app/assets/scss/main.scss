@@ -16,7 +16,9 @@
   --alerte-bord: #b98300;
 
   --gauche: #a92c47;
+  --centre-gauche: #b0596b;
   --centre: #5b6069;
+  --centre-droit: #4f74a8;
   --droite: #24538f;
   --sur-bloc: #ffffff;
 
@@ -42,7 +44,9 @@
     --alerte-bord: #d9a93a;
 
     --gauche: #d0607a;
+    --centre-gauche: #e6a3b2;
     --centre: #9aa0aa;
+    --centre-droit: #abc6ea;
     --droite: #6f9fdc;
     --sur-bloc: #161513;
   }
@@ -210,6 +214,8 @@ a {
   border-radius: 50%;
 
   &--gauche { background: var(--gauche); }
+  &--centre-gauche { background: var(--centre-gauche); }
   &--centre { background: var(--centre); }
+  &--centre-droit { background: var(--centre-droit); }
   &--droite { background: var(--droite); }
 }

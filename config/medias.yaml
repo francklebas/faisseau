@@ -7,7 +7,7 @@
 #   flux          un ou plusieurs flux RSS/Atom (titres et extraits uniquement)
 #   orientation   extreme-gauche | gauche | centre-gauche | centre | centre-droit
 #                 | droite | extreme-droite
-#                 (le regroupement en trois blocs se règle dans reglages.yaml)
+#                 (le regroupement en cinq blocs se règle dans reglages.yaml)
 #   justification pourquoi ce positionnement (propriété, ligne revendiquée, histoire)
 #   statut        a_valider | valide — tant que « a_valider », le site l'affiche comme tel
 #   sources       sources externes sur la ligne éditoriale (optionnel). Chaque page a été chargée

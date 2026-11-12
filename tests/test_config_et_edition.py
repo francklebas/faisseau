@@ -4,7 +4,7 @@ import json
 
 from conftest import FauxLLM, article
 
-from revue.config import ORIENTATIONS
+from revue.config import BLOCS, ORIENTATIONS
 from revue.edition import ecrire_edition, slug
 from revue.faits import extraire
 from revue.modeles import Sujet
@@ -18,9 +18,10 @@ def test_fichier_des_medias(cfg):
         assert media.orientation in ORIENTATIONS
         assert media.justification, f"{media.id} : justification manquante"
         assert media.flux and all(u.startswith("https://") for u in media.flux)
-    # Chaque bloc est représenté par au moins dix médias actifs.
-    for bloc in ("gauche", "centre", "droite"):
-        assert sum(1 for m in actifs if cfg.bloc(m.id) == bloc) >= 10
+    # Chaque bord compte assez de médias actifs pour que la comparaison ait un sens.
+    for bord in ("gauche", "droite"):
+        assert sum(1 for m in actifs if cfg.bord(m.id) == bord) >= 8
+    assert {cfg.bloc(m.id) for m in actifs} == set(BLOCS)
 
 
 def test_edition_chaque_fait_renvoie_a_un_article_liste(cfg, tmp_path, monkeypatch):
@@ -54,9 +55,9 @@ def test_edition_chaque_fait_renvoie_a_un_article_liste(cfg, tmp_path, monkeypat
     assert [f["medias"] for f in publie["affirmations_isolees"]] == [["liberation"]]
     assert len(publie["faits_communs"]) == 1
 
-    # Couverture : quatre médias du bloc gauche, aucun à droite. Pour l'asymétrie, Le Monde
-    # (centre-gauche) ne compte pas : 3 médias de gauche sur 6 présents, 0 sur 10 à droite.
-    assert publie["couverture"] == {"gauche": ["humanite", "liberation", "mediapart", "lemonde"], "centre": [], "droite": []}
+    # Couverture : trois médias de gauche, un de centre-gauche, aucun à droite. Le Monde ne
+    # compte pas dans la comparaison : 3 médias de gauche sur 6 présents, 0 sur 10 à droite.
+    assert publie["couverture"] == {"gauche": ["humanite", "liberation", "mediapart"], "centre-gauche": ["lemonde"], "centre": [], "centre-droit": [], "droite": []}
     assert publie["asymetrie"]["gauche"] == {"medias": ["humanite", "liberation", "mediapart"], "depeche": [], "total": 6, "part": 0.5}
     assert publie["asymetrie"]["droite"] == {"medias": [], "depeche": [], "total": 10, "part": 0.0}
     assert publie["asymetrie"]["ecart"] == 0.5 and publie["asymetrie"]["notable"]

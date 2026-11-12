@@ -141,15 +141,13 @@ def en_markdown(rapport: Rapport, config: Config) -> str:
         "",
         "Proximité moyenne (0 à 1) avec les médias de chaque bloc, le média lui-même exclu.",
         "",
-        "| Média | Bloc déclaré | Sujets | Gauche | Centre | Droite | Plus proches |",
-        "|---|---|---|---|---|---|---|",
+        "| Média | Bloc déclaré | Sujets | " + " | ".join(BLOCS) + " | Plus proches |",
+        "|---|---|---|" + "---|" * len(BLOCS) + "---|",
     ]
     for p in rapport.profils:
         voisins = ", ".join(f"{nom(m)} ({v:.2f})" for m, v in p.voisins)
-        b = p.par_bloc
-        lignes.append(
-            f"| {nom(p.media)} | {p.bloc} | {p.nb_sujets} | {b['gauche']:.2f} | {b['centre']:.2f} | {b['droite']:.2f} | {voisins} |"
-        )
+        parts = " | ".join(f"{p.par_bloc[b]:.2f}" for b in BLOCS)
+        lignes.append(f"| {nom(p.media)} | {p.bloc} | {p.nb_sujets} | {parts} | {voisins} |")
     if rapport.ignores:
         lignes += ["", "Trop peu de sujets pour être comparés : " + ", ".join(f"{nom(m)} ({n})" for m, n in rapport.ignores) + "."]
     return "\n".join(lignes) + "\n"

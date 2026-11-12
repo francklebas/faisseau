@@ -52,7 +52,9 @@ const segments = computed(() => BLOCS.filter(b => props.couverture[b] > 0))
     font-weight: 700;
 
     &--gauche { background: var(--gauche); }
+    &--centre-gauche { background: var(--centre-gauche); }
     &--centre { background: var(--centre); }
+    &--centre-droit { background: var(--centre-droit); }
     &--droite { background: var(--droite); }
   }
 

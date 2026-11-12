@@ -1,15 +1,12 @@
-"""Répartition de la couverture par bloc (gauche, centre, droite) et angles morts."""
+"""Répartition de la couverture par bloc et asymétrie entre les deux bords."""
 
 from __future__ import annotations
 
 from urllib.parse import urlparse
 
-from .config import BLOCS, Config
+from .config import BLOCS, BORDS, Config
 from .faits import mots
 from .modeles import Article
-
-BORDS = ("gauche", "droite")
-
 
 def repartition(media_ids: list[str], config: Config) -> dict[str, list[str]]:
     """Médias distincts ayant couvert le sujet, rangés par bloc."""

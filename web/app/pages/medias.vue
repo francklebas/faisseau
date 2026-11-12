@@ -18,7 +18,7 @@ const aValider = computed(() => actifs.value.filter(m => m.statut === 'a_valider
   <header>
     <h1 class="titre-page">Médias et classement</h1>
     <p class="chapo">
-      {{ pluriel(actifs.length, 'média suivi', 'médias suivis') }}, répartis en trois blocs pour mesurer qui couvre quoi.
+      {{ pluriel(actifs.length, 'média suivi', 'médias suivis') }}, répartis en cinq blocs pour mesurer qui couvre quoi.
       Le positionnement décrit la ligne éditoriale d'ensemble d'un titre, pas chacun de ses articles.
     </p>
     <p v-if="aValider" class="note intro-note">

@@ -52,8 +52,8 @@ const nbSport = computed(() => edition.value?.sujets.filter(s => s.asymetrie.eca
     <p v-else class="ecarts__vide">Aucun sujet ne dépasse le seuil d'affichage aujourd'hui.</p>
 
     <p class="note ecarts__note">
-      Un écart n'est affiché qu'à partir de 25 points et de deux médias du bord qui domine. Les médias de
-      centre gauche et de centre droit ne sont pas comptés. Les sujets de sport ne sont pas classés
+      Un écart n'est affiché qu'à partir de 25 points et de deux médias du bord qui domine. Les médias du
+      centre gauche, du centre et du centre droit ne sont comptés dans aucun bord. Les sujets de sport ne sont pas classés
       <template v-if="nbSport">({{ nbSport }} dans cette édition)</template>, et un média qui ne fait que
       reprendre une dépêche d'agence n'est pas compté : dans les deux cas, l'écart refléterait les
       rubriques et le débit des médias, pas un choix de traitement. Le calcul dépend entièrement du classement des

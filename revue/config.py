@@ -18,7 +18,8 @@ ORIENTATIONS = (
     "droite",
     "extreme-droite",
 )
-BLOCS = ("gauche", "centre", "droite")
+BLOCS = ("gauche", "centre-gauche", "centre", "centre-droit", "droite")
+BORDS = ("gauche", "droite")  # les deux blocs comparés dans la mesure d'asymétrie
 STATUTS = ("a_valider", "valide")
 TYPES_SOURCE = ("ligne_revendiquee", "propriete", "etude", "presse", "audience")
 VERDICTS = ("confirme", "contredit", "ne tranche pas")
@@ -69,7 +70,7 @@ class Config:
         return [m for m in self.medias.values() if m.actif]
 
     def bloc(self, media_id: str) -> str:
-        """Bloc (gauche, centre, droite) d'un média, d'après reglages.yaml."""
+        """Bloc d'un média (un des cinq de BLOCS), d'après reglages.yaml."""
         orientation = self.medias[media_id].orientation
         for bloc, orientations in self.reglages["couverture"]["blocs"].items():
             if orientation in orientations:
@@ -77,12 +78,9 @@ class Config:
         raise ValueError(f"orientation « {orientation} » absente de couverture.blocs")
 
     def bord(self, media_id: str) -> str | None:
-        """Bord (gauche, droite) d'un média pour la mesure d'asymétrie, None s'il n'en a pas."""
-        orientation = self.medias[media_id].orientation
-        for bord, orientations in self.reglages["couverture"]["asymetrie"]["bords"].items():
-            if orientation in orientations:
-                return bord
-        return None
+        """Bord (gauche, droite) d'un média pour la mesure d'asymétrie, None s'il est au milieu."""
+        bloc = self.bloc(media_id)
+        return bloc if bloc in BORDS else None
 
     # ── embeddings ──
     @property

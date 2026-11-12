@@ -54,7 +54,7 @@ useSeoMeta({
 
     <h2>Couverture et angles morts</h2>
     <p>
-      Chaque média est rangé dans un bloc — gauche, centre ou droite — selon un
+      Chaque média est rangé dans un bloc — gauche, centre gauche, centre, centre droit ou droite — selon un
       <NuxtLink to="/medias">classement public et justifié</NuxtLink>. Pour chaque sujet, on compte les
       médias de chaque bloc, un média ne comptant qu'une fois quel que soit son nombre d'articles.
     </p>
@@ -74,9 +74,9 @@ useSeoMeta({
       moins un article au titre propre.
     </p>
     <p>
-      Pour cette comparaison, les médias classés centre-gauche ou centre-droit ne comptent pour aucun bord,
-      bien qu'ils figurent à gauche et à droite dans la répartition affichée : deux généralistes modérés
-      ne suffisent pas à faire pencher un sujet. Un écart ne dit rien de l'importance du sujet ni d'une
+      Pour cette comparaison, seuls les blocs gauche et droite comptent. Les médias classés centre-gauche,
+      centre ou centre-droit ont leur propre segment dans la barre de couverture et n'appartiennent à
+      aucun bord : deux généralistes modérés ne suffisent pas à faire pencher un sujet. Un écart ne dit rien de l'importance du sujet ni d'une
       intention : les médias des deux bords n'ont ni la même taille ni les mêmes rubriques.
     </p>
 

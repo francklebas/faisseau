@@ -51,7 +51,7 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
   verdict) et parfois un bloc `audience`, donné pour information : le format est décrit en tête
   du fichier.
 - **`config/reglages.yaml`** : fenêtre de collecte, modèle d'embeddings et seuils, définition
-  des trois blocs (quelle nuance va dans quel bloc), seuils d'asymétrie, fournisseur LLM.
+  des cinq blocs (quelle nuance va dans quel bloc), seuils d'asymétrie, fournisseur LLM.
 - **`.env`** (voir `.env.example`) : clé Mistral et surcharges ponctuelles.
 
 ### Extraction des faits
@@ -102,7 +102,7 @@ flux RSS ──► collecte ──► embeddings ──► regroupement ──�
 | Embeddings | `revue/plongements.py` | `sentence-transformers` sur CPU, 4 fils, vecteurs en cache. |
 | Regroupement | `revue/regroupement.py` | Classification ascendante hiérarchique, distance cosinus, **liaison moyenne** : deux groupes ne fusionnent que si leurs articles se ressemblent en moyenne, ce qui empêche un article « pont » de souder deux sujets voisins. Sujet = au moins 3 médias distincts. |
 | Faits | `revue/faits.py` | Le LLM propose faits et sources ; le code contrôle chaque rattachement (mots, noms propres, chiffres), retire les sources non fondées, ajoute les sources oubliées — y compris celles qui disent la même chose autrement, repérées par Solon — et calcule seul le statut à partir du nombre de **médias** distincts. |
-| Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Asymétrie : part des médias de gauche qui couvrent le sujet moins part des médias de droite, parmi ceux qui ont publié ce jour-là ; centre-gauche et centre-droit ne comptent pour aucun bord. Affichée à partir de 25 points d'écart et de 2 médias du bord dominant. Les sujets de sport (rubrique dans l'adresse des articles) ne sont pas classés, et un média qui ne publie qu'un titre repris d'un autre (dépêche) n'est pas compté. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 sujets asymétriques trouvés au-delà. |
+| Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Asymétrie : part des médias de gauche qui couvrent le sujet moins part des médias de droite, parmi ceux qui ont publié ce jour-là ; seuls les blocs gauche et droite sont comparés. Affichée à partir de 25 points d'écart et de 2 médias du bord dominant. Les sujets de sport (rubrique dans l'adresse des articles) ne sont pas classés, et un média qui ne publie qu'un titre repris d'un autre (dépêche) n'est pas compté. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 sujets asymétriques trouvés au-delà. |
 | Site | `web/` | Nuxt 4, `nuxt generate`, **zéro JavaScript** côté lecteur (`features.noScripts`). |
 
 ### Solon ou E5 ?
@@ -152,7 +152,7 @@ dit rien de ce qu'on en écrit. Le rapport se déclare non concluant en dessous 
   propose de peu utiles ; le contrôle écarte les rattachements infondés mais ne réécrit pas.
   Mistral donne de meilleurs énoncés. Comptez ~1 min 30 par sujet en local sur CPU, soit
   45 minutes pour 30 sujets ; quelques secondes par sujet avec l'API.
-- **Classement des médias non validé**, et en trois blocs seulement : les angles morts en
+- **Classement des médias non validé**, et en cinq blocs seulement : les angles morts en
   dépendent directement. Le service public et la presse régionale sont rangés au centre faute
   de ligne revendiquée, ce qui se discute.
 - **Flux absents.** Le Point, Les Échos, Marianne et RTL refusent les robots ou n'ont plus de
@@ -177,9 +177,9 @@ dit rien de ce qu'on en écrit. Le rapport se déclare non concluant en dessous 
   pour retrouver une application Vue hydratée le jour où il faudra de l'interactivité.
 - **« France uniquement »** est compris comme : médias français, en français. L'actualité
   internationale qu'ils couvrent est incluse.
-- **Centre-gauche compte à gauche, centre-droit à droite** dans la répartition affichée (comme
-  Ground News), mais **pas pour les angles morts** : seuls gauche, droite et extrêmes y font un
-  bord (`couverture.asymetrie.bords`).
+- **Cinq blocs affichés** : gauche, centre gauche, centre, centre droit, droite. La comparaison
+  des deux bords (angles morts) ne porte que sur les blocs gauche et droite, si bien que la
+  barre de couverture et le détail par bord comptent les mêmes médias.
 - Le dossier s'appelle `faisseau/` comme demandé ; le dépôt git est initialisé, rien n'est commité.
 
 ## Accessibilité

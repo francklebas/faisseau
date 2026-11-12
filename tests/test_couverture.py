@@ -26,7 +26,7 @@ def arts(medias: list[str]):
 
 def test_repartition_compte_les_medias_pas_les_articles(cfg):
     resultat = repartition(["humanite", "humanite", "lefigaro", "franceinfo", "lemonde"], cfg)
-    assert resultat == {"gauche": ["humanite", "lemonde"], "centre": ["franceinfo"], "droite": ["lefigaro"]}
+    assert resultat == {"gauche": ["humanite"], "centre-gauche": ["lemonde"], "centre": ["franceinfo"], "centre-droit": [], "droite": ["lefigaro"]}
 
 
 def test_effectifs_comptent_les_medias_presents_par_bord(cfg):
@@ -66,11 +66,13 @@ def test_min_medias_bord_ecarte_un_bord_reduit_a_un_media(cfg):
 
 
 def test_centre_gauche_et_centre_droit_ne_font_pas_un_bord(cfg):
-    """Rangés à gauche et à droite à l'affichage, ils ne comptent pour aucun bord ici."""
+    """La barre et la comparaison parlent de la même gauche : Le Monde n'y figure ni dans l'une ni dans l'autre."""
     medias = ["humanite", "lemonde", "huffpost", "lexpress", "franceinfo"]
-    assert len(repartition(medias, cfg)["gauche"]) == 3
+    blocs = repartition(medias, cfg)
     a = asymetrie(arts(medias), EFFECTIF, cfg)
-    assert a["gauche"]["medias"] == ["humanite"] and a["droite"]["medias"] == []
+    assert blocs["gauche"] == a["gauche"]["medias"] == ["humanite"]
+    assert blocs["droite"] == a["droite"]["medias"] == []
+    assert blocs["centre-gauche"] == ["lemonde", "huffpost"] and blocs["centre-droit"] == ["lexpress"]
 
 
 def test_sujet_de_sport_n_est_pas_classe(cfg):
@@ -106,25 +108,15 @@ def test_bord_sans_media_present_ne_fait_pas_d_erreur(cfg):
     assert a["gauche"]["part"] == 0 and a["ecart"] == -0.333
 
 
-def test_les_bords_viennent_de_la_configuration(cfg):
-    import copy
-
-    large = copy.copy(cfg)
-    large.reglages = copy.deepcopy(cfg.reglages)
-    large.reglages["couverture"]["asymetrie"]["bords"]["gauche"].append("centre-gauche")
-    assert asymetrie(arts(["humanite", "lemonde", "franceinfo"]), EFFECTIF, large)["gauche"]["medias"] == ["humanite", "lemonde"]
-
-
 def test_la_frontiere_des_blocs_vient_de_la_configuration(cfg):
-    """Aucun classement en dur : déplacer une orientation dans reglages.yaml change le bloc."""
+    """Aucun classement en dur : déplacer une orientation dans reglages.yaml change le bloc et le bord."""
     import copy
 
     autre = copy.copy(cfg)
     autre.reglages = copy.deepcopy(cfg.reglages)
-    assert cfg.bloc("lemonde") == "gauche"  # centre-gauche → gauche par défaut
-    autre.reglages["couverture"]["blocs"] = {
-        "gauche": ["extreme-gauche", "gauche"],
-        "centre": ["centre-gauche", "centre", "centre-droit"],
-        "droite": ["droite", "extreme-droite"],
-    }
-    assert autre.bloc("lemonde") == "centre"
+    assert cfg.bloc("lemonde") == "centre-gauche" and cfg.bord("lemonde") is None
+    blocs = autre.reglages["couverture"]["blocs"]
+    blocs["centre-gauche"].remove("centre-gauche")
+    blocs["gauche"].append("centre-gauche")
+    assert autre.bloc("lemonde") == autre.bord("lemonde") == "gauche"
+    assert asymetrie(arts(["humanite", "lemonde", "franceinfo"]), EFFECTIF, autre)["gauche"]["medias"] == ["humanite", "lemonde"]

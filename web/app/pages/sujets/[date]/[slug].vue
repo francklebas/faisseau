@@ -14,11 +14,7 @@ useSeoMeta({
   description: () => `${sujet.value.nb_medias} médias, ${sujet.value.nb_articles} articles : faits communs, affirmations isolées et répartition de la couverture.`,
 })
 
-const compte = computed(() => ({
-  gauche: sujet.value.couverture.gauche.length,
-  centre: sujet.value.couverture.centre.length,
-  droite: sujet.value.couverture.droite.length,
-}))
+const compte = computed(() => Object.fromEntries(BLOCS.map(b => [b, sujet.value.couverture[b].length])) as Record<Bloc, number>)
 const nom = (id: string) => medias.value[id]?.nom ?? id
 const articlesDu = (bloc: Bloc): ArticleSource[] => sujet.value.articles.filter(a => medias.value[a.media]?.bloc === bloc)
 const classementProvisoire = computed(() => Object.values(medias.value).some(m => m.statut === 'a_valider'))
@@ -50,8 +46,7 @@ const aDesFaits = computed(() => sujet.value.faits_communs.length + sujet.value.
         {{ sujet.asymetrie.gauche.medias.length }} des {{ pluriel(sujet.asymetrie.gauche.total, 'média') }} de gauche
         en parlent ({{ pourcent(sujet.asymetrie.gauche.part) }}), contre
         {{ sujet.asymetrie.droite.medias.length }} des {{ pluriel(sujet.asymetrie.droite.total, 'média') }} de droite
-        ({{ pourcent(sujet.asymetrie.droite.part) }}). Les médias de centre gauche et de centre droit ne
-        sont pas comptés dans cette comparaison.
+        ({{ pourcent(sujet.asymetrie.droite.part) }}).
       </p>
       <div class="sujet__blocs">
         <div v-for="bloc in BLOCS" :key="bloc">
@@ -160,11 +155,11 @@ const aDesFaits = computed(() => sujet.value.faits_communs.length + sujet.value.
     font-family: var(--police-interface);
     font-size: 0.95rem;
 
-    @include a-partir-de($moyen) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @include a-partir-de($moyen) { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
   }
 
   &__articles {
-    @include a-partir-de($large) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @include a-partir-de($large) { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
   }
 
   &__bloc-titre {
