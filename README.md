@@ -47,6 +47,9 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
   Aucun classement n'existe ailleurs. **Tous les positionnements sont marqués `a_valider`** :
   ce sont des propositions rédigées de mémoire, à relire une par une. Tant qu'un média est
   `a_valider`, le site l'affiche comme provisoire. Passer `statut: valide` après relecture.
+  Chaque média porte aussi des `sources` externes sur sa ligne éditoriale (lien, citation,
+  verdict) et parfois un bloc `audience`, donné pour information : le format est décrit en tête
+  du fichier.
 - **`config/reglages.yaml`** : fenêtre de collecte, modèle d'embeddings et seuils, définition
   des trois blocs (quelle nuance va dans quel bloc), seuils d'asymétrie, fournisseur LLM.
 - **`.env`** (voir `.env.example`) : clé Mistral et surcharges ponctuelles.
