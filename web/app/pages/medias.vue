@@ -50,6 +50,12 @@ const aValider = computed(() => actifs.value.filter(m => m.statut === 'a_valider
             <td>
               {{ media.justification }}
               <span v-if="media.note" class="tableau__note">{{ media.note }}</span>
+              <span v-if="media.sources?.length" class="tableau__note">
+                Sources :
+                <template v-for="(source, i) in media.sources" :key="source.url">
+                  <a :href="source.url" rel="external noopener">{{ source.titre }}</a>{{ i < media.sources.length - 1 ? ' ; ' : '' }}
+                </template>
+              </span>
             </td>
             <td class="tableau__court">
               <span class="badge" :class="{ 'badge--attente': media.statut === 'a_valider' }">{{ media.statut === 'a_valider' ? 'À valider' : 'Validé' }}</span>

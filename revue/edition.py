@@ -67,6 +67,7 @@ def medias_en_json(config: Config) -> list[dict]:
             "note": m.note,
             "statut": m.statut,
             "actif": m.actif,
+            "sources": [{"url": s["url"], "type": s["type"], "titre": s["titre"]} for s in m.sources],
         }
         for m in config.medias.values()
     ]

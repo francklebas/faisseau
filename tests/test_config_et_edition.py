@@ -72,3 +72,29 @@ def test_edition_chaque_fait_renvoie_a_un_article_liste(cfg, tmp_path, monkeypat
 def test_slug():
     assert slug("Présidentielle 2027 : l'État face à l'élection", "abcdef123") == "presidentielle-2027-l-etat-face-a-l-election-abcdef"
     assert slug("…", "abcdef123") == "abcdef123"
+
+
+def test_sources_des_medias_sont_completes(cfg):
+    """Chaque source a un lien, une citation, un type et un verdict connus ; un « contredit » s'explique."""
+    sources = [(m.id, s) for m in cfg.medias.values() for s in m.sources]
+    assert sources
+    for media_id, s in sources:
+        assert s["url"].startswith("https://") and s["citation"] and s["titre"], media_id
+        assert s["verdict"] != "contredit" or s["note"], media_id
+    # L'audience est une information : elle ne doit jamais servir au classement.
+    assert all(m.statut == "a_valider" for m in cfg.medias.values())
+
+
+def test_source_incomplete_refusee(tmp_path):
+    import pytest
+
+    from revue.config import lire_medias
+
+    chemin = tmp_path / "medias.yaml"
+    base = "medias:\n  - {id: a, nom: A, site: 'https://a.example', flux: 'https://a.example/rss', orientation: centre, justification: j, sources: [%s]}\n"
+    chemin.write_text(base % "{url: 'https://x.example', type: presse, titre: t, citation: c, verdict: contredit}", encoding="utf-8")
+    with pytest.raises(ValueError, match="contredit"):
+        lire_medias(chemin)
+    chemin.write_text(base % "{url: 'https://x.example', type: rumeur, titre: t, citation: c, verdict: confirme}", encoding="utf-8")
+    with pytest.raises(ValueError, match="type ou verdict"):
+        lire_medias(chemin)

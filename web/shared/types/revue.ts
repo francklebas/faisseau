@@ -12,6 +12,14 @@ export interface Media {
   note: string
   statut: 'a_valider' | 'valide'
   actif: boolean
+  /** Sources externes sur la ligne éditoriale (absent des éditions antérieures au 12 novembre 2026). */
+  sources?: SourceMedia[]
+}
+
+export interface SourceMedia {
+  url: string
+  type: 'ligne_revendiquee' | 'propriete' | 'etude' | 'presse' | 'audience'
+  titre: string
 }
 
 export interface Fait {

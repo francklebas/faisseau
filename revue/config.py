@@ -20,6 +20,8 @@ ORIENTATIONS = (
 )
 BLOCS = ("gauche", "centre", "droite")
 STATUTS = ("a_valider", "valide")
+TYPES_SOURCE = ("ligne_revendiquee", "propriete", "etude", "presse", "audience")
+VERDICTS = ("confirme", "contredit", "ne tranche pas")
 
 
 def racine() -> Path:
@@ -38,6 +40,8 @@ class Media:
     statut: str = "a_valider"
     actif: bool = True
     note: str = ""
+    sources: tuple[dict, ...] = ()  # sources externes sur la ligne éditoriale
+    audience: dict | None = None  # orientation du public : information, jamais un critère
 
 
 @dataclass
@@ -122,6 +126,8 @@ def lire_medias(chemin: Path) -> dict[str, Media]:
             statut=entree.get("statut", "a_valider"),
             actif=entree.get("actif", True),
             note=(entree.get("note") or "").strip(),
+            sources=tuple(entree.get("sources") or ()),
+            audience=entree.get("audience"),
         )
         if media.id in medias:
             raise ValueError(f"médias en double : {media.id}")
@@ -131,6 +137,13 @@ def lire_medias(chemin: Path) -> dict[str, Media]:
             raise ValueError(f"{media.id} : statut inconnu « {media.statut} »")
         if not media.justification:
             raise ValueError(f"{media.id} : justification manquante")
+        for source in media.sources:
+            if not str(source.get("url", "")).startswith("https://") or not source.get("citation"):
+                raise ValueError(f"{media.id} : source sans lien https ou sans citation")
+            if source.get("type") not in TYPES_SOURCE or source.get("verdict") not in VERDICTS:
+                raise ValueError(f"{media.id} : type ou verdict de source inconnu ({source.get('url')})")
+            if source["verdict"] == "contredit" and not source.get("note"):
+                raise ValueError(f"{media.id} : une source qui contredit doit dire en quoi (note)")
         medias[media.id] = media
     return medias
 

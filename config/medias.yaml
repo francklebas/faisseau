@@ -10,6 +10,20 @@
 #                 (le regroupement en trois blocs se règle dans reglages.yaml)
 #   justification pourquoi ce positionnement (propriété, ligne revendiquée, histoire)
 #   statut        a_valider | valide — tant que « a_valider », le site l'affiche comme tel
+#   sources       sources externes sur la ligne éditoriale (optionnel). Chaque page a été chargée
+#                 le 2026-11-12 et la citation y a été retrouvée mot pour mot. Champs :
+#                   url, titre, date (de la source), citation
+#                   type     ligne_revendiquee (le média parle de lui-même) | propriete
+#                            | etude (analyse de contenu, décision d'un régulateur ou d'un juge)
+#                            | presse (un tiers décrit la ligne : fiche eurotopics, presse
+#                              professionnelle, Wikipédia)
+#                   verdict  confirme | contredit | ne tranche pas — par rapport à « orientation »
+#                   note     pour un « contredit » : ce que dit la source
+#                 Les verdicts « confirme » et « ne tranche pas » sont une première lecture ;
+#                 seuls les « contredit » ont été recontrôlés un par un dans la page.
+#                 Une source qui contredit ne change rien toute seule : c'est un point à relire.
+#   audience      orientation moyenne du public (optionnel). Information seulement : ce n'est
+#                 pas un critère de classement, le public d'un média n'est pas sa ligne.
 #   actif         false pour désactiver sans supprimer (optionnel, true par défaut)
 #   note          remarque libre (optionnel)
 #
@@ -33,6 +47,27 @@ medias:
     orientation: gauche
     justification: Fondé par Jean Jaurès en 1904, organe du PCF jusqu'en 1994, se revendique toujours journal communiste.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148695/l-humanite
+      type: presse
+      titre: L'Humanité | eurotopics.net
+      date: non datée
+      citation: Between 1920 and 1994 the paper was the organ of the French Communist Party, which is still the majority
+        shareholder today.
+      verdict: contredit
+      note: 'La fiche porte « Political orientation: Far left » ; le fichier dit « gauche ».'
+    - url: https://www.ozap.com/actu/-l-humanite-en-cessation-de-paiements-le-quotidien-communiste-en-appelle-a-la-mobilisation-generale/573911
+      type: propriete
+      titre: '"L''Humanité" : En cessation de paiements, le quotidien communiste en appelle à la "mobilisation générale"'
+      date: '2019-01-28'
+      citation: Le capital est détenu aujourd'hui par la Société des amis de "L'Humanité" et par des actionnaires individuels.
+      verdict: ne tranche pas
+    - url: https://www.universalis.fr/encyclopedie/l-humanite/
+      type: presse
+      titre: L'HUMANITÉ | Sciences humaines et sociales - Encyclopédie Universalis (article « HUMANITÉ L' »)
+      date: non datée
+      citation: reste un journal porte-parole de la ligne du Parti communiste français
+      verdict: ne tranche pas
 
   - id: liberation
     nom: Libération
@@ -43,6 +78,19 @@ medias:
     orientation: gauche
     justification: Quotidien fondé en 1973 autour de Jean-Paul Sartre, ligne éditoriale de gauche revendiquée.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148696/liberation
+      type: presse
+      titre: Libération | eurotopics.net
+      date: non datée
+      citation: is considered France's leading leftwing daily
+      verdict: ne tranche pas
+    - url: https://www.cbnews.fr/medias/image-altice-se-desengage-liberation-via-fonds-dotation-presse-independante-52048
+      type: propriete
+      titre: Altice se désengage de Libération via un Fonds de Dotation pour une Presse Indépendante
+      date: '2020-05-14'
+      citation: Libération deviendra ainsi la propriété d'une structure non cessible et non capitaliste à but non lucratif
+      verdict: ne tranche pas
 
   - id: mediapart
     nom: Mediapart
@@ -52,6 +100,26 @@ medias:
     orientation: gauche
     justification: Journal d'investigation indépendant fondé en 2008 (Edwy Plenel), engagement à gauche assumé dans ses partis pris.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148717/mediapart
+      type: presse
+      titre: Mediapart | eurotopics.net
+      date: non datée
+      citation: Mediapart has built a reputation for investigative journalism.
+      verdict: confirme
+    - url: https://www.ozap.com/actu/-mediapart-modifie-sa-gouvernance-pour-rendre-son-independance-eternelle/580685
+      type: propriete
+      titre: '"Mediapart" modifie sa gouvernance pour rendre son indépendance "éternelle" - Puremédias'
+      date: '2019-07-03'
+      citation: Tous les actionnaires du site d'information vont céder leur participation à un fonds de dotation à but
+        non-lucratif.
+      verdict: ne tranche pas
+    - url: https://fondspresselibre.org/en/the-free-press-fund-is-created
+      type: propriete
+      titre: The Free Press Fund is created
+      date: '2019-09-16'
+      citation: to defend freedom of information, the pluralism of the press and the independence of journalism
+      verdict: ne tranche pas
 
   - id: politis
     nom: Politis
@@ -61,6 +129,19 @@ medias:
     orientation: gauche
     justification: Hebdomadaire indépendant fondé en 1988, se définit comme engagé à gauche (social, écologie).
     statut: a_valider
+    sources:
+    - url: https://www.politis.fr/a-propos-de-politis/
+      type: ligne_revendiquee
+      titre: 'A propos de Politis : un média 100% indépendant et engagé'
+      date: non datée (mentionne septembre 2024)
+      citation: Ancré au cœur de la gauche, de l'écologie politique et des mouvements sociaux
+      verdict: confirme
+    - url: https://www.politis.fr/politis-qui-sommes-nous/
+      type: ligne_revendiquee
+      titre: Politis - Qui sommes-nous ?
+      date: non datée
+      citation: Depuis toujours, Politis dénonce les injustices sociales et ouvre des pistes pour plus de solidarité.
+      verdict: ne tranche pas
 
   - id: reporterre
     nom: Reporterre
@@ -70,6 +151,19 @@ medias:
     orientation: gauche
     justification: Média associatif consacré à l'écologie, ligne écologiste et critique du productivisme.
     statut: a_valider
+    sources:
+    - url: https://reporterre.net/La-ligne-et-l-histoire-de-Reporterre
+      type: ligne_revendiquee
+      titre: La ligne et l'histoire de Reporterre
+      date: non datée (mentionne septembre 2025)
+      citation: donne notamment la parole aux mouvements écologiste, altermondialiste, et alternatif
+      verdict: ne tranche pas
+    - url: https://reporterre.net/quisommesnous
+      type: propriete
+      titre: À propos de Reporterre
+      date: non datée
+      citation: Le journal est géré par une association d'intérêt général à but non lucratif, et n'a donc pas d'actionnaire.
+      verdict: ne tranche pas
 
   - id: alternatives-economiques
     nom: Alternatives Économiques
@@ -79,6 +173,20 @@ medias:
     orientation: gauche
     justification: Mensuel économique en coopérative (Scop), approche keynésienne et critique du libéralisme.
     statut: a_valider
+    sources:
+    - url: https://www.veblen-institute.org/IMG/pdf/ecopo104_presentation_-2.pdf
+      type: propriete
+      titre: L'Economie politique n° 104 - Du champ à l'assiette, un modèle verrouillé (ours de la revue, PDF)
+      date: 2024-11
+      citation: la Scop-SA Alternatives Economiques à capital variable, partagé entre les salariés (62 %), la Société
+        civile des lecteurs d'Alternatives Economiques (21 %)
+      verdict: ne tranche pas
+    - url: https://donorbox.org/alternatives-economiques
+      type: ligne_revendiquee
+      titre: Soutenez Alternatives Economiques ! | J'aime l'info
+      date: non datée
+      citation: 'qu''une autre information économique est possible : critique, pluraliste et accessible'
+      verdict: ne tranche pas
 
   - id: basta
     nom: Basta!
@@ -88,6 +196,13 @@ medias:
     orientation: gauche
     justification: Média associatif indépendant centré sur les questions sociales et environnementales.
     statut: a_valider
+    sources:
+    - url: https://basta.media/about-basta
+      type: ligne_revendiquee
+      titre: About - Basta!
+      date: non datée
+      citation: Basta! is an appeal for resistance, a resistance which involves commitment to creating another society
+      verdict: ne tranche pas
 
   - id: streetpress
     nom: StreetPress
@@ -97,6 +212,19 @@ medias:
     orientation: gauche
     justification: Média d'enquête en ligne, travail suivi sur l'extrême droite, les violences policières et les discriminations.
     statut: a_valider
+    sources:
+    - url: https://soutenir.streetpress.com/
+      type: ligne_revendiquee
+      titre: soutenir.streetpress.com | Soutenez StreetPress
+      date: non datée
+      citation: La lutte contre l'extrême droite est au cœur de nos engagements et de notre travail.
+      verdict: ne tranche pas
+    - url: https://www.streetpress.com/1667383782-streetpress-comment-finance-media-independant-enquete-campagne-financement-dons-prix-libre-soutien-lecteurs-journalisme/
+      type: propriete
+      titre: Comment on finance un média indépendant ?
+      date: '2022-11-02'
+      citation: On sait qu'on n'a pas de gros actionnaires derrière nous
+      verdict: ne tranche pas
 
   - id: regards
     nom: Regards
@@ -106,6 +234,26 @@ medias:
     orientation: gauche
     justification: Revue issue de la mouvance communiste, aujourd'hui proche de la gauche radicale.
     statut: a_valider
+    sources:
+    - url: https://regards.fr/article-catherine-tricot-regards-ne-fait-la-campagne-de-personne-ca-n-est-pas-notre/
+      type: ligne_revendiquee
+      titre: 'Catherine Tricot : « Regards ne fait la campagne de personne, ça n''est pas son rôle »'
+      date: '2022-01-03'
+      citation: Nous sommes un journal de gauche, nous assumons l'identification à la gauche, à son histoire et à son
+        futur.
+      verdict: confirme
+    - url: https://regards.fr/mentions-legales-et-rgpd/
+      type: propriete
+      titre: Mentions légales et RGPD – Regards.fr
+      date: non datée (copyright 2000-2026)
+      citation: Société coopérative (SCOP) exploitée sous forme de société à responsabilité limitée.
+      verdict: ne tranche pas
+    - url: https://en.wikipedia.org/wiki/Regards
+      type: presse
+      titre: Regards - Wikipedia
+      date: 2026-04-09 (dernière modification)
+      citation: is a monthly French Communist news magazine published in Paris, France.
+      verdict: ne tranche pas
 
   - id: nouvelobs
     nom: Le Nouvel Obs
@@ -115,6 +263,28 @@ medias:
     orientation: centre-gauche
     justification: Hebdomadaire fondé en 1964, historiquement associé à la gauche sociale-démocrate.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148700/le-nouvel-obs
+      type: presse
+      titre: Le Nouvel Obs | eurotopics.net
+      date: non datée
+      citation: following its takeover by the investor trio Pigasse-Niel-Bergé
+      verdict: contredit
+      note: 'La fiche porte « Political orientation: Left-wing » ; le fichier dit « centre-gauche » (la même source
+        dit « Centre-left » pour Libération).'
+    - url: https://www.cbnews.fr/medias/nouvel-obs-nouveau-nom-refonte
+      type: presse
+      titre: 'Le Nouvel Obs : un nouveau nom et une refonte'
+      date: '2024-03-03'
+      citation: des valeurs humanistes, universalistes, féministes et écologique
+      verdict: ne tranche pas
+    - url: https://en.wikipedia.org/wiki/Le_Nouvel_Obs
+      type: propriete
+      titre: Le Nouvel Obs - Wikipedia
+      date: 2026-07-16 (dernière modification)
+      citation: The holding company Le Monde Libre, the majority shareholder of Groupe Le Monde, owns 99% of the weekly
+        Le Nouvel Obs.
+      verdict: ne tranche pas
 
   - id: lemonde
     nom: Le Monde
@@ -126,6 +296,26 @@ medias:
     orientation: centre-gauche
     justification: Quotidien de référence ; ligne éditoriale généralement décrite comme de centre gauche, plus nette dans les éditoriaux que dans l'information.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148683/le-monde
+      type: presse
+      titre: Le Monde (fiche média eurotopics)
+      date: non datée
+      citation: 'Political orientation: Centre-left'
+      verdict: confirme
+    - url: https://www.thelocal.fr/20211222/whos-who-in-french-tv-newspapers-and-magazines
+      type: presse
+      titre: 'French media explained: From newspapers to TV channels and magazines'
+      date: 2021-12-22, mis à jour 2024-10-02
+      citation: is generally considered to be a centre-left publication - although it claims to be non-partisan.
+      verdict: confirme
+    - url: https://www.cbnews.fr/medias/image-monde-daniel-kretinsky-officiellement-actionnaire-minoritaire-39484
+      type: propriete
+      titre: 'Le Monde : Daniel Kretinsky officiellement actionnaire minoritaire'
+      date: '2018-10-25'
+      citation: Matthieu Pigasse a revendu à l'homme d'affaires tchèque Daniel Kretinsky 49% des actions de sa holding
+        Le Nouveau Monde
+      verdict: ne tranche pas
 
   - id: huffpost
     nom: Le HuffPost
@@ -135,6 +325,19 @@ medias:
     orientation: centre-gauche
     justification: Édition française lancée en 2012 avec le groupe Le Monde, ton progressiste sur les sujets de société.
     statut: a_valider
+    sources:
+    - url: https://eurotopics.net/en/193080/le-huffpost
+      type: presse
+      titre: Le HuffPost (fiche média eurotopics)
+      date: non datée
+      citation: 'Political orientation: Centre-left'
+      verdict: confirme
+    - url: https://www.cbnews.fr/digital/image-monde-proprietaire-du-huff-post-france-66158
+      type: propriete
+      titre: Le Monde propriétaire du Huff Post France
+      date: '2022-01-04'
+      citation: la Société éditrice du Monde a racheté les 51%
+      verdict: ne tranche pas
 
   - id: slate
     nom: Slate.fr
@@ -144,6 +347,26 @@ medias:
     orientation: centre-gauche
     justification: Magazine en ligne fondé en 2009 (Jean-Marie Colombani), sensibilité libérale-progressiste.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148783/slate
+      type: presse
+      titre: Slate (fiche média eurotopics)
+      date: non datée
+      citation: 'Political orientation: Liberal-conservative'
+      verdict: contredit
+      note: 'La fiche porte « Political orientation: Liberal-conservative » ; le fichier dit « centre-gauche ».'
+    - url: https://www.ozap.com/actu/ariane-et-benjamin-de-rothschild-prennent-le-controle-de-slate-fr/534597
+      type: propriete
+      titre: Ariane et Benjamin de Rothschild prennent le contrôle de Slate.fr
+      date: '2017-08-18'
+      citation: a pris le contrôle du pureplayer le 30 juin dernier en procédant à une augmentation de capital
+      verdict: ne tranche pas
+    - url: https://paperjam.lu/article/news-slatefr-sous-pavillon-luxembourgeois
+      type: propriete
+      titre: Slate.fr sous pavillon luxembourgeois
+      date: non datée (la page affiche la date du jour ; faits de 2017)
+      citation: les deux banquiers genevois ont ainsi pris le contrôle majoritaire du média français
+      verdict: ne tranche pas
 
   - id: ladepeche
     nom: La Dépêche du Midi
@@ -154,6 +377,28 @@ medias:
     orientation: centre-gauche
     justification: Quotidien régional de la famille Baylet, historiquement lié au radicalisme de gauche.
     statut: a_valider
+    sources:
+    - url: https://www.ozap.com/actu/un-remaniement-de-combat-pour-la-depeche-du-midi-dirigee-par-un-nouveau-ministre/490216
+      type: presse
+      titre: Un remaniement de "combat" pour "La Dépêche du midi", dirigée par un nouveau ministre
+      date: '2016-02-12'
+      citation: Reste à savoir si le président du Parti radical de gauche et nouveau ministre
+      verdict: confirme
+    - url: https://www.universitepopulairetoulouse.fr/IMG/pdf/mediacites_quand_les_lecteurs_de_la_depeche_contredisent_sa_ligne_editoriale.pdf
+      type: presse
+      titre: 'A69 : Quand les lecteurs de La Dépêche contredisent sa ligne éditoriale (Médiacités Toulouse, copie PDF
+        hébergée par l''Université populaire de Toulouse)'
+      date: '2025-03-05'
+      citation: Clairement engagée pour l'A69, la Dépêche du Midi pèse de tout son poids contre la décision du tribunal
+        administratif de Toulouse
+      verdict: ne tranche pas
+    - url: https://fr.themedialeader.com/?p=213633
+      type: propriete
+      titre: 'Jean-Nicolas Baylet (La Dépêche) : « Le seul compromis que je ne ferai pas, c''est celui de l''indépendance
+        »'
+      date: '2026-04-23'
+      citation: Être une maison familiale depuis 155 ans
+      verdict: ne tranche pas
 
   # ───────────────────────────── Bloc centre ─────────────────────────────
   - id: franceinfo
@@ -165,6 +410,25 @@ medias:
     orientation: centre
     justification: Service public (France Télévisions / Radio France), soumis à une obligation de pluralisme contrôlée par l'Arcom.
     statut: a_valider
+    sources:
+    - url: https://institut-thomas-more.org/wp-content/uploads/2026/02/202602-ITM-Rapport35-3.pdf
+      type: etude
+      titre: 'Pluralisme et neutralité : l''audiovisuel public en déficit (Institut Thomas More, rapport 35)'
+      date: 2026-02
+      citation: Seules les deux chaînes d'information du service public sont proches de la neutralité (-1,9 et +3,3).
+      verdict: confirme
+    - url: https://www.cbnews.fr/node/82483
+      type: presse
+      titre: Franceinfo lance une rubrique dédiée à la transparence de l'information
+      date: '2024-02-26'
+      citation: 'nos méthodes et nos valeurs : l''indépendance, le pluralisme, la neutralité et l''utilité'
+      verdict: confirme
+    - url: https://www.thelocal.fr/20211222/whos-who-in-french-tv-newspapers-and-magazines
+      type: presse
+      titre: 'French media explained: From newspapers to TV channels and magazines'
+      date: 2021-12-22, mis à jour 2024-10-02
+      citation: reliable and doesn't tend to spin the news politically.
+      verdict: confirme
 
   - id: franceinter
     nom: France Inter
@@ -174,6 +438,29 @@ medias:
     orientation: centre
     justification: Radio de service public soumise au pluralisme ; souvent perçue comme de centre gauche, classée au centre faute de ligne revendiquée.
     statut: a_valider
+    sources:
+    - url: https://questions.assemblee-nationale.fr/dyn/opendata/CRCANR5L17S2026PO874480N011.html
+      type: ligne_revendiquee
+      titre: Audition, ouverte à la presse, des représentants de France Inter (commission d'enquête sur l'audiovisuel
+        public, compte rendu n° 11)
+      date: '2025-12-18'
+      citation: la ligne éditoriale de France Inter n'est pas une ligne idéologique
+      verdict: ne tranche pas
+    - url: https://institut-thomas-more.org/wp-content/uploads/2026/02/202602-ITM-Rapport35-3.pdf
+      type: etude
+      titre: 'Pluralisme et neutralité : l''audiovisuel public en déficit (Institut Thomas More, rapport 35)'
+      date: 2026-02
+      citation: Sur France Inter, 56 chroniques sur 64 sont notées à gauche.
+      verdict: contredit
+      note: Le rapport note 56 chroniques sur 64 « à gauche » ; le fichier dit « centre ». Notation faite par un think
+        tank, pas une étude universitaire.
+    - url: https://www.radiofrance.com/sites/default/files/2023-11/principes_fondamentaux_de_l_information_a_Radio_France.pdf
+      type: ligne_revendiquee
+      titre: Pour une information de confiance, Radio France s'engage (principes fondamentaux de l'information à Radio
+        France)
+      date: 2023-11 (date du fichier)
+      citation: Le journalisme s'exerce hors de toute pression, qu'elle soit politique, économique, idéologique, étrangère.
+      verdict: confirme
     note: Classement particulièrement discutable (centre ou centre-gauche).
 
   - id: france24
@@ -184,6 +471,20 @@ medias:
     orientation: centre
     justification: Chaîne publique d'information internationale (France Médias Monde).
     statut: a_valider
+    sources:
+    - url: https://francemediasmonde.com/wp-content/uploads/2023/12/Charte-de-deontologie-de-FMM-1.pdf
+      type: ligne_revendiquee
+      titre: Charte de déontologie des journalistes de France Médias Monde
+      date: non datée
+      citation: France Médias Monde est une Société Nationale de programmes, de service public qui respecte le principe
+        d'indépendance éditoriale qui garantit la liberté de l'information
+      verdict: confirme
+    - url: https://www.francemediasmonde.com/en/?p=213
+      type: ligne_revendiquee
+      titre: Our missions - France Médias Monde
+      date: non datée
+      citation: As independent public service media, they are committed to bringing humanist values and human rights
+      verdict: ne tranche pas
 
   - id: rfi
     nom: RFI
@@ -193,6 +494,20 @@ medias:
     orientation: centre
     justification: Radio publique internationale (France Médias Monde).
     statut: a_valider
+    sources:
+    - url: https://francemediasmonde.com/wp-content/uploads/2023/12/Charte-de-deontologie-de-FMM-1.pdf
+      type: ligne_revendiquee
+      titre: Charte de déontologie des journalistes de France Médias Monde
+      date: non datée
+      citation: Respecter le pluralisme et l'équilibre des points de vue. Le traitement de l'information doit être équitable,
+        honnête
+      verdict: confirme
+    - url: https://www.francemediasmonde.com/en/?p=213
+      type: ligne_revendiquee
+      titre: Our missions - France Médias Monde
+      date: non datée
+      citation: As independent public service media, they are committed to bringing humanist values and human rights
+      verdict: ne tranche pas
 
   - id: publicsenat
     nom: Public Sénat
@@ -202,6 +517,28 @@ medias:
     orientation: centre
     justification: Chaîne parlementaire du Sénat, tenue à l'équilibre entre groupes politiques.
     statut: a_valider
+    sources:
+    - url: https://senat.fr/fileadmin/Presse/Documents_pdf/Fiche_poste_PDG_PublicSenat_24_octobre_2024.pdf
+      type: ligne_revendiquee
+      titre: 'Public Sénat : fiche de poste pour le président-directeur général'
+      date: '2024-10-24'
+      citation: rendre compte des travaux du Sénat dans un souci constant de respect du pluralisme politique et d'impartialité
+        des programmes
+      verdict: confirme
+    - url: https://www.assemblee-nationale.fr/dyn/contenu/telechargement/629077/file/Fiche%2035%20-%20LCP-AN.pdf
+      type: propriete
+      titre: 'Fiche n° 35 : La Chaîne Parlementaire (LCP-Assemblée nationale et Public Sénat)'
+      date: 2023-09
+      citation: sociétés commerciales de droit privé dont le capital est intégralement détenu par l'assemblée à laquelle
+        chacune d'elles se rattache
+      verdict: ne tranche pas
+    - url: https://www.publicsenat.fr/actualites/politique/20-ans-de-public-senat-je-voulais-montrer-que-c-etait-une-chaine-qui-allait-s
+      type: propriete
+      titre: '20 ans de Public Sénat : « Je voulais montrer que c''était une chaîne qui allait s''adresser à tous les
+        publics » se souvient Jean-Pierre Elkabbach'
+      date: '2020-10-13'
+      citation: le Sénat, c'est l'actionnaire.
+      verdict: ne tranche pas
 
   - id: lcp
     nom: LCP - Assemblée nationale
@@ -211,6 +548,20 @@ medias:
     orientation: centre
     justification: Chaîne parlementaire de l'Assemblée nationale, tenue à l'équilibre entre groupes politiques.
     statut: a_valider
+    sources:
+    - url: https://lcp.fr/la-chaine/qui-sommes-nous-14428
+      type: ligne_revendiquee
+      titre: Qui sommes-nous ?
+      date: 2020-03-09, mise à jour 2025-12-18
+      citation: Dans le cadre de son indépendance éditoriale, la chaîne veille à l'impartialité de ses programmes.
+      verdict: confirme
+    - url: https://www.assemblee-nationale.fr/dyn/contenu/telechargement/629077/file/Fiche%2035%20-%20LCP-AN.pdf
+      type: propriete
+      titre: 'Fiche n° 35 : La Chaîne Parlementaire (LCP-Assemblée nationale et Public Sénat)'
+      date: 2023-09
+      citation: sociétés commerciales de droit privé dont le capital est intégralement détenu par l'assemblée à laquelle
+        chacune d'elles se rattache
+      verdict: ne tranche pas
 
   - id: 20minutes
     nom: 20 Minutes
@@ -220,6 +571,20 @@ medias:
     orientation: centre
     justification: Quotidien gratuit d'information généraliste, sans ligne politique revendiquée.
     statut: a_valider
+    sources:
+    - url: https://fr.themedialeader.com/rossel-sapprete-a-prendre-le-controle-de-20-minutes/
+      type: presse
+      titre: Rossel s'apprête à prendre le contrôle de 20 Minutes
+      date: '2026-02-04'
+      citation: l'indépendance journalistique et la neutralité politique
+      verdict: confirme
+    - url: https://fr.wikipedia.org/wiki/20_minutes_(France)
+      type: propriete
+      titre: 20 Minutes (France) — Wikipédia
+      date: non datée
+      citation: Nous ne prenons pas position politiquement, nous laissons le lecteur se forger son opinion à partir
+        des faits.
+      verdict: ne tranche pas
 
   - id: ouestfrance
     nom: Ouest-France
@@ -230,6 +595,19 @@ medias:
     orientation: centre
     justification: Premier quotidien régional, propriété d'une association ; tradition démocrate-chrétienne et pro-européenne.
     statut: a_valider
+    sources:
+    - url: https://www.cbnews.fr/node/83468
+      type: presse
+      titre: Ouest-France s'affirme en Une
+      date: '2024-04-02'
+      citation: n'appartient pas à des personnes privées
+      verdict: ne tranche pas
+    - url: https://fr.wikipedia.org/wiki/Ouest-France
+      type: propriete
+      titre: Ouest-France — Wikipédia
+      date: non datée
+      citation: 'répondent à la trinité : humanisme, démocratie chrétienne et social-libéralisme'
+      verdict: ne tranche pas
 
   - id: leparisien
     nom: Le Parisien
@@ -240,6 +618,20 @@ medias:
     orientation: centre
     justification: Quotidien populaire généraliste (groupe LVMH), sans ligne partisane revendiquée.
     statut: a_valider
+    sources:
+    - url: https://www.cbnews.fr/node/80955
+      type: presse
+      titre: Inquiète de l'indépendance du Parisien, sa SDJ travaille à une charte éthique
+      date: '2023-12-06'
+      citation: des éditos et des Unes pro-exécutif
+      verdict: ne tranche pas
+    - url: https://fr.wikipedia.org/wiki/Le_Parisien
+      type: propriete
+      titre: Le Parisien — Wikipédia
+      date: non datée
+      citation: Depuis 2015, Le Parisien est détenu par le groupe LVMH appartenant au milliardaire français Bernard
+        Arnault
+      verdict: confirme
     note: Parfois classé centre-droit en raison de son actionnaire.
 
   - id: lacroix
@@ -250,6 +642,20 @@ medias:
     orientation: centre
     justification: Quotidien catholique (groupe Bayard), tradition démocrate-chrétienne modérée.
     statut: a_valider
+    sources:
+    - url: https://reutersinstitute.politics.ox.ac.uk/news/comment-la-presse-catholique-se-reinvente-dans-une-europe-laique
+      type: etude
+      titre: Comment la presse catholique se réinvente dans une Europe laïque
+      date: '2024-06-24'
+      citation: les deux journaux revendiquent une indépendance éditoriale totale à cet égard.
+      verdict: ne tranche pas
+    - url: https://fr.wikipedia.org/wiki/La_Croix
+      type: propriete
+      titre: La Croix — Wikipédia
+      date: non datée
+      citation: le journal se définit comme chrétien et catholique, même si les choix éditoriaux qui en découlent ont
+        pu évoluer.
+      verdict: ne tranche pas
 
   - id: tf1info
     nom: TF1 Info
@@ -259,6 +665,29 @@ medias:
     orientation: centre
     justification: Rédaction de TF1 et LCI (groupe Bouygues), information généraliste grand public.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/TF1_INFO
+      type: propriete
+      titre: TF1+ — Wikipédia (section TF1 Info, la page TF1 Info y redirige)
+      date: '2026-11-11'
+      citation: TF1 Info est la plateforme numérique d'information du Groupe TF1 depuis le 24 janvier 2022.
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/tf1-une-chaine-progouvernementale-selon-xavier-niel-thierry-thuiller-denonce-des-affirmations-infondees-meprisantes-voire-insultantes/643202
+      type: presse
+      titre: 'TF1 une chaîne "progouvernementale" selon Xavier Niel : Thierry Thuillier dénonce des affirmations "infondées,
+        méprisantes, voire insultantes"'
+      date: '2024-03-30'
+      citation: d'une manière générale pro-gouvernementales
+      verdict: ne tranche pas
+    audience:
+      moyenne: 4.44
+      population: 3.96
+      echelle: 1 (très à gauche) à 7 (très à droite)
+      annee: 2020
+      mesure: téléspectateurs de TF1 (la chaîne, pas le site TF1 Info)
+      source: https://www.ifo.de/DocDL/cesifo1_wp11741.pdf
+      reference: Cagé, Hengel, Hervé, Urvoy, CESifo WP 11741 (2025), annexe, figure D.21, p. 75 ; données Reuters Institute
+        Digital News Report
     note: Parfois classé centre-droit.
 
   - id: bfmtv
@@ -269,6 +698,30 @@ medias:
     orientation: centre
     justification: Chaîne d'information en continu (groupe CMA CGM depuis 2024), sans ligne partisane revendiquée.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/BFM_TV
+      type: propriete
+      titre: BFM TV — Wikipédia
+      date: non datée
+      citation: Privée, elle appartient au groupe RMC BFM, contrôlé par la société CMA Média du groupe CMA CGM.
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/garantir-l-impartialite-et-l-independance-des-journalistes-les-redactions-de-bfmtv-et-rmc-signent-une-nouvelle-charte-deontologique/652471
+      type: presse
+      titre: '« Garantir l''impartialité et l''indépendance des journalistes » : Les rédactions de BFMTV et RMC signent
+        une nouvelle charte déontologique'
+      date: '2025-11-16'
+      citation: Cette charte (…) garantit l'impartialité et l'indépendance des journalistes et rappelle la nécessité
+        du pluralisme.
+      verdict: ne tranche pas
+    audience:
+      moyenne: 4.34
+      population: 3.96
+      echelle: 1 (très à gauche) à 7 (très à droite)
+      annee: 2020
+      mesure: téléspectateurs de BFM TV
+      source: https://www.ifo.de/DocDL/cesifo1_wp11741.pdf
+      reference: Cagé, Hengel, Hervé, Urvoy, CESifo WP 11741 (2025), annexe, figure D.21, p. 75 ; données Reuters Institute
+        Digital News Report
     note: Parfois classé centre-droit.
 
   - id: sudouest
@@ -279,6 +732,25 @@ medias:
     orientation: centre
     justification: Quotidien régional généraliste, sans ligne politique revendiquée.
     statut: a_valider
+    sources:
+    - url: https://www.cbnews.fr/node/102866
+      type: propriete
+      titre: Le groupe Sud Ouest négocie son rachat par le groupe Rossel
+      date: '2026-09-03'
+      citation: est détenu à environ 80% par la famille Lemoîne
+      verdict: ne tranche pas
+    - url: https://mediabiasfactcheck.com/sud-ouest-bias-and-credibility/
+      type: presse
+      titre: Sud Ouest – Bias and Credibility
+      date: '2026-07-18'
+      citation: Sud Ouest is rated Least biased with High factual reporting by Media Bias Fact Check.
+      verdict: confirme
+    - url: https://fr.wikipedia.org/wiki/Sud_Ouest_(quotidien)
+      type: propriete
+      titre: Sud Ouest — Wikipédia
+      date: '2026-05-09'
+      citation: Les faits sont sacrés, les commentaires sont libres
+      verdict: ne tranche pas
 
   - id: midilibre
     nom: Midi Libre
@@ -288,6 +760,19 @@ medias:
     orientation: centre
     justification: Quotidien régional généraliste (groupe La Dépêche), sans ligne politique revendiquée.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Midi_libre
+      type: propriete
+      titre: Midi libre — Wikipédia
+      date: '2026-09-06'
+      citation: il appartient depuis 2015 au Groupe La Dépêche
+      verdict: ne tranche pas
+    - url: https://www.24matins.fr/midi-libre-denonce-campagne-daffichage-haineuse-de-robert-menard-382399
+      type: presse
+      titre: Midi Libre dénonce la campagne d'affichage « haineuse » de Robert Ménard
+      date: '2016-08-17'
+      citation: Le traitement et la hiérarchisation de l'information à Midi libre dépendent de la seule rédaction
+      verdict: ne tranche pas
 
   - id: leprogres
     nom: Le Progrès
@@ -297,6 +782,13 @@ medias:
     orientation: centre
     justification: Quotidien régional généraliste (groupe Ebra, Crédit Mutuel), sans ligne politique revendiquée.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Le_Progrès_(Lyon)
+      type: propriete
+      titre: Le Progrès (Lyon) — Wikipédia
+      date: '2026-10-04'
+      citation: Le Progrès est aujourd'hui une filiale du groupe EBRA
+      verdict: ne tranche pas
 
   - id: latribune
     nom: La Tribune
@@ -306,6 +798,20 @@ medias:
     orientation: centre
     justification: Quotidien économique (groupe CMA CGM), approche pro-entreprise sans affiliation partisane.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/La_Tribune_(France)
+      type: propriete
+      titre: La Tribune (France, 1985) — Wikipédia
+      date: non datée
+      citation: possédée à 100 % par Rodolphe Saadé depuis le 27 juillet 2023
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/apres-une-mobilisation-des-journalistes-la-tribune-suspend-sa-reforme-editoriale-et-son-rapprochement-avec-bfm-business/652349
+      type: presse
+      titre: Après une mobilisation des journalistes, "La Tribune" suspend sa réforme éditoriale et son rapprochement
+        avec BFM Business
+      date: '2025-11-06'
+      citation: atteintes à l'indépendance éditoriale
+      verdict: ne tranche pas
     note: Parfois classé centre-droit (presse économique).
 
   - id: challenges
@@ -316,6 +822,27 @@ medias:
     orientation: centre
     justification: Hebdomadaire économique, sensibilité libérale modérée et pro-européenne.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Challenges
+      type: propriete
+      titre: Challenges — Wikipédia
+      date: modifiée le 2 novembre 2026
+      citation: Fin décembre 2025, LVMH annonce avoir finalisé le rachat des Éditions Croque Futur
+      verdict: ne tranche pas
+    - url: https://rsf.org/fr/rachat-de-challenges-par-lvmh-double-offensive-de-rsf-et-des-syndicats-pour-faire-respecter-le
+      type: presse
+      titre: 'Rachat de Challenges par LVMH : double offensive de RSF et des syndicats pour faire respecter le pluralisme'
+      date: '2025-12-18'
+      citation: malgré le refus de la part de LVMH de signer la charte préservant l’indépendance et la ligne éditoriale
+        du titre.
+      verdict: ne tranche pas
+    - url: https://fr.themedialeader.com/rachat-de-challenges-par-lvmh-les-redactions-defendent-leur-independance-editoriale/
+      type: presse
+      titre: 'Rachat de Challenges par LVMH : les rédactions défendent leur indépendance éditoriale'
+      date: '2025-09-23'
+      citation: Leur indépendance éditoriale est un élément indispensable à la crédibilité et la qualité des titres
+        concernés
+      verdict: ne tranche pas
 
   # ───────────────────────────── Bloc droite ─────────────────────────────
   - id: lexpress
@@ -326,6 +853,21 @@ medias:
     orientation: centre-droit
     justification: Hebdomadaire d'actualité, ligne libérale et pro-européenne revendiquée depuis sa reprise en 2019.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/L'Express
+      type: propriete
+      titre: L'Express — Wikipédia
+      date: non datée
+      citation: L'Express est détenu depuis septembre 2023 à 100 % par l'homme d'affaires Alain Weill via la société
+        NextNow
+      verdict: contredit
+      note: La page dit le titre « orienté politiquement au centre » ; le fichier dit « centre-droit ».
+    - url: https://www.cbnews.fr/node/79611
+      type: presse
+      titre: L’Express trace sa route
+      date: '2023-10-18'
+      citation: libéral, européen, laïque et universaliste
+      verdict: ne tranche pas
 
   - id: lopinion
     nom: L'Opinion
@@ -335,6 +877,25 @@ medias:
     orientation: centre-droit
     justification: Quotidien fondé en 2013 par Nicolas Beytout, se définit comme « libéral, pro-business et européen ».
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/L'Opinion_(quotidien_français)
+      type: propriete
+      titre: L'Opinion (quotidien français) — Wikipédia
+      date: modifiée le 6 novembre 2026
+      citation: L'Opinion appartient à Bey Media, propriété à 100 % d'Ufipar, une filiale de LVMH
+      verdict: ne tranche pas
+    - url: https://www.politis.fr/articles/2013/05/une-opinion-un-patron-et-des-investisseurs-secrets-22132
+      type: presse
+      titre: Une opinion, un patron et des investisseurs secrets
+      date: '2013-05-16'
+      citation: libérale, probusiness et pro-européenne
+      verdict: ne tranche pas
+    - url: https://eurotopics.net/en/148701/l-opinion
+      type: presse
+      titre: L'Opinion | eurotopics.net
+      date: non datée
+      citation: Founded in 2013, L'Opinion is a liberal, pro-European daily newspaper.
+      verdict: ne tranche pas
 
   - id: capital
     nom: Capital
@@ -344,6 +905,27 @@ medias:
     orientation: centre-droit
     justification: Magazine économique du groupe Prisma Media (galaxie Bolloré), angle pro-entreprise et fiscalité.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Capital_(magazine)
+      type: propriete
+      titre: Capital (magazine) — Wikipédia
+      date: modifiée le 13 octobre 2026
+      citation: Filiale du groupe Prisma Media, le magazine Capital est contrôlé depuis 2021 par le milliardaire Vincent
+        Bolloré.
+      verdict: ne tranche pas
+    - url: https://fr.themedialeader.com/?p=204118
+      type: presse
+      titre: Les journalistes de Capital alertent Bolloré contre une dérive en média d’opinion
+      date: '2025-09-26'
+      citation: rester un magazine d'information, et non se transformer en média d'opinion
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/prisma-media-ouverture-dune-clause-de-conscience-pour-les-journalistes-de-capital-apres-la-reprise-en-main-du-magazine-par-la-garde-rapprochee-de-vincent-bollore/652633
+      type: presse
+      titre: 'Prisma Media : Ouverture d''une clause de conscience pour les journalistes de "Capital" après la reprise
+        en main du magazine par la garde rapprochée de Vincent Bolloré'
+      date: '2025-11-26'
+      citation: la direction s'éloigne de la ligne éditoriale historique du titre
+      verdict: ne tranche pas
 
   - id: lefigaro
     nom: Le Figaro
@@ -355,6 +937,21 @@ medias:
     orientation: droite
     justification: Quotidien du groupe Dassault, ligne conservatrice et libérale revendiquée.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Le_Figaro
+      type: propriete
+      titre: Le Figaro — Wikipédia
+      date: non datée
+      citation: Depuis la Libération, sa ligne éditoriale est issue des trois grandes familles de la droite
+      verdict: confirme
+    - url: https://www.ozap.com/actu/-etonnement-et-inquietude-au-figaro-la-colere-gronde-apres-un-nouvel-edito-juge-pro-rn-d-alexis-brezet-directeur-des-redactions/644738
+      type: presse
+      titre: '"Étonnement et inquiétude" : Au "Figaro", la colère gronde après un nouvel édito jugé pro-RN d''Alexis
+        Brézet, directeur des rédactions'
+      date: '2024-07-03'
+      citation: Le Figaro se définit-il encore comme un journal libéral, conservateur, pro-européen et opposé à l'extrême
+        droite ?
+      verdict: confirme
 
   - id: europe1
     nom: Europe 1
@@ -364,6 +961,26 @@ medias:
     orientation: droite
     justification: Radio passée sous le contrôle du groupe Bolloré (Lagardère) ; grille rapprochée de CNews depuis 2021.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Europe_1
+      type: propriete
+      titre: Europe 1 — Wikipédia
+      date: non datée
+      citation: Depuis juillet 2020, le groupe Vivendi, détenu par Vincent Bolloré, est devenu le premier actionnaire
+        du groupe Lagardère, propriétaire d'Europe 1
+      verdict: confirme
+    - url: https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2025-09-30/497187
+      type: etude
+      titre: Conseil d'État, décision n° 497187 du 30 septembre 2025 (Europe 1 Télécompagnie c. Arcom)
+      date: '2025-09-30'
+      citation: un traitement univoque de l'actualité électorale
+      verdict: ne tranche pas
+    - url: https://www.lemondedudroit.fr/pi-tic/299-medias/101246-traitement-univoque-de-l-actualite-le-conseil-d-etat-valide-la-mise-en-demeure-d-europe-1.html
+      type: presse
+      titre: 'Traitement univoque de l''actualité : le Conseil d''Etat valide la mise en demeure d''Europe 1'
+      date: '2025-10-03'
+      citation: Le Conseil d'Etat rejette le recours d'Europe 1 contre la mise en demeure de l'Arcom
+      verdict: ne tranche pas
 
   - id: cnews
     nom: CNews
@@ -373,6 +990,29 @@ medias:
     orientation: droite
     justification: Chaîne du groupe Canal+ (Bolloré), ligne conservatrice ; plusieurs rappels de l'Arcom sur le pluralisme.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/CNews
+      type: propriete
+      titre: CNews — Wikipédia
+      date: non datée
+      citation: une orientation marquée de plus en plus à l'extrême droite et identitaire
+      verdict: contredit
+      note: Le chapeau de la page dit « chaîne […] privée d'extrême droite » ; le fichier dit « droite ».
+    - url: https://rsf.org/fr/contrôle-du-pluralisme-en-france-une-décision-sans-précédent-de-l-arcom-à-l-encontre-de-cnews
+      type: presse
+      titre: 'Contrôle du pluralisme en France : une décision sans précédent de l’Arcom à l’encontre de CNews'
+      date: '2026-06-15'
+      citation: surreprésentation de la droite et de l’extrême droite aux heures de grandes écoutes
+      verdict: ne tranche pas
+    audience:
+      moyenne: 4.33
+      population: 3.96
+      echelle: 1 (très à gauche) à 7 (très à droite)
+      annee: 2020
+      mesure: téléspectateurs de CNews
+      source: https://www.ifo.de/DocDL/cesifo1_wp11741.pdf
+      reference: Cagé, Hengel, Hervé, Urvoy, CESifo WP 11741 (2025), annexe, figure D.21, p. 75 ; données Reuters Institute
+        Digital News Report
     note: Parfois classée extrême droite ; à trancher.
 
   - id: lejdd
@@ -383,6 +1023,20 @@ medias:
     orientation: droite
     justification: Hebdomadaire du groupe Lagardère (Bolloré), ligne conservatrice depuis le changement de direction de 2023.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Le_Journal_du_dimanche
+      type: propriete
+      titre: Le Journal du dimanche — Wikipédia
+      date: non datée
+      citation: Depuis cette date, il appartient à la presse d'opinion, au service d'idées identitaires et de l'union
+        des droites
+      verdict: ne tranche pas
+    - url: https://www.lalibre.be/international/europe/2023/06/25/en-france-la-redaction-du-journal-du-dimanche-jdd-refuse-de-virer-a-lextreme-droite-4KCRO7SZTVCH5AKBE5FIK6TZTM/
+      type: presse
+      titre: En France, la rédaction du Journal du Dimanche (JDD) refuse de virer à l'extrême droite
+      date: '2023-06-25'
+      citation: une ligne éditoriale durcie, droitisée, extrême droitisée
+      verdict: ne tranche pas
     note: Parfois classé extrême droite ; à trancher.
 
   - id: valeursactuelles
@@ -393,6 +1047,20 @@ medias:
     orientation: droite
     justification: Hebdomadaire conservateur, se présente comme de droite ; ligne identitaire marquée.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Valeurs_actuelles
+      type: propriete
+      titre: Valeurs actuelles — Wikipédia
+      date: non datée
+      citation: En décembre 2025, Valmonde est racheté par un trio d’investisseurs
+      verdict: contredit
+      note: La page dit le titre « classé à l'extrême droite » depuis 2012 ; le fichier dit « droite ».
+    - url: https://www.cbnews.fr/medias/vente-valeurs-actuelles-trio-investisseurs-dont-pierre-edouard-sterin-finalisee
+      type: presse
+      titre: La vente de Valeurs actuelles à un trio d'investisseurs, dont Pierre-Edouard Stérin, finalisée
+      date: '2025-12-02'
+      citation: l'hebdomadaire de droite conservatrice Valeurs actuelles
+      verdict: confirme
     note: Parfois classé extrême droite ; à trancher.
 
   - id: causeur
@@ -403,6 +1071,21 @@ medias:
     orientation: droite
     justification: Magazine d'opinion fondé par Élisabeth Lévy, ligne conservatrice et souverainiste.
     statut: a_valider
+    sources:
+    - url: https://fr.wikipedia.org/wiki/Causeur
+      type: propriete
+      titre: Causeur — Wikipédia
+      date: non datée
+      citation: Gérald Penciolelli, actionnaire de référence de Causeur avec 44 % des parts
+      verdict: contredit
+      note: La page dit le titre « le plus souvent classé à l'extrême droite » depuis 2019 ; le fichier dit « droite
+        ».
+    - url: https://www.eurotopics.net/en/163150/causeur
+      type: presse
+      titre: Causeur | eurotopics.net
+      date: non datée
+      citation: controversial articles which often have a right-wing bias
+      verdict: confirme
 
   - id: atlantico
     nom: Atlantico
@@ -412,6 +1095,25 @@ medias:
     orientation: droite
     justification: Site d'information et d'opinion fondé en 2011, ligne libérale-conservatrice.
     statut: a_valider
+    sources:
+    - url: https://www.frenchweb.fr/atlantico-mediapart-de-droite-ou-huffington-post-a-la-francaise/12213
+      type: presse
+      titre: Atlantico, Mediapart de droite ou Huffington Post à la française?
+      date: '2011-02-28'
+      citation: qui prenne des positions libérales, en faveur de l’économie de marché et du capitalisme
+      verdict: confirme
+    - url: https://www.eurotopics.net/en/203731/atlantico
+      type: presse
+      titre: Atlantico | eurotopics.net
+      date: non datée
+      citation: Atlantico is classified as conservative but always emphasizes its editorial independence.
+      verdict: confirme
+    - url: https://atlantico.fr/qui-sommes-nous
+      type: propriete
+      titre: A Propos | Atlantico.fr
+      date: non datée (copyright 2026)
+      citation: © 2026 Talmont Media SAS. tous droits réservés.
+      verdict: ne tranche pas
 
   - id: contrepoints
     nom: Contrepoints
@@ -421,6 +1123,20 @@ medias:
     orientation: droite
     justification: Journal en ligne libéral (association Liberaux.org), défense du libéralisme économique.
     statut: a_valider
+    sources:
+    - url: https://www.contrepoints.org/qui-sommes-nous
+      type: ligne_revendiquee
+      titre: Le journal quotidien en ligne Contrepoints
+      date: non datée (pied de page © 2026 IREF)
+      citation: propose chaque jour une analyse libérale, indépendante de l’actualité politique, économique et sociale
+      verdict: ne tranche pas
+    - url: https://www.eurotopics.net/en/148461/contrepoints
+      type: presse
+      titre: Contrepoints | eurotopics.net
+      date: non datée
+      citation: Contrepoints provides a forum for the exponents of liberalism, including economists, political scientists
+        and bloggers,
+      verdict: ne tranche pas
     note: Libéral au sens classique ; le classement à droite vaut surtout pour l'économie.
 
   - id: sudradio
@@ -431,6 +1147,26 @@ medias:
     orientation: droite
     justification: Radio généraliste (groupe Fiducial), antenne de débat à tonalité conservatrice et souverainiste.
     statut: a_valider
+    sources:
+    - url: https://www.sudradio.fr/qui-sommes-nous
+      type: ligne_revendiquee
+      titre: QUI SOMMES-NOUS ? - Sud Radio
+      date: non datée
+      citation: Fidèle à sa devise "Parlons vrai", la station défend des valeurs fortes qui résonnent chaque jour sur
+        ses ondes
+      verdict: ne tranche pas
+    - url: https://www.cbnews.fr/node/3892
+      type: propriete
+      titre: 'CSA : feu vert au rachat de Sud Radio par Fiducial'
+      date: '2013-09-04'
+      citation: son feu vert au rachat de Sud Radio par le groupe de services aux entreprises Fiducial
+      verdict: ne tranche pas
+    - url: https://www.arcom.fr/en/find-out-more/legal-area/decisions/bercoff-dans-tous-ses-etats-broadcast-25-march-and-2-may-2024-sud-radio-and-sud-radio-warnings
+      type: etude
+      titre: '"Bercoff dans tous ses états" broadcast on 25 March and 2 May 2024: Sud Radio and Sud Radio + warnings'
+      date: 2024-10-22 (décision du 2024-07-29)
+      citation: contradicted or minimised the existing scientific consensus on climate change
+      verdict: ne tranche pas
 
   - id: frontpopulaire
     nom: Front Populaire
@@ -440,6 +1176,26 @@ medias:
     orientation: droite
     justification: Revue souverainiste fondée par Michel Onfray en 2020 ; se dit « ni droite ni gauche », lectorat et thèmes majoritairement à droite.
     statut: a_valider
+    sources:
+    - url: https://frontpopulaire.fr/qui-sommes-nous
+      type: ligne_revendiquee
+      titre: 'Front Populaire : La revue des souverainistes par Michel Onfray - Qui sommes-nous ?'
+      date: non datée
+      citation: 'Front Populaire est un média indépendant qui offre une perspective unique sur l''actualité : celle
+        des souverainistes.'
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/vincent-bollore-prend-le-controle-de-front-populaire-la-revue-de-michel-onfray/656626
+      type: propriete
+      titre: Vincent Bolloré prend le contrôle de "Front populaire", la revue de Michel Onfray
+      date: '2026-08-26'
+      citation: Lagardère Media News, vient de racheter 90% de la société éditrice de "Front populaire"
+      verdict: ne tranche pas
+    - url: https://www.jean-jaures.org/publication/les-generalites-ideologiques-de-front-populaire-la-revue-de-michel-onfray/
+      type: etude
+      titre: Les généralités idéologiques de « Front populaire », la revue de Michel Onfray
+      date: '2020-07-22'
+      citation: Michel Onfray rejette les notions mêmes de gauche et de droite
+      verdict: ne tranche pas
     note: Classement particulièrement discutable (souverainisme transpartisan revendiqué).
 
   - id: bvoltaire
@@ -450,6 +1206,19 @@ medias:
     orientation: extreme-droite
     justification: Site d'opinion cofondé en 2012 par Robert Ménard, ligne identitaire.
     statut: a_valider
+    sources:
+    - url: https://www.bvoltaire.fr/qui-sommes-nous/
+      type: ligne_revendiquee
+      titre: Qui sommes-nous ? - Boulevard Voltaire
+      date: non datée (© 2007-2026)
+      citation: un site d'actualité politique et générale ouvert à toutes les sensibilités de la droite conservatrice
+      verdict: ne tranche pas
+    - url: https://www.eurotopics.net/en/148455/boulevard-voltaire
+      type: presse
+      titre: Boulevard Voltaire | eurotopics.net
+      date: non datée
+      citation: launched the online magazine Boulevard Voltaire in 2012 as a forum for debate
+      verdict: ne tranche pas
 
   - id: lincorrect
     nom: L'Incorrect
@@ -459,6 +1228,19 @@ medias:
     orientation: extreme-droite
     justification: Mensuel fondé en 2017 par des proches de Marion Maréchal, prône l'union des droites.
     statut: a_valider
+    sources:
+    - url: https://www.publicsenat.fr/actualites/politique/l-incorrect-nouveau-mensuel-a-droite-toute-pour-reinventer-son-logiciel-76713
+      type: presse
+      titre: « L’Incorrect », nouveau mensuel à droite toute pour « réinventer son logiciel »
+      date: '2017-08-24'
+      citation: L'incorrect aura un positionnement foncièrement à droite et le dira
+      verdict: ne tranche pas
+    - url: https://www.publicsenat.fr/actualites/parlementaire/nous-avons-ouvert-un-vrai-debat-lincorrect-defend-son-coup-mediatique-dans-laffaire-legrand-cohen
+      type: presse
+      titre: '« Nous avons ouvert un vrai débat » : L''Incorrect défend son coup médiatique dans l''affaire Legrand-Cohen'
+      date: '2026-06-16'
+      citation: Nous avons reçu un don du Fonds du Bien Commun de Pierre-Édouard Stérin
+      verdict: ne tranche pas
 
   # ─────────────── Flux indisponibles au 2026-11-11 (désactivés) ───────────────
   - id: lepoint
@@ -469,6 +1251,26 @@ medias:
     orientation: centre-droit
     justification: Hebdomadaire d'actualité (groupe Artémis, famille Pinault), ligne libérale.
     statut: a_valider
+    sources:
+    - url: https://www.cbnews.fr/node/104365
+      type: presse
+      titre: 'Le Point : Etienne Gernelle est démis de ses fonctions'
+      date: '2026-11-10'
+      citation: L'hebdomadaire de droite libérale fondé en 1972 par des journalistes transfuges de L'Express
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/le-point-24-heures-apres-avoir-denonce-lintervention-du-pdg-dans-le-recrutement-de-deux-journalistes-etienne-gernelle-evince/657924
+      type: propriete
+      titre: '"Le Point" : 24 heures après avoir dénoncé l''intervention du PDG dans le recrutement de deux journalistes,
+        Etienne Gernelle évincé'
+      date: '2026-11-10'
+      citation: une volonté de changement de ligne éditoriale par rapport au Rassemblement national
+      verdict: ne tranche pas
+    - url: https://www.eurotopics.net/en/148685/le-point
+      type: presse
+      titre: Le Point | eurotopics.net
+      date: non datée
+      citation: In 1997 it was bought by businessman François Pinault and his company Artémis.
+      verdict: ne tranche pas
     actif: false
     note: Flux refusé aux robots (HTTP 403/404). À réactiver si un flux public réapparaît.
 
@@ -480,6 +1282,26 @@ medias:
     orientation: centre-droit
     justification: Quotidien économique (groupe LVMH), ligne libérale.
     statut: a_valider
+    sources:
+    - url: https://www.eurotopics.net/en/148688/les-echos
+      type: presse
+      titre: Les Echos | eurotopics.net
+      date: non datée
+      citation: The business paper Les Echos was founded as a monthly newspaper in 1880.
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/-s-ils-deviennent-marxistes-je-m-en-retirerais-bernard-arnault-repond-a-son-interventionnisme-suppose-aux-echos/633664
+      type: presse
+      titre: '"S''ils deviennent marxistes, je m''en retirerais" : Bernard Arnault répond à son "interventionnisme supposé"
+        aux "Échos"'
+      date: '2023-06-22'
+      citation: S'ils devenaient marxistes, je m'en retirerais.
+      verdict: ne tranche pas
+    - url: https://www.jeanmarcmorandini.com/article-40672-les-echos-une-charte-pour-l-independance-de-la-redaction.html
+      type: propriete
+      titre: 'Les Echos: Une charte pour l''indépendance de la rédaction'
+      date: '2010-06-21'
+      citation: a adopté une longue charte éthique destinée à garantir l'indépendance de la rédaction
+      verdict: ne tranche pas
     actif: false
     note: Flux refusé aux robots (HTTP 403).
 
@@ -491,6 +1313,27 @@ medias:
     orientation: centre
     justification: Hebdomadaire souverainiste et républicain, difficile à situer sur l'axe gauche-droite.
     statut: a_valider
+    sources:
+    - url: https://www.cbnews.fr/node/89506
+      type: presse
+      titre: 'Marianne : Daniel Kretinsky reste, Natacha Polony quitte la direction'
+      date: '2024-12-19'
+      citation: Marianne a défendu ces dernières années une ligne éditoriale souverainiste, pro-laïcité, antilibérale
+        en économie et critique des élites.
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/-natacha-polony-s-eloigne-de-daniel-kretinsky-intellectuellement-cmi-france-reflechit-a-ceder-marianne/643445
+      type: presse
+      titre: '"Natacha Polony s''éloigne de Daniel Kretinsky intellectuellement" : CMI France réfléchit à céder "Marianne"'
+      date: '2024-04-16'
+      citation: jugée trop souverainiste et trop éloignée de la vision pro-européenne de Daniel Kretinsky
+      verdict: ne tranche pas
+    - url: https://www.ozap.com/actu/le-projet-recueille-un-large-soutien-88-des-salaries-de-marianne-favorables-au-rachat-du-journal-par-jean-claude-delgenes/648715
+      type: propriete
+      titre: '"Le projet recueille un large soutien" : 88% des salariés de "Marianne" favorables au rachat du journal
+        par Jean-Claude Delgènes'
+      date: '2025-02-12'
+      citation: CMI France, actuel propriétaire du titre
+      verdict: ne tranche pas
     actif: false
     note: Flux protégé par un contrôle anti-robots (HTTP 403).
 
@@ -502,5 +1345,18 @@ medias:
     orientation: centre
     justification: Radio généraliste (groupe M6), sans ligne partisane revendiquée.
     statut: a_valider
+    sources:
+    - url: https://fr.themedialeader.com/?p=112140
+      type: propriete
+      titre: Le nouveau DG des radios du groupe M6 souhaite moderniser RTL
+      date: '2025-09-04'
+      citation: le nouveau directeur général des radios du groupe M6 (RTL, RTL2 et Fun Radio)
+      verdict: ne tranche pas
+    - url: https://mediabiasfactcheck.com/rtl/
+      type: presse
+      titre: RTL – Bias and Credibility
+      date: '2024-12-12'
+      citation: RTL is rated Least biased with Mostly Factual factual reporting by Media Bias Fact Check.
+      verdict: confirme
     actif: false
     note: Aucun flux RSS public trouvé (HTTP 404).
