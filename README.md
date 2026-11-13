@@ -59,12 +59,18 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
 Deux fournisseurs, même protocole (API compatible OpenAI) :
 
 ```sh
-# Mistral
-echo 'REVUE_LLM=mistral' >> .env && echo 'MISTRAL_API_KEY=…' >> .env
+# Mistral (fournisseur par défaut, config/reglages.yaml) : il suffit de la clé
+echo 'MISTRAL_API_KEY=…' >> .env
 
-# Modèle local : lancer KoboldCpp, puis (défaut : http://localhost:5001/v1)
+# Repli local, à demander explicitement : lancer KoboldCpp (défaut : http://localhost:5001/v1)
 ./koboldcpp --model gemma-3-4b-it-Q4_K_M.gguf --contextsize 8192
+make quotidien LLM=koboldcpp        # ou REVUE_LLM=koboldcpp uv run revue executer
 ```
+
+Le fournisseur est celui de `faits.fournisseur`, surchargé par `REVUE_LLM` : la présence d'une
+clé ne le change pas, et il n'y a pas de repli automatique d'un fournisseur vers l'autre (les
+faits dépendent du modèle). Avec Mistral, les titres et extraits RSS des sujets retenus sont
+envoyés à l'API. Chaque passage affiche les jetons consommés.
 
 `REVUE_LLM=aucun` désactive l'extraction. La réponse du LLM est mise en cache par sujet : un
 sujet dont les articles n'ont pas changé n'est jamais retraité, et rien n'est calculé à la

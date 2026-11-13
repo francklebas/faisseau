@@ -27,8 +27,10 @@ servir:
 
 # Passage quotidien : n'installe rien, ne sert rien, sort en erreur si une étape échoue
 # (y compris si le LLM configuré est injoignable : mieux vaut garder l'édition de la veille).
+# Fournisseur par défaut : celui de config/reglages.yaml (Mistral). Repli local, à demander
+# explicitement : make quotidien LLM=koboldcpp
 quotidien:
-	uv run revue executer --exiger-llm
+	$(if $(LLM),REVUE_LLM=$(LLM) )uv run revue executer --exiger-llm
 	cd web && pnpm generate
 
 test:

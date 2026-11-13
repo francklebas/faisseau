@@ -117,6 +117,12 @@ def executer(options) -> int:
                 f"{len(e.hors_sujet)} hors sujet ({time.time() - t0:.0f} s)"
             )
 
+    if client is not None:
+        _dire(
+            f"Consommation LLM : {client.appels} appels, {client.jetons_entree} jetons en entrée, "
+            f"{client.jetons_sortie} en sortie (sujets déjà en cache non recomptés)"
+        )
+
     stats = {
         "nb_articles": nb_articles,
         "nb_medias_actifs": len(cfg.medias_actifs),

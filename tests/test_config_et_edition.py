@@ -102,3 +102,16 @@ def test_source_incomplete_refusee(tmp_path):
     chemin.write_text(base % "{url: 'https://fr.wikipedia.org/wiki/A', type: presse, titre: t, citation: c, verdict: confirme}", encoding="utf-8")
     with pytest.raises(ValueError, match="Wikipédia"):
         lire_medias(chemin)
+
+
+def test_le_client_llm_cumule_la_consommation(monkeypatch):
+    import httpx
+
+    from revue.llm import ClientOpenAI
+
+    corps = {"choices": [{"message": {"content": "{}"}}], "usage": {"prompt_tokens": 120, "completion_tokens": 30}}
+    monkeypatch.setattr(httpx, "post", lambda *a, **k: httpx.Response(200, json=corps, request=httpx.Request("POST", a[0])))
+    client = ClientOpenAI("http://exemple.invalid/v1", "m")
+    client.completer("s", "u")
+    client.completer("s", "u")
+    assert (client.appels, client.jetons_entree, client.jetons_sortie) == (2, 240, 60)

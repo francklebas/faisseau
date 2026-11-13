@@ -27,6 +27,10 @@ class ClientOpenAI:
         self.max_jetons = max_jetons
         self.delai = delai
         self.nom = nom or f"{self.url}#{modele}"  # sert de clé de cache : un autre modèle retraite les sujets
+        # Consommation déclarée par le serveur (champ `usage`), cumulée sur le passage.
+        self.appels = 0
+        self.jetons_entree = 0
+        self.jetons_sortie = 0
 
     def _entetes(self) -> dict[str, str]:
         return {"Authorization": f"Bearer {self.cle}"} if self.cle else {}
@@ -54,7 +58,16 @@ class ClientOpenAI:
             },
         )
         reponse.raise_for_status()
-        return reponse.json()["choices"][0]["message"]["content"]
+        corps = reponse.json()
+        usage = corps.get("usage") or {}
+        self.appels += 1
+        self.jetons_entree += usage.get("prompt_tokens") or 0
+        self.jetons_sortie += usage.get("completion_tokens") or 0
+        return corps["choices"][0]["message"]["content"]
+
+
+# Le repli sur le modèle local n'est jamais automatique : il change le modèle, donc les faits.
+REPLI = " — repli local : REVUE_LLM=koboldcpp (ou make quotidien LLM=koboldcpp)"
 
 
 def creer_client(config: Config) -> tuple[ClientOpenAI | None, str]:
@@ -73,9 +86,9 @@ def creer_client(config: Config) -> tuple[ClientOpenAI | None, str]:
     if f.get("variable_cle"):
         cle = os.environ.get(f["variable_cle"], "")
         if not cle:
-            return None, f"{fournisseur} : variable {f['variable_cle']} absente de l'environnement et de .env"
+            return None, f"{fournisseur} : variable {f['variable_cle']} absente de l'environnement et de .env{REPLI}"
     modele = os.environ.get("REVUE_LLM_MODELE", f["modele"])
     client = ClientOpenAI(url, modele, cle, faits["temperature"], faits["max_jetons"], faits["delai_secondes"], nom=f"{fournisseur}:{modele}")
     if not client.disponible():
-        return None, f"{fournisseur} injoignable ({url})"
+        return None, f"{fournisseur} injoignable ou clé refusée ({url}){REPLI if fournisseur != 'koboldcpp' else ''}"
     return client, f"{fournisseur} ({modele})"

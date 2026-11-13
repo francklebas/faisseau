@@ -37,7 +37,7 @@ regroupement:
   max_articles_par_media: 3     # au-delà, on garde les plus proches du centre du sujet
 
 faits:
-  fournisseur: koboldcpp        # mistral | koboldcpp | aucun (surcharge : REVUE_LLM)
+  fournisseur: mistral          # mistral | koboldcpp | aucun (surcharge : REVUE_LLM) ; pas de repli automatique
   temperature: 0.1
   max_jetons: 900
   delai_secondes: 600
