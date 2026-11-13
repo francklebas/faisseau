@@ -72,6 +72,13 @@ clé ne le change pas, et il n'y a pas de repli automatique d'un fournisseur ver
 faits dépendent du modèle). Avec Mistral, les titres et extraits RSS des sujets retenus sont
 envoyés à l'API. Chaque passage affiche les jetons consommés.
 
+Un fait candidat au niveau « commun » passe en plus par un modèle d'implication textuelle
+local (`faits.implication`, mDeBERTa multilingue, ~280 Mo téléchargés au premier passage) : il
+ne garde que les sources dont la phrase la plus proche l'affirme. Compter ~8 minutes de plus
+par édition sur 4 fils. La comparaison des méthodes se rejoue avec
+`uv run python scripts/comparer_controles.py --implication <modèle>` sur les 77 paires relues
+de `tests/donnees/paires_fait_source.json`.
+
 `REVUE_LLM=aucun` désactive l'extraction. La réponse du LLM est mise en cache par sujet : un
 sujet dont les articles n'ont pas changé n'est jamais retraité, et rien n'est calculé à la
 lecture.

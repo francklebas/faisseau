@@ -420,3 +420,64 @@ Les 28 faits communs restants ont été relus, 14 avec leurs sources : aucun fau
 1. Garder 0,65, passer à 0,55, ou changer de mesure (découpage des phrases en propositions, ou modèle d'implication textuelle, nouvelle dépendance) ?
 2. Un fait déclassé doit-il perdre ses autres sources, au risque de paraître isolé à tort ?
 
+---
+
+# Bilan du 13 novembre, suite : contrôle du niveau commun par implication
+
+## Ce qui a été vérifié
+
+- Les 77 paires relues sont dans `tests/donnees/paires_fait_source.json` avec leur verdict. Deux verdicts corrigés à la relecture (n° 51, lu d'abord sur un affichage tronqué ; n° 74, hôpital non nommé) : 46 paires où la phrase énonce le fait, 31 où elle ne l'énonce pas. Le jeu ne contient aucune paire de proximité Solon supérieure à 0,75.
+- Comparaison rejouable : `scripts/comparer_controles.py`.
+- 55 tests passent. Édition du 13 novembre rejouée sans appel à Mistral (cache).
+
+## Comparaison sur les 77 paires
+
+| Méthode | Faux positifs (sur 31) | Faux négatifs (sur 46) | Erreurs |
+|---|---|---|---|
+| Proximité, phrase entière ≥ 0,55 | 12 | 14 | 26 |
+| Proximité, phrase entière ≥ 0,65 | 5 | 29 | 34 |
+| Proximité par propositions ≥ 0,55 | 14 | 3 | 17 |
+| Proximité par propositions ≥ 0,65 | 7 | 22 | 29 |
+| Implication mDeBERTa-v3 multilingue ≥ 0,5 | 3 | 11 | 14 |
+| Implication MiniLMv2 multilingue ≥ 0,5 | 4 | 14 | 18 |
+
+Méthode retenue : implication, `MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7`, seuil 0,5 (le seuil par défaut, non ajusté sur le jeu ; ajusté à 0,12 il donnerait 5 et 5, chiffre optimiste). Elle n'est appliquée qu'aux candidats au niveau commun, sur la phrase de chaque source la plus proche du fait.
+
+## Édition du 13 novembre
+
+| | Avant contrôle | Proximité 0,65 | Implication |
+|---|---|---|---|
+| Faits communs | 75 | 28 | 32 |
+| Recoupés | 93 | 110 | 120 |
+| Isolés | 126 | 156 | 136 |
+| Sujets sans fait commun | 0 | 7 | 10 |
+
+Des 75 candidats : 32 restent communs, 37 redescendent, 6 sont retirés faute de source qui les affirme.
+
+Relecture des 32 faits communs avec la phrase de chacune de leurs 190 sources :
+
+- aucun fait faux ;
+- 9 sources retenues à tort (par exemple « Jensen Huang désormais sur un siège éjectable » pour la démission) ;
+- trois faits ne tiennent leur niveau commun qu'à une de ces sources (saisine du CSM par Gérald Darmanin, candidature annoncée de Teddy Riner, « sanctions à la hauteur » en Île-de-France). Les trois sont vrais.
+
+## Ce qui marche moins bien
+
+- **Des faits vrais sont retirés.** Les six faits retirés étaient tous énoncés par au moins un média ; « Kevin Tessier est le suspect principal » l'est par 7. Le modèle ne voit qu'une phrase : « Il nie… » ne lui dit pas qui nie.
+- **Le modèle est strict sur chaque détail.** « Jordan Bardella a porté plainte contre X pour faux et usage de faux » passe de 7 médias à 1, parce que la plupart des titres ne disent pas « contre X ». « L'équipe de France de football a été battue par l'Italie » passe de 9 à 3. Les faits de Mistral ne sont pas encore assez atomiques pour ce contrôle.
+- **Durée** : environ 8 minutes de plus par édition sur 4 fils (492 s au total sans appel au LLM).
+- 10 sujets sur 31 n'ont plus de fait commun.
+
+## Décisions prises sans validation préalable
+
+- Seuil 0,5 plutôt que le seuil ajusté 0,12.
+- Le modèle juge la phrase la plus proche du fait dans chaque article, pas l'article entier : c'est la condition dans laquelle les 77 paires ont été relues.
+- Un candidat commun qu'aucune source n'affirme est retiré (conséquence de « un fait n'affiche que les sources qui l'affirment »).
+- Les sources d'un fait resté commun sont filtrées elles aussi.
+- `transformers` ajouté aux dépendances déclarées (il était déjà installé par sentence-transformers).
+
+## Questions pour Franck
+
+1. Faut-il donner au modèle le titre et l'extrait entiers de l'article plutôt qu'une phrase ? Cela réglerait les pronoms, mais les 77 paires devraient être relues dans cette condition.
+2. Un candidat commun sans aucune source qui l'affirme : le retirer (état actuel) ou le garder avec ses sources d'origine à un niveau inférieur ?
+3. Huit minutes de plus par édition, est-ce acceptable ?
+

@@ -45,8 +45,9 @@ useSeoMeta({
       <li>un article qui énonce clairement un fait est ajouté à ses sources même si le modèle l'avait oublié ;</li>
       <li>le classement d'un fait dépend du nombre de médias distincts, jamais de l'avis du modèle.</li>
       <li>
-        un fait n'est dit « commun » que si, chez assez de médias, une phrase le dit de façon proche par le
-        sens ; sinon il redescend, et seuls ces médias-là restent cités.
+        un fait qui pourrait être « commun » passe un contrôle de plus : un second modèle, local lui aussi,
+        dit pour chaque source si elle l'affirme vraiment. Seules ces sources restent citées, et le niveau
+        du fait est recalculé ; si aucune ne l'affirme, le fait n'est pas publié ;
       </li>
     </ul>
     <p>Trois niveaux en résultent :</p>

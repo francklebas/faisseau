@@ -23,10 +23,6 @@ embeddings:
       # énonce le fait (en plus du contrôle lexical ; les chiffres doivent concorder).
       # Propre à chaque modèle. Retirer la ligne pour s'en tenir au contrôle lexical.
       seuil_faits: 0.75
-      # Proximité minimale entre un fait et une phrase de chaque source pour qu'il soit
-      # « commun » ; en dessous, il redescend au niveau que ses sources proches soutiennent.
-      # Relu sur 77 paires le 13 novembre : pas de coupure nette (voir CONCLUSIONS.md).
-      seuil_commun: 0.65
     e5-small:
       nom: intfloat/multilingual-e5-small
       prefixe: "query: "        # E5 : même préfixe des deux côtés
@@ -50,6 +46,13 @@ faits:
   part_majorite: 0.5            # « fait commun » = au moins cette part des médias du sujet
   ancrage_min: 0.5              # part des mots du fait à retrouver dans une source citée
   ancrage_ajout: 0.7            # au-delà, une source non citée par le LLM est ajoutée
+  # Contrôle du niveau « commun » : un candidat ne garde que les sources dont la phrase la plus
+  # proche l'affirme, selon un modèle d'implication textuelle local. Comparé à la proximité
+  # de vecteurs sur 77 paires relues (scripts/comparer_controles.py). Retirer le bloc pour
+  # s'en passer.
+  implication:
+    modele: MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7
+    seuil: 0.5                  # probabilité d'implication ; non ajusté sur le jeu de référence
   fournisseurs:
     mistral:
       url: https://api.mistral.ai/v1

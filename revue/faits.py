@@ -152,8 +152,21 @@ def phrases(article: Article) -> list[str]:
     return [article.titre] + [p.strip() for p in MOTIF_PHRASE.split(article.extrait or "") if len(p.strip()) >= 25]
 
 
-def proximites(faits: list[str], articles: list[Article], encodeur) -> list[dict[str, float]]:
-    """Pour chaque fait, proximité de sens avec la phrase la plus proche de chaque article.
+MOTIF_PROPOSITION = re.compile(r"\s*[,;:()«»\"“”…–—]\s*|\s+-\s+")
+
+
+def propositions(phrase: str) -> list[str]:
+    """La phrase et ses propositions (coupées à la ponctuation, trois mots au moins).
+
+    Un fait court ressemble peu à une longue phrase qui le contient, davantage à la
+    proposition qui le porte.
+    """
+    morceaux = [m.strip() for m in MOTIF_PROPOSITION.split(phrase) if len(m.split()) >= 3]
+    return list(dict.fromkeys([phrase] + morceaux))
+
+
+def proximites(faits: list[str], articles: list[Article], encodeur) -> list[dict[str, tuple[float, str]]]:
+    """Pour chaque fait et chaque article : (proximité de sens, phrase la plus proche).
 
     `encodeur.encoder(textes)` renvoie des vecteurs normalisés.
     """
@@ -162,11 +175,12 @@ def proximites(faits: list[str], articles: list[Article], encodeur) -> list[dict
     morceaux = [(a, p) for a in articles for p in phrases(a)]
     vecteurs = encodeur.encoder(faits + [p for _, p in morceaux])
     similarites = vecteurs[: len(faits)] @ vecteurs[len(faits) :].T
-    resultat: list[dict[str, float]] = []
+    resultat: list[dict[str, tuple[float, str]]] = []
     for ligne in similarites:
-        meilleures: dict[str, float] = {}
-        for (a, _), s in zip(morceaux, ligne):
-            meilleures[a.id] = max(meilleures.get(a.id, -1.0), float(s))
+        meilleures: dict[str, tuple[float, str]] = {}
+        for (a, p), s in zip(morceaux, ligne):
+            if a.id not in meilleures or s > meilleures[a.id][0]:
+                meilleures[a.id] = (float(s), p)
         resultat.append(meilleures)
     return resultat
 
@@ -180,7 +194,7 @@ def rapprochements(faits: list[str], articles: list[Article], encodeur, seuil: f
     """
     parid = {a.id: a for a in articles}
     return [
-        {i for i, s in proches.items() if s >= seuil and chiffres_concordent(fait, parid[i].texte)}
+        {i for i, (s, _) in proches.items() if s >= seuil and chiffres_concordent(fait, parid[i].texte)}
         for fait, proches in zip(faits, proximites(faits, articles, encodeur))
     ]
 
@@ -239,15 +253,16 @@ def verifier(
     titre_secours: str,
     encodeur=None,
     seuil_semantique: float | None = None,
-    seuil_commun: float | None = None,
+    juge=None,
 ) -> Extraction:
     """Contrôle la réponse du LLM et construit l'extraction publiable.
 
     `envoyes` : articles numérotés dans l'invite. `tous` : tous les articles du sujet (ceux
     que le LLM n'a pas vus servent aussi au recoupement). `encodeur` et `seuil_semantique` :
     rapprochement par le sens, en plus du contrôle lexical (voir `rapprochements`).
-    `seuil_commun` : un fait n'est « commun » que par des sources dont une phrase en est proche
-    par le sens à ce seuil ; sinon il redescend au niveau que ces sources-là soutiennent.
+    `juge` : implication textuelle (voir implication.Juge). Un fait candidat au niveau
+    « commun » ne garde que les sources dont la phrase la plus proche l'affirme, puis son
+    niveau est recalculé ; sans aucune source qui l'affirme, il n'est pas publié.
     """
     extraction = Extraction()
     retenus: list[tuple[str, list[Article]]] = []
@@ -266,11 +281,11 @@ def verifier(
             if isinstance(numero, (int, str)) and str(numero).isdigit() and 1 <= int(numero) <= len(envoyes):
                 cites.append(envoyes[int(numero) - 1])
         proposes.append((texte, cites))
-    semantique = encodeur if seuil_semantique or seuil_commun else None
+    semantique = encodeur if seuil_semantique or juge else None
     parid = {a.id: a for a in tous}
     sens = dict(zip((t for t, _ in proposes), proximites([t for t, _ in proposes], tous, semantique)))
     proches = [
-        {i for i, s in sens[t].items() if seuil_semantique and s >= seuil_semantique and chiffres_concordent(t, parid[i].texte)}
+        {i for i, (s, _) in sens[t].items() if seuil_semantique and s >= seuil_semantique and chiffres_concordent(t, parid[i].texte)}
         for t, _ in proposes
     ]
 
@@ -314,16 +329,17 @@ def verifier(
     for texte, sources in retenus:
         medias = list(dict.fromkeys(a.media_id for a in sources))
         # Le niveau « commun » se mérite : les mots d'un fait court se retrouvent facilement
-        # dans des articles qui ne l'énoncent pas. On ne garde alors que les sources dont une
-        # phrase en est proche par le sens (à défaut, la plus proche seule).
-        if seuil_commun and sens.get(texte) and statut(len(medias), nb_medias, reglage["part_majorite"]) == "commun":
-            proximite = sens[texte]
-            sures = [a for a in sources if proximite.get(a.id, 0.0) >= seuil_commun]
-            sures = sures or [max(sources, key=lambda a: proximite.get(a.id, 0.0))]
-            medias_surs = list(dict.fromkeys(a.media_id for a in sures))
-            if statut(len(medias_surs), nb_medias, reglage["part_majorite"]) != "commun":
+        # dans des articles qui ne l'énoncent pas. Un candidat ne garde donc que les sources
+        # dont la phrase la plus proche l'affirme, au jugement d'un modèle d'implication.
+        if juge is not None and sens.get(texte) and statut(len(medias), nb_medias, reglage["part_majorite"]) == "commun":
+            verdicts = juge.affirme([(sens[texte][a.id][1], texte) for a in sources])
+            sources = [a for a, oui in zip(sources, verdicts) if oui]
+            if not sources:
+                extraction.rejets.append(f"candidat commun qu'aucune source n'affirme : {texte!r}")
+                continue
+            medias = list(dict.fromkeys(a.media_id for a in sources))
+            if statut(len(medias), nb_medias, reglage["part_majorite"]) != "commun":
                 extraction.declasses += 1
-                sources, medias = sures, medias_surs
         extraction.faits.append(
             Fait(
                 texte=texte if texte[-1] in ".!?»" else texte + ".",
@@ -356,7 +372,7 @@ def extraire(
     signature: str = "",
     encodeur=None,
     seuil_semantique: float | None = None,
-    seuil_commun: float | None = None,
+    juge=None,
 ) -> Extraction:
     """Analyse un sujet. Un seul appel au LLM par sujet (deux si la première réponse est illisible).
 
@@ -385,4 +401,4 @@ def extraire(
             return Extraction(titre=titre_secours, etat="echec", rejets=[f"pas de réponse exploitable : {erreur}"])
         if cache is not None and cle:
             cache.enregistrer_extraction(cle, brut)
-    return verifier(brut, envoyes, articles, reglage, titre_secours, encodeur, seuil_semantique, seuil_commun)
+    return verifier(brut, envoyes, articles, reglage, titre_secours, encodeur, seuil_semantique, juge)

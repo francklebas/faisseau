@@ -236,22 +236,42 @@ def test_lire_json_tolere_l_habillage():
     assert lire_json('[{"titre": "t", "faits": []}]')["faits"] == []
 
 
-def test_un_fait_commun_redescend_sans_sources_proches_par_le_sens(reglage_faits):
+class FauxJuge:
+    """Juge de test : une phrase affirme le fait si elle contient l'un des fragments donnés."""
+
+    def __init__(self, fragments: list[str]) -> None:
+        self.fragments = fragments
+
+    def affirme(self, paires):
+        return [any(f in phrase for f in self.fragments) for phrase, _ in paires]
+
+
+LYON = [
+    ("a", "Le maire de Lyon a démissionné ce matin"),
+    ("b", "Lyon : le maire annonce qu'il a démissionné"),
+    ("c", "À Lyon, le maire dément avoir démissionné"),
+    ("d", "Lyon : la rumeur disant que le maire a démissionné enfle"),
+    ("e", "Le maire de Lyon a démissionné ? Ses adjoints n'y croient pas"),
+]
+BRUT_LYON = {"titre": "Démission du maire de Lyon", "faits": [{"fait": "Le maire de Lyon a démissionné.", "sources": [1, 2, 3, 4, 5]}]}
+
+
+def test_un_candidat_commun_ne_garde_que_les_sources_qui_l_affirment(reglage_faits):
     from revue.faits import verifier
 
-    textes = [
-        ("a", "Le maire de Lyon a démissionné ce matin"),
-        ("b", "Lyon : le maire annonce qu'il a démissionné"),
-        ("c", "À Lyon, le maire dément avoir démissionné"),
-        ("d", "Lyon : la rumeur disant que le maire a démissionné enfle"),
-        ("e", "Le maire de Lyon a démissionné ? Ses adjoints n'y croient pas"),
-    ]
-    articles = [article(m, t) for m, t in textes]
-    brut = {"titre": "Démission du maire de Lyon", "faits": [{"fait": "Le maire de Lyon a démissionné.", "sources": [1, 2, 3, 4, 5]}]}
-    sans = verifier(brut, articles, articles, reglage_faits, "secours")
-    assert sans.faits[0].statut == "commun"
-    encodeur = FauxEncodeur({"démissionné ce matin": "demission", "annonce qu'il a démissionné": "demission", "Le maire de Lyon a démissionné.": "demission"})
-    avec = verifier(brut, articles, articles, reglage_faits, "secours", encodeur, None, 0.65)
+    articles = [article(m, t) for m, t in LYON]
+    assert verifier(BRUT_LYON, articles, articles, reglage_faits, "secours").faits[0].statut == "commun"
+    juge = FauxJuge(["démissionné ce matin", "annonce qu'il a démissionné"])
+    avec = verifier(BRUT_LYON, articles, articles, reglage_faits, "secours", FauxEncodeur({}), None, juge)
     assert avec.declasses == 1
     assert avec.faits[0].statut == "recoupe"
     assert sorted(avec.faits[0].medias) == ["a", "b"]
+
+
+def test_un_candidat_commun_qu_aucune_source_n_affirme_n_est_pas_publie(reglage_faits):
+    from revue.faits import verifier
+
+    articles = [article(m, t) for m, t in LYON]
+    avec = verifier(BRUT_LYON, articles, articles, reglage_faits, "secours", FauxEncodeur({}), None, FauxJuge([]))
+    assert avec.faits == []
+    assert "aucune source n'affirme" in avec.rejets[0]

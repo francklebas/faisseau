@@ -72,6 +72,7 @@ def _sujets(
 
 def executer(options) -> int:
     from .faits import extraire
+    from .implication import juge_depuis
     from .llm import creer_client
     from .plongements import encodeur_depuis
 
@@ -101,14 +102,16 @@ def executer(options) -> int:
 
     noms = {m.id: m.nom for m in cfg.medias.values()}
     seuil_faits = cfg.modele_embeddings.get("seuil_faits")
-    seuil_commun = cfg.modele_embeddings.get("seuil_commun")
+    juge = juge_depuis(cfg) if client is not None else None
+    if juge is not None:
+        _dire(f"Niveau commun contrôlé par implication : {juge.nom} (seuil {juge.seuil})")
     if client is not None:
         _dire(f"Recoupement par le sens : {f'seuil {seuil_faits}' if seuil_faits else 'désactivé (pas de seuil_faits pour ce modèle)'}")
     for rang, sujet in enumerate(sujets, 1):
         t0 = time.time()
         sujet.extraction = extraire(
             sujet.articles, client, noms, cfg.reglages["faits"], cache=base, signature=sujet.signature,
-            encodeur=encodeur, seuil_semantique=seuil_faits, seuil_commun=seuil_commun,
+            encodeur=encodeur, seuil_semantique=seuil_faits, juge=juge,
         )  # fmt: skip
         if client is not None:
             e = sujet.extraction
