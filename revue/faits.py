@@ -13,6 +13,7 @@ deux phrases qui ne diffèrent que par un chiffre se ressemblent beaucoup.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -29,21 +30,29 @@ Tu dégages les faits rapportés et tu indiques précisément quels articles les
 
 Règles :
 - Utilise uniquement les textes fournis. N'ajoute aucune connaissance extérieure, ne déduis rien.
-- Un fait est une affirmation vérifiable et courte : une seule information par fait (qui, quoi, \
-où, quand, combien), en une phrase complète et neutre, qui se comprend seule.
+- Un fait est une affirmation vérifiable et courte, en une phrase complète et neutre, qui se \
+comprend seule.
+- Un fait ne dit qu'une chose. Énonce d'abord le fait central du sujet sous sa forme la plus \
+simple (qui a fait quoi), sans date, lieu, chiffre ni circonstance. Chaque précision (date, lieu, \
+chiffre, durée, cause) fait ensuite l'objet d'un fait séparé, avec ses propres sources. \
+Exemple : « Le maire de Lyon a démissionné. » puis « La démission du maire de Lyon date du 3 mars. », \
+et non « Le maire de Lyon a démissionné le 3 mars après douze ans de mandat. ».
 - Seulement ce qui s'est passé, ce qui a été décidé ou ce qui a été dit. Pas de fait d'identité \
 (« X est journaliste »), pas d'opinion ni de jugement. Une déclaration s'écrit comme un fait \
 attribué : « X affirme que… ».
 - Reprends les noms propres et les chiffres exactement comme dans les textes.
 - Ne donne jamais deux fois la même information.
 - "sources" : tous les numéros d'articles qui énoncent ce fait explicitement, et seulement ceux-là.
-- Donne de 4 à 9 faits. D'abord ceux présents dans plusieurs articles. Termine par 2 ou 3 faits \
+- Donne de 5 à 12 faits. D'abord ceux présents dans plusieurs articles. Termine par 2 ou 3 faits \
 qu'un seul article avance : un détail, un chiffre ou une déclaration absent des autres.
 - "titre" : titre neutre et factuel du sujet, 12 mots au plus, sans recopier le titre d'un article.
 - "hors_sujet" : numéros des articles qui traitent d'un autre sujet (liste vide sinon).
 
 Réponds uniquement par un objet JSON de cette forme :
 {"titre": "…", "faits": [{"fait": "…", "sources": [1, 3]}, {"fait": "…", "sources": [2]}], "hors_sujet": []}"""
+
+# La consigne fait partie de la clé de cache : la modifier fait retraiter les sujets.
+EMPREINTE_CONSIGNE = hashlib.sha1(SYSTEME.encode()).hexdigest()[:8]
 
 MOTS_VIDES = frozenset(
     """a afin ai ainsi alors apres au aucun aussi autre autres aux avait avant avec avoir bien car ce
@@ -316,7 +325,7 @@ def extraire(
     if client is None:
         return Extraction(titre=titre_secours, etat="indisponible")
     envoyes = choisir_articles(articles, reglage["max_articles_par_sujet"])
-    cle = f"{signature}:{client.nom}" if signature else ""
+    cle = f"{signature}:{client.nom}:{EMPREINTE_CONSIGNE}" if signature else ""
     brut = cache.extraction(cle) if cache is not None and cle else None
     if brut is None:
         invite = construire_invite(envoyes, noms_medias, reglage.get("extrait_max_llm", 400))
