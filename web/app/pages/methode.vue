@@ -44,6 +44,10 @@ useSeoMeta({
       <li>un fait dont aucune source ne résiste à ce contrôle n'est pas publié ;</li>
       <li>un article qui énonce clairement un fait est ajouté à ses sources même si le modèle l'avait oublié ;</li>
       <li>le classement d'un fait dépend du nombre de médias distincts, jamais de l'avis du modèle.</li>
+      <li>
+        un fait n'est dit « commun » que si, chez assez de médias, une phrase le dit de façon proche par le
+        sens ; sinon il redescend, et seuls ces médias-là restent cités.
+      </li>
     </ul>
     <p>Trois niveaux en résultent :</p>
     <ul>

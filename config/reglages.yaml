@@ -23,6 +23,10 @@ embeddings:
       # énonce le fait (en plus du contrôle lexical ; les chiffres doivent concorder).
       # Propre à chaque modèle. Retirer la ligne pour s'en tenir au contrôle lexical.
       seuil_faits: 0.75
+      # Proximité minimale entre un fait et une phrase de chaque source pour qu'il soit
+      # « commun » ; en dessous, il redescend au niveau que ses sources proches soutiennent.
+      # Relu sur 77 paires le 13 novembre : pas de coupure nette (voir CONCLUSIONS.md).
+      seuil_commun: 0.65
     e5-small:
       nom: intfloat/multilingual-e5-small
       prefixe: "query: "        # E5 : même préfixe des deux côtés

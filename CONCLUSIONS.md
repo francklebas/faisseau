@@ -372,3 +372,51 @@ Je n'ai pas forcé. En attente, comme convenu.
    n'affiche pas encore les citations.
 3. **Sources fermées aux robots** : voulez-vous déposer vous-même les articles ou études clés
    (par exemple l'étude Quaderni 2022 sur Valeurs actuelles), comme pour l'Ifop ?
+
+---
+
+# Bilan du 13 novembre
+
+## Ce qui a été vérifié
+
+- La clé Mistral de `.env` était bien lue et valide ; le fournisseur restait `koboldcpp` parce que rien, hors `REVUE_LLM`, ne le changeait. Mistral est maintenant le défaut, KoboldCpp un repli à demander (`make quotidien LLM=koboldcpp`), sans repli automatique.
+- Édition du 13 novembre, mêmes 31 sujets pour les deux modèles (fenêtre fixée à 11 h 56) : Gemma 3 4B, 149 faits en 27 min ; Mistral Small (`mistral-small-2603`), 217 faits en 2 min 40 pour 35 596 jetons en entrée et 11 300 en sortie, soit environ 0,012 $ au tarif lu (0,15 $ / 0,60 $ par million).
+- 54 tests passent.
+
+## Faits atomiques
+
+Consigne : fait central minimal, chaque précision dans un fait séparé, noms et chiffres tels qu'écrits, pas de synthèse entre sources, faits lisibles seuls. La consigne entre dans la clé de cache.
+
+| Étape (Mistral) | Communs | Recoupés | Isolés | Sujets sans fait commun |
+|---|---|---|---|---|
+| Ancienne consigne | 37 | 70 | 110 | 10 |
+| Faits atomiques | 73 | 95 | 117 | 0 |
+| Consigne resserrée | 75 | 93 | 126 | 0 |
+| + contrôle du niveau commun (0,65) | 28 | 110 | 156 | 7 |
+
+## Contrôle du niveau commun
+
+Un fait n'est commun que par des sources dont une phrase en est proche par le sens (`seuil_commun`, Solon) ; sinon il ne garde que ces sources-là.
+
+Calibrage sur 77 paires fait/source relues : pas de coupure nette, contrairement au 0,75 d'hier. Sources qui n'énoncent pas le fait : 4 sur 22 au-dessus de 0,65, 8 sur 22 entre 0,55 et 0,65, 19 sur 33 en dessous. Un fait court comparé à une phrase longue obtient un score bas même quand la phrase le contient.
+
+À 0,65, 47 faits communs sur 75 tombent. Certains à raison (« Jensen Huang est le fondateur de Nvidia » était commun avec 19 médias sur 19 par simple présence des mots ; « Kevin Tessier a été arrêté », 10 sur 11). D'autres à tort (« L'équipe de France de football a été battue par l'Italie » devient une affirmation isolée ; « Marion Wagon a disparu » aussi). À 0,55 : 24 tombent, 51 restent.
+
+Les 28 faits communs restants ont été relus, 14 avec leurs sources : aucun faux ; un surévalué (« des établissements ont été évacués », énoncé par 2 sources sur 6).
+
+## Ce qui marche moins bien
+
+- Le contrôle lexical rattache trop facilement un fait court : c'est la vraie cause des faux faits communs, et les faits atomiques l'aggravent.
+- La proximité de phrase à phrase n'est pas la bonne mesure pour dire qu'une phrase longue contient un fait court.
+- Un fait déclassé faute de sources proches s'affiche « isolé » alors que plusieurs médias le disent.
+
+## Décisions prises sans validation préalable
+
+- Seuil 0,65 retenu malgré l'absence de coupure nette.
+- Un fait commun sans aucune source proche garde sa source la plus proche et devient isolé.
+
+## Questions pour Franck
+
+1. Garder 0,65, passer à 0,55, ou changer de mesure (découpage des phrases en propositions, ou modèle d'implication textuelle, nouvelle dépendance) ?
+2. Un fait déclassé doit-il perdre ses autres sources, au risque de paraître isolé à tort ?
+

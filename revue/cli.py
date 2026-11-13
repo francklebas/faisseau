@@ -101,19 +101,20 @@ def executer(options) -> int:
 
     noms = {m.id: m.nom for m in cfg.medias.values()}
     seuil_faits = cfg.modele_embeddings.get("seuil_faits")
+    seuil_commun = cfg.modele_embeddings.get("seuil_commun")
     if client is not None:
         _dire(f"Recoupement par le sens : {f'seuil {seuil_faits}' if seuil_faits else 'désactivé (pas de seuil_faits pour ce modèle)'}")
     for rang, sujet in enumerate(sujets, 1):
         t0 = time.time()
         sujet.extraction = extraire(
             sujet.articles, client, noms, cfg.reglages["faits"], cache=base, signature=sujet.signature,
-            encodeur=encodeur, seuil_semantique=seuil_faits,
+            encodeur=encodeur, seuil_semantique=seuil_faits, seuil_commun=seuil_commun,
         )  # fmt: skip
         if client is not None:
             e = sujet.extraction
             _dire(
                 f"  {rang}/{len(sujets)} « {e.titre[:60]} » : {len(e.faits)} faits, "
-                f"{e.rapproches} sources rapprochées par le sens, {len(e.rejets)} rejetés, "
+                f"{e.rapproches} sources rapprochées par le sens, {e.declasses} communs déclassés, {len(e.rejets)} rejetés, "
                 f"{len(e.hors_sujet)} hors sujet ({time.time() - t0:.0f} s)"
             )
 

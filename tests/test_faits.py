@@ -234,3 +234,24 @@ def test_ancrage():
 def test_lire_json_tolere_l_habillage():
     assert lire_json('```json\n{"titre": "t", "faits": []}\n```')["titre"] == "t"
     assert lire_json('[{"titre": "t", "faits": []}]')["faits"] == []
+
+
+def test_un_fait_commun_redescend_sans_sources_proches_par_le_sens(reglage_faits):
+    from revue.faits import verifier
+
+    textes = [
+        ("a", "Le maire de Lyon a démissionné ce matin"),
+        ("b", "Lyon : le maire annonce qu'il a démissionné"),
+        ("c", "À Lyon, le maire dément avoir démissionné"),
+        ("d", "Lyon : la rumeur disant que le maire a démissionné enfle"),
+        ("e", "Le maire de Lyon a démissionné ? Ses adjoints n'y croient pas"),
+    ]
+    articles = [article(m, t) for m, t in textes]
+    brut = {"titre": "Démission du maire de Lyon", "faits": [{"fait": "Le maire de Lyon a démissionné.", "sources": [1, 2, 3, 4, 5]}]}
+    sans = verifier(brut, articles, articles, reglage_faits, "secours")
+    assert sans.faits[0].statut == "commun"
+    encodeur = FauxEncodeur({"démissionné ce matin": "demission", "annonce qu'il a démissionné": "demission", "Le maire de Lyon a démissionné.": "demission"})
+    avec = verifier(brut, articles, articles, reglage_faits, "secours", encodeur, None, 0.65)
+    assert avec.declasses == 1
+    assert avec.faits[0].statut == "recoupe"
+    assert sorted(avec.faits[0].medias) == ["a", "b"]

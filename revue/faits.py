@@ -152,22 +152,37 @@ def phrases(article: Article) -> list[str]:
     return [article.titre] + [p.strip() for p in MOTIF_PHRASE.split(article.extrait or "") if len(p.strip()) >= 25]
 
 
-def rapprochements(faits: list[str], articles: list[Article], encodeur, seuil: float) -> list[set[str]]:
-    """Pour chaque fait, identifiants des articles dont une phrase dit la même chose.
+def proximites(faits: list[str], articles: list[Article], encodeur) -> list[dict[str, float]]:
+    """Pour chaque fait, proximité de sens avec la phrase la plus proche de chaque article.
 
-    `encodeur.encoder(textes)` renvoie des vecteurs normalisés. La proximité ne suffit pas :
-    « plus de 3 millions de personnes » et « plus de 2 millions de personnes » sont presque
-    identiques pour le modèle, d'où le contrôle des chiffres sur tout le texte de l'article.
+    `encodeur.encoder(textes)` renvoie des vecteurs normalisés.
     """
     if encodeur is None or not faits or not articles:
-        return [set() for _ in faits]
+        return [{} for _ in faits]
     morceaux = [(a, p) for a in articles for p in phrases(a)]
     vecteurs = encodeur.encoder(faits + [p for _, p in morceaux])
     similarites = vecteurs[: len(faits)] @ vecteurs[len(faits) :].T
-    proches: list[set[str]] = []
-    for fait, ligne in zip(faits, similarites):
-        proches.append({a.id for (a, _), s in zip(morceaux, ligne) if s >= seuil and chiffres_concordent(fait, a.texte)})
-    return proches
+    resultat: list[dict[str, float]] = []
+    for ligne in similarites:
+        meilleures: dict[str, float] = {}
+        for (a, _), s in zip(morceaux, ligne):
+            meilleures[a.id] = max(meilleures.get(a.id, -1.0), float(s))
+        resultat.append(meilleures)
+    return resultat
+
+
+def rapprochements(faits: list[str], articles: list[Article], encodeur, seuil: float) -> list[set[str]]:
+    """Pour chaque fait, identifiants des articles dont une phrase dit la même chose.
+
+    La proximité ne suffit pas : « plus de 3 millions de personnes » et « plus de 2 millions de
+    personnes » sont presque identiques pour le modèle, d'où le contrôle des chiffres sur tout
+    le texte de l'article.
+    """
+    parid = {a.id: a for a in articles}
+    return [
+        {i for i, s in proches.items() if s >= seuil and chiffres_concordent(fait, parid[i].texte)}
+        for fait, proches in zip(faits, proximites(faits, articles, encodeur))
+    ]
 
 
 def construire_invite(articles: list[Article], noms_medias: dict[str, str], extrait_max: int = 400) -> str:
@@ -224,12 +239,15 @@ def verifier(
     titre_secours: str,
     encodeur=None,
     seuil_semantique: float | None = None,
+    seuil_commun: float | None = None,
 ) -> Extraction:
     """Contrôle la réponse du LLM et construit l'extraction publiable.
 
     `envoyes` : articles numérotés dans l'invite. `tous` : tous les articles du sujet (ceux
     que le LLM n'a pas vus servent aussi au recoupement). `encodeur` et `seuil_semantique` :
     rapprochement par le sens, en plus du contrôle lexical (voir `rapprochements`).
+    `seuil_commun` : un fait n'est « commun » que par des sources dont une phrase en est proche
+    par le sens à ce seuil ; sinon il redescend au niveau que ces sources-là soutiennent.
     """
     extraction = Extraction()
     retenus: list[tuple[str, list[Article]]] = []
@@ -248,8 +266,13 @@ def verifier(
             if isinstance(numero, (int, str)) and str(numero).isdigit() and 1 <= int(numero) <= len(envoyes):
                 cites.append(envoyes[int(numero) - 1])
         proposes.append((texte, cites))
-    semantique = encodeur if seuil_semantique else None
-    proches = rapprochements([texte for texte, _ in proposes], tous, semantique, seuil_semantique or 1.0)
+    semantique = encodeur if seuil_semantique or seuil_commun else None
+    parid = {a.id: a for a in tous}
+    sens = dict(zip((t for t, _ in proposes), proximites([t for t, _ in proposes], tous, semantique)))
+    proches = [
+        {i for i, s in sens[t].items() if seuil_semantique and s >= seuil_semantique and chiffres_concordent(t, parid[i].texte)}
+        for t, _ in proposes
+    ]
 
     for (texte, cites), memes in zip(proposes, proches):
         # 1. Une source citée n'est gardée que si son texte porte bien le fait.
@@ -290,6 +313,17 @@ def verifier(
     nb_medias = len({a.media_id for a in restants})
     for texte, sources in retenus:
         medias = list(dict.fromkeys(a.media_id for a in sources))
+        # Le niveau « commun » se mérite : les mots d'un fait court se retrouvent facilement
+        # dans des articles qui ne l'énoncent pas. On ne garde alors que les sources dont une
+        # phrase en est proche par le sens (à défaut, la plus proche seule).
+        if seuil_commun and sens.get(texte) and statut(len(medias), nb_medias, reglage["part_majorite"]) == "commun":
+            proximite = sens[texte]
+            sures = [a for a in sources if proximite.get(a.id, 0.0) >= seuil_commun]
+            sures = sures or [max(sources, key=lambda a: proximite.get(a.id, 0.0))]
+            medias_surs = list(dict.fromkeys(a.media_id for a in sures))
+            if statut(len(medias_surs), nb_medias, reglage["part_majorite"]) != "commun":
+                extraction.declasses += 1
+                sources, medias = sures, medias_surs
         extraction.faits.append(
             Fait(
                 texte=texte if texte[-1] in ".!?»" else texte + ".",
@@ -322,6 +356,7 @@ def extraire(
     signature: str = "",
     encodeur=None,
     seuil_semantique: float | None = None,
+    seuil_commun: float | None = None,
 ) -> Extraction:
     """Analyse un sujet. Un seul appel au LLM par sujet (deux si la première réponse est illisible).
 
@@ -350,4 +385,4 @@ def extraire(
             return Extraction(titre=titre_secours, etat="echec", rejets=[f"pas de réponse exploitable : {erreur}"])
         if cache is not None and cle:
             cache.enregistrer_extraction(cle, brut)
-    return verifier(brut, envoyes, articles, reglage, titre_secours, encodeur, seuil_semantique)
+    return verifier(brut, envoyes, articles, reglage, titre_secours, encodeur, seuil_semantique, seuil_commun)

@@ -41,6 +41,7 @@ class Extraction:
     hors_sujet: list[str] = field(default_factory=list)  # identifiants d'articles écartés
     rejets: list[str] = field(default_factory=list)  # faits refusés, avec le motif
     rapproches: int = 0  # sources ajoutées par le sens seul (reformulations)
+    declasses: int = 0  # faits communs redescendus faute de sources proches par le sens
     etat: str = "ok"  # ok | indisponible | echec
 
 
