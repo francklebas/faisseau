@@ -40,7 +40,14 @@ et non « Le maire de Lyon a démissionné le 3 mars après douze ans de mandat.
 - Seulement ce qui s'est passé, ce qui a été décidé ou ce qui a été dit. Pas de fait d'identité \
 (« X est journaliste »), pas d'opinion ni de jugement. Une déclaration s'écrit comme un fait \
 attribué : « X affirme que… ».
-- Reprends les noms propres et les chiffres exactement comme dans les textes.
+- Reprends les noms propres et les chiffres exactement comme ils sont écrits dans les textes : \
+« Jensen Huang » et non « le patron de Nvidia », « 3-1 » et non « 3 buts à 1 ». Nomme les \
+personnes et les organisations dans chaque fait, sans les remplacer par une périphrase.
+- Pas de synthèse entre plusieurs articles : chaque fait doit être énoncé tel quel par chacune de \
+ses sources. N'écris pas « plusieurs sondages », « selon certains médias », « en tête ou proche \
+de la tête » : rapporte ce qu'un texte dit, précisément.
+- Chaque fait doit garder son sens lu seul, hors de cette liste : pas de « Un sondage est publié \
+le 11 novembre. » ni de « La plainte a été déposée contre X. » sans dire de quoi il s'agit.
 - Ne donne jamais deux fois la même information.
 - "sources" : tous les numéros d'articles qui énoncent ce fait explicitement, et seulement ceux-là.
 - Donne de 5 à 12 faits. D'abord ceux présents dans plusieurs articles. Termine par 2 ou 3 faits \
