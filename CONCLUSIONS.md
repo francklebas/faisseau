@@ -481,3 +481,74 @@ Relecture des 32 faits communs avec la phrase de chacune de leurs 190 sources :
 2. Un candidat commun sans aucune source qui l'affirme : le retirer (état actuel) ou le garder avec ses sources d'origine à un niveau inférieur ?
 3. Huit minutes de plus par édition, est-ce acceptable ?
 
+
+# Bilan du 14 novembre : contexte entier et faits plus atomiques
+
+## Ce qui a été vérifié
+
+- Les 77 paires ont été relues avec le titre et l'extrait entiers de l'article (`enonce_contexte` dans `tests/donnees/paires_fait_source.json`), verdicts enregistrés avant de lancer le modèle dans cette condition. 54 paires vraies, 23 fausses (46 et 31 avec la phrase seule).
+- 14 verdicts changent par rapport à la phrase seule. 11 s'expliquent par le contexte (le fait est écrit ailleurs dans l'extrait). 3 viennent de moi, plus sévère à la seconde lecture sans que le texte ait changé : n° 50 (« premier » déplacement non écrit), n° 52 (formule « à la hauteur » non écrite), n° 75 (« possibilité » et non « probable »).
+- Critère appliqué : le fait est écrit dans le texte avec tous ses détails ; j'ai accepté un événement annoncé pour le jour même énoncé comme accompli (n° 34, 71, 74), et « cofondateur » pour « fondateur » (n° 37).
+- Édition du 13 novembre rejouée : 31 appels Mistral (nouvelle consigne), 45 643 jetons en entrée, 13 868 en sortie, soit environ 0,015 $. 12 min 40 au total, dont une dizaine pour l'implication.
+- 55 tests passent, site régénéré (104 pages), `wrangler deploy --dry-run` passe. Rien n'est déployé.
+
+## Jeu de référence
+
+| Condition | Faux positifs | Faux négatifs | Erreurs |
+|---|---|---|---|
+| Phrase la plus proche seule (bilan précédent) | 3 sur 31 | 11 sur 46 | 14 |
+| Titre et extrait entiers, seuil 0,5 | 2 sur 23 | 3 sur 54 | 5 |
+| Titre et extrait entiers, seuil ajusté 0,27 (optimiste) | 2 | 2 | 4 |
+
+Les cinq erreurs sont toutes sur des paires que j'avais notées « limite » : n° 52 et 75 acceptées à tort (les deux verdicts que j'ai durcis), n° 3, 23 et 43 refusées à tort. Les deux chiffres ne se comparent pas terme à terme : les verdicts de référence ne sont pas les mêmes dans les deux conditions.
+
+Second avis : `tests/donnees/paires_a_juger.md` contient 20 des 77 paires tirées au hasard (graine fixe), avec le fait, le titre et l'extrait, sans verdict ni score. Une fois rempli : `uv run python scripts/paires_a_juger.py comparer`.
+
+## Édition du 13 novembre
+
+| | Phrase seule, ancienne consigne | Contexte entier, nouvelle consigne |
+|---|---|---|
+| Candidats au niveau commun | 75 | 56 |
+| Restés communs | 32 | 35 |
+| Redescendus | 37 | 19 |
+| Retirés (aucune source ne les affirme) | 6 | 2 |
+| Recoupés | 120 | 109 |
+| Isolés | 136 | 151 |
+| Sujets sans fait commun | 10 | 9 |
+
+Les trois cas à vérifier en priorité :
+
+- **France-Italie** : « L'équipe de France de football s'est inclinée face à l'Italie (3-1) en Ligue des nations » est commun, 10 médias sur 18, toutes les sources justes.
+- **Kevin Tessier** : le fait n'est plus retiré. « Kevin Tessier a commis un attentat raciste à Trappes et La Verrière » est recoupé, 4 médias sur 11 : ceux qui citent les deux communes. Trois autres articles le disent auteur de l'attentat « de Trappes » sans La Verrière et ne sont pas comptés.
+- **Jordan Bardella** : pas réglé. Mistral n'a pas séparé le fait malgré la nouvelle consigne : « Jordan Bardella a porté plainte contre X pour faux et usage de faux » reste un seul fait, recoupé, 3 médias sur 8 (les trois qui écrivent « contre X », ce qui est juste). Le sujet n'a aucun fait commun alors que les 8 médias titrent sur la plainte.
+
+Relecture des 35 faits communs avec le titre et l'extrait de leurs 224 sources :
+
+- **Un fait commun est faux à ce niveau** : « Laurent Nuñez évoque une probable « ingérence étrangère » derrière les fausses alertes à la bombe », 6 médias sur 6. Seul le titre d'Europe 1 écrit « probable » ; les cinq autres écrivent « possible », « possiblement » ou « possibilité ». Le fait voisin « évoque une « possibilité d'ingérence étrangère » » est commun lui aussi : l'édition affiche les deux. C'est la paire n° 75 du jeu, que le modèle accepte à tort.
+- 12 sources retenues à tort sur 224 (5 %) : 5 sur ce fait, 2 sur « Sébastien Lecornu a évoqué des complicités », 2 sur le « manquement à son devoir de conscience professionnelle », 1 sur la primaire de la droite, 1 sur « concertées », 1 sur l'appel à témoins.
+- Deux autres faits ne tiennent leur niveau commun qu'à ces sources, et sont vrais : « Gérald Darmanin a saisi le Conseil supérieur de la magistrature pour un manquement à son devoir de conscience professionnelle » et « Bruno Retailleau affirme qu'Édouard Philippe ne doit pas pouvoir empêcher l'organisation de la primaire ».
+- Cinq faits communs ne se comprennent pas seuls : « Sébastien Lecornu a évoqué des complicités », « Le Canon français a été débouté dans ce procès », « Le match a lieu au Stade de France », « la plainte sera déposée « très prochainement » », et le « son devoir » de la saisine du CSM, qui se lit comme celui du ministre.
+
+## Ce qui marche moins bien
+
+- **Des faits faux sont publiés sous le niveau commun, où rien ne les contrôle par le sens.** Sujet inflation : Mistral a écrit « en octobre 2024 » dans quatre faits alors que les textes parlent d'octobre 2026 et d'un « plus haut niveau depuis janvier 2024 ». Le contrôle des chiffres laisse passer, puisque « 2024 » figure dans les sources. Le candidat commun (« 3,4 % sur un an en octobre 2024 ») a été retiré par l'implication ; trois faits recoupés et un isolé portant la même erreur sont publiés. L'ancienne consigne ne produisait pas cette erreur dans les faits.
+- **Le titre de ce sujet est faux depuis le 13** : « Inflation en France en octobre 2024 selon l'Insee ». Il était déjà dans l'édition précédente et dans celle du 14 produite à 19 h 21 ; je ne l'avais pas vu. Le contrôle du titre ne compare que des mots.
+- **La consigne atomique n'est suivie qu'en partie** : plainte de Bardella non séparée, faits d'identité toujours proposés (« Jensen Huang est le fondateur de Nvidia », « Marine Tondelier est la cheffe des Écologistes ») bien qu'interdits. Deux sujets dépassent 12 faits (18 et 16) ; rien dans le code ne plafonne.
+- **Des sources justes ne sont pas comptées** : pour « Le Rassemblement national va déposer une plainte en diffamation contre Marine Tondelier », 3 médias sur 6, alors que les titres du Figaro, de 20 Minutes et du Parisien le disent aussi (« le RN annonce une plainte… »). L'erreur va dans le sens prudent.
+- Le fait central du sujet inflation (3,4 % en octobre, 8 médias sur 8) a disparu avec l'erreur d'année.
+- Durée : une dizaine de minutes d'implication par édition sur 4 fils.
+
+## Décisions prises sans validation préalable
+
+- Prémisse du modèle : `Article.texte` (titre, point, extrait), tronquée à 512 jetons ; seuil laissé à 0,5.
+- Lots d'implication triés par longueur de texte (vitesse seulement, mêmes scores).
+- Consigne : exemple fictif (maire de Lyon) plutôt que la plainte de Jordan Bardella, pour ne pas mettre un nom de l'actualité dans la consigne ; fourchette de 5 à 12 faits inchangée.
+- Les 20 paires à juger sont tirées des 77 du jeu de référence, pour pouvoir comparer les deux relectures et le modèle ; l'en-tête du fichier donne le critère que j'ai appliqué.
+- Rejeu du 13 lancé après la fin du `make quotidien` de Franck, pour ne pas faire tourner deux calculs à la fois.
+- Déploiement : `web/wrangler.jsonc` déclare le seul domaine `revue.francklebas.com`, sans adresse `workers.dev` ni adresses de prévisualisation. Préparé bien que la condition « aucun fait commun faux » ne soit pas remplie : rien n'est envoyé tant que Franck ne le demande pas.
+
+## Questions pour Franck
+
+1. Étendre le contrôle par implication à tous les faits publiés et au titre du sujet, et plus seulement aux candidats communs ? C'est ce qui aurait arrêté « octobre 2024 ». Coût : environ deux à trois fois plus de temps d'implication. Cela change la règle du 13 novembre (« seulement pour le niveau commun ») et ce que veut dire « isolé ».
+2. Publication : déployer en l'état, ou attendre que le point 1 soit tranché et l'édition du jour relue ?
+3. Indexation : `robots.txt` autorise aujourd'hui tous les robots. À garder ou à fermer pour un premier déploiement ?
