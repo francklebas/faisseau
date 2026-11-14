@@ -1,10 +1,17 @@
-// Déploiement Cloudflare (Workers Static Assets) : `pnpm dlx wrangler deploy` depuis web/,
-// après `make quotidien`. Aucun code serveur : uniquement le dossier de pages statiques.
+// Déploiement Cloudflare (Workers Static Assets) : `make deployer` depuis la racine du dépôt,
+// après `make quotidien`. Aucun code serveur : seul le dossier de pages générées est envoyé
+// (HTML et CSS). La base, les éditions JSON et la configuration restent sur la machine.
 {
   "name": "revue-du-matin",
   "compatibility_date": "2025-07-15",
   "assets": {
     "directory": "./.output/public",
     "not_found_handling": "404-page"
-  }
+  },
+  // Un seul domaine : revue.francklebas.com (la zone francklebas.com est déjà chez Cloudflare,
+  // l'enregistrement DNS et le certificat sont créés par le premier déploiement).
+  "routes": [{ "pattern": "revue.francklebas.com", "custom_domain": true }],
+  // Pas d'adresse *.workers.dev ni d'adresses de prévisualisation : rien d'autre que le domaine.
+  "workers_dev": false,
+  "preview_urls": false
 }

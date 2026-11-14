@@ -74,7 +74,7 @@ envoyés à l'API. Chaque passage affiche les jetons consommés.
 
 Un fait candidat au niveau « commun » passe en plus par un modèle d'implication textuelle
 local (`faits.implication`, mDeBERTa multilingue, ~280 Mo téléchargés au premier passage) : il
-ne garde que les sources dont la phrase la plus proche l'affirme. Compter ~8 minutes de plus
+ne garde que les sources dont le titre et l'extrait l'affirment. Compter ~10 minutes de plus
 par édition sur 4 fils. La comparaison des méthodes se rejoue avec
 `uv run python scripts/comparer_controles.py --implication <modèle>` sur les 77 paires relues
 de `tests/donnees/paires_fait_source.json`.
@@ -96,8 +96,9 @@ systemctl --user daemon-reload && systemctl --user enable --now revue-du-matin.t
 
 `make quotidien` échoue (et ne remplace pas l'édition précédente) si le LLM configuré est
 injoignable. Le site généré est dans `web/.output/public`, déployable tel quel :
-`make deployer` (Cloudflare Workers Static Assets, `web/wrangler.jsonc`) ou glisser le dossier
-dans Cloudflare Pages. Les en-têtes de sécurité sont dans `web/public/_headers`.
+`make deployer` (Cloudflare Workers Static Assets, `web/wrangler.jsonc`, domaine
+`revue.francklebas.com`, après un `pnpm dlx wrangler login` dans `web/`). Seul ce dossier est
+envoyé : ni la base, ni les éditions JSON, ni la configuration. Les en-têtes de sécurité sont dans `web/public/_headers`.
 
 ## Comment ça marche
 
