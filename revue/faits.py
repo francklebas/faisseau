@@ -33,10 +33,13 @@ Règles :
 - Un fait est une affirmation vérifiable et courte, en une phrase complète et neutre, qui se \
 comprend seule.
 - Un fait ne dit qu'une chose. Énonce d'abord le fait central du sujet sous sa forme la plus \
-simple (qui a fait quoi), sans date, lieu, chiffre ni circonstance. Chaque précision (date, lieu, \
-chiffre, durée, cause) fait ensuite l'objet d'un fait séparé, avec ses propres sources. \
-Exemple : « Le maire de Lyon a démissionné. » puis « La démission du maire de Lyon date du 3 mars. », \
-et non « Le maire de Lyon a démissionné le 3 mars après douze ans de mandat. ».
+simple : qui a fait quoi, et rien d'autre. Chaque complément fait ensuite l'objet d'un fait \
+séparé, avec ses propres sources : contre qui, pour quel motif, quand, où, combien, pendant \
+combien de temps, pour quelle raison. \
+Exemple : « Le maire de Lyon a porté plainte. », puis « La plainte du maire de Lyon vise X. », \
+« La plainte du maire de Lyon porte sur des faits de diffamation. » et « Le maire de Lyon a porté \
+plainte le 3 mars. », et non « Le maire de Lyon a porté plainte contre X pour diffamation le 3 mars. ».
+- Un fait séparé rappelle de qui et de quoi il parle, mais ne porte qu'un seul complément.
 - Seulement ce qui s'est passé, ce qui a été décidé ou ce qui a été dit. Pas de fait d'identité \
 (« X est journaliste »), pas d'opinion ni de jugement. Une déclaration s'écrit comme un fait \
 attribué : « X affirme que… ».
@@ -47,7 +50,7 @@ personnes et les organisations dans chaque fait, sans les remplacer par une pér
 ses sources. N'écris pas « plusieurs sondages », « selon certains médias », « en tête ou proche \
 de la tête » : rapporte ce qu'un texte dit, précisément.
 - Chaque fait doit garder son sens lu seul, hors de cette liste : pas de « Un sondage est publié \
-le 11 novembre. » ni de « La plainte a été déposée contre X. » sans dire de quoi il s'agit.
+le 11 novembre. » ni de « La plainte vise X. » sans dire de qui est la plainte.
 - Ne donne jamais deux fois la même information.
 - "sources" : tous les numéros d'articles qui énoncent ce fait explicitement, et seulement ceux-là.
 - Donne de 5 à 12 faits. D'abord ceux présents dans plusieurs articles. Termine par 2 ou 3 faits \
