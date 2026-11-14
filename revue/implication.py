@@ -34,13 +34,18 @@ class Juge:
             self._jetons = AutoTokenizer.from_pretrained(self.nom)
             self._modele = AutoModelForSequenceClassification.from_pretrained(self.nom).eval()
             self._indice = {v.lower(): k for k, v in self._modele.config.id2label.items()}["entailment"]
-        resultats: list[float] = []
-        for debut in range(0, len(paires), self.lot):
-            lot = paires[debut : debut + self.lot]
+        # Lots formés par longueurs voisines : un lot est complété à la taille de son texte
+        # le plus long, et les extraits vont de une à dix lignes.
+        ordre = sorted(range(len(paires)), key=lambda i: len(paires[i][0]))
+        resultats = [0.0] * len(paires)
+        for debut in range(0, len(ordre), self.lot):
+            indices = ordre[debut : debut + self.lot]
+            lot = [paires[i] for i in indices]
             entrees = self._jetons([p for p, _ in lot], [f for _, f in lot], padding=True, truncation=True, max_length=512, return_tensors="pt")
             with torch.no_grad():
                 probabilites = torch.softmax(self._modele(**entrees).logits, dim=-1)
-            resultats += probabilites[:, self._indice].tolist()
+            for i, score in zip(indices, probabilites[:, self._indice].tolist()):
+                resultats[i] = score
         return resultats
 
     def affirme(self, paires: list[tuple[str, str]]) -> list[bool]:
