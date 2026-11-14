@@ -46,7 +46,7 @@ useSeoMeta({
       <li>le classement d'un fait dépend du nombre de médias distincts, jamais de l'avis du modèle.</li>
       <li>
         un fait qui pourrait être « commun » passe un contrôle de plus : un second modèle, local lui aussi,
-        dit pour chaque source si elle l'affirme vraiment. Seules ces sources restent citées, et le niveau
+        lit le titre et l'extrait de chaque source et dit si elle l'affirme vraiment. Seules ces sources restent citées, et le niveau
         du fait est recalculé ; si aucune ne l'affirme, le fait n'est pas publié ;
       </li>
     </ul>

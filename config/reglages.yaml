@@ -46,8 +46,8 @@ faits:
   part_majorite: 0.5            # « fait commun » = au moins cette part des médias du sujet
   ancrage_min: 0.5              # part des mots du fait à retrouver dans une source citée
   ancrage_ajout: 0.7            # au-delà, une source non citée par le LLM est ajoutée
-  # Contrôle du niveau « commun » : un candidat ne garde que les sources dont la phrase la plus
-  # proche l'affirme, selon un modèle d'implication textuelle local. Comparé à la proximité
+  # Contrôle du niveau « commun » : un candidat ne garde que les sources dont le texte (titre
+  # et extrait) l'affirme, selon un modèle d'implication textuelle local. Comparé à la proximité
   # de vecteurs sur 77 paires relues (scripts/comparer_controles.py). Retirer le bloc pour
   # s'en passer.
   implication:
