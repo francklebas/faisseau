@@ -4,6 +4,10 @@ Jeu de référence : tests/donnees/paires_fait_source.json (paires relues à la 
 Pour chaque méthode : faux positifs (phrase acceptée alors qu'elle n'énonce pas le fait)
 et faux négatifs (phrase refusée alors qu'elle l'énonce).
 
+Les modèles d'implication sont jugés dans deux conditions, chacune contre les verdicts relus
+dans cette condition : la phrase la plus proche seule (« enonce »), puis le titre et l'extrait
+entiers de l'article (« enonce_contexte »), qui est ce que fait le pipeline.
+
     uv run python scripts/comparer_controles.py
     uv run python scripts/comparer_controles.py --implication MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7
 """
@@ -37,8 +41,13 @@ def meilleur_seuil(scores: np.ndarray, verite: list[bool]) -> float:
     return min(candidats, key=lambda s: sum((x >= s) != v for x, v in zip(scores, verite)))
 
 
-def implication(nom: str, paires: list[dict], fils: int) -> tuple[np.ndarray, np.ndarray]:
-    """Probabilités (implication, contradiction) que la phrase (prémisse) dise le fait (hypothèse)."""
+def texte_entier(paire: dict) -> str:
+    """Titre et extrait, assemblés comme Article.texte."""
+    return f"{paire['titre']}. {paire['extrait']}" if paire["extrait"] else paire["titre"]
+
+
+def implication(nom: str, premisses: list[str], faits: list[str], fils: int) -> tuple[np.ndarray, np.ndarray]:
+    """Probabilités (implication, contradiction) que la prémisse dise le fait (hypothèse)."""
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
@@ -46,9 +55,12 @@ def implication(nom: str, paires: list[dict], fils: int) -> tuple[np.ndarray, np
     jetons = AutoTokenizer.from_pretrained(nom)
     modele = AutoModelForSequenceClassification.from_pretrained(nom).eval()
     etiquettes = {v.lower(): k for k, v in modele.config.id2label.items()}
-    entrees = jetons([p["phrase"] for p in paires], [p["fait"] for p in paires], padding=True, truncation=True, max_length=256, return_tensors="pt")
-    with torch.no_grad():
-        probabilites = torch.softmax(modele(**entrees).logits, dim=-1).numpy()
+    lots = []
+    for debut in range(0, len(faits), 16):
+        entrees = jetons(premisses[debut : debut + 16], faits[debut : debut + 16], padding=True, truncation=True, max_length=512, return_tensors="pt")
+        with torch.no_grad():
+            lots.append(torch.softmax(modele(**entrees).logits, dim=-1).numpy())
+    probabilites = np.concatenate(lots)
     return probabilites[:, etiquettes["entailment"]], probabilites[:, etiquettes["contradiction"]]
 
 
@@ -82,18 +94,24 @@ def main() -> None:
     s = meilleur_seuil(entiere, verite)
     print(bilan(f"proximité phrase entière ≥ {s} (meilleur seuil)", list(entiere >= s), verite))
 
+    faits = [p["fait"] for p in paires]
+    conditions = [
+        ("phrase seule", "", [p["phrase"] for p in paires], verite),
+        ("titre et extrait", "_contexte", [texte_entier(p) for p in paires], [p["enonce_contexte"] for p in paires]),
+    ]
     for nom in options.implication:
-        t0 = time.time()
-        oui, non = implication(nom, paires, cfg.reglages["embeddings"]["fils_cpu"])
-        duree = time.time() - t0
         court = nom.split("/")[-1]
-        print()
-        print(bilan(f"{court} : implication ≥ 0.5", list(oui >= 0.5), verite, duree))
-        s = meilleur_seuil(oui, verite)
-        print(bilan(f"{court} : implication ≥ {s} (meilleur seuil)", list(oui >= s), verite))
-        print(bilan(f"{court} : pas de contradiction (< 0.5)", list(non < 0.5), verite))
-        for p, x in zip(paires, oui):
-            p[court] = round(float(x), 3)
+        for condition, suffixe, premisses, attendu in conditions:
+            t0 = time.time()
+            oui, non = implication(nom, premisses, faits, cfg.reglages["embeddings"]["fils_cpu"])
+            duree = time.time() - t0
+            print(f"\n{court}, {condition} ({attendu.count(True)} paires vraies sur {len(attendu)})")
+            print(bilan("implication ≥ 0.5", list(oui >= 0.5), attendu, duree))
+            s = meilleur_seuil(oui, attendu)
+            print(bilan(f"implication ≥ {s} (meilleur seuil)", list(oui >= s), attendu))
+            print(bilan("pas de contradiction (< 0.5)", list(non < 0.5), attendu))
+            for p, x in zip(paires, oui):
+                p[court + suffixe] = round(float(x), 3)
     sortie = RACINE / "data" / "comparaison_controles.json"
     sortie.write_text(json.dumps(paires, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"\nScores par paire : {sortie}")

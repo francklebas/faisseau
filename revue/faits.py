@@ -261,8 +261,8 @@ def verifier(
     que le LLM n'a pas vus servent aussi au recoupement). `encodeur` et `seuil_semantique` :
     rapprochement par le sens, en plus du contrôle lexical (voir `rapprochements`).
     `juge` : implication textuelle (voir implication.Juge). Un fait candidat au niveau
-    « commun » ne garde que les sources dont la phrase la plus proche l'affirme, puis son
-    niveau est recalculé ; sans aucune source qui l'affirme, il n'est pas publié.
+    « commun » ne garde que les sources dont le texte (titre et extrait entiers) l'affirme,
+    puis son niveau est recalculé ; sans aucune source qui l'affirme, il n'est pas publié.
     """
     extraction = Extraction()
     retenus: list[tuple[str, list[Article]]] = []
@@ -281,7 +281,7 @@ def verifier(
             if isinstance(numero, (int, str)) and str(numero).isdigit() and 1 <= int(numero) <= len(envoyes):
                 cites.append(envoyes[int(numero) - 1])
         proposes.append((texte, cites))
-    semantique = encodeur if seuil_semantique or juge else None
+    semantique = encodeur if seuil_semantique else None
     parid = {a.id: a for a in tous}
     sens = dict(zip((t for t, _ in proposes), proximites([t for t, _ in proposes], tous, semantique)))
     proches = [
@@ -330,9 +330,10 @@ def verifier(
         medias = list(dict.fromkeys(a.media_id for a in sources))
         # Le niveau « commun » se mérite : les mots d'un fait court se retrouvent facilement
         # dans des articles qui ne l'énoncent pas. Un candidat ne garde donc que les sources
-        # dont la phrase la plus proche l'affirme, au jugement d'un modèle d'implication.
-        if juge is not None and sens.get(texte) and statut(len(medias), nb_medias, reglage["part_majorite"]) == "commun":
-            verdicts = juge.affirme([(sens[texte][a.id][1], texte) for a in sources])
+        # dont le texte l'affirme, au jugement d'un modèle d'implication. Le modèle lit le
+        # titre et l'extrait entiers : une phrase seule perd le sujet d'un « Il nie… ».
+        if juge is not None and statut(len(medias), nb_medias, reglage["part_majorite"]) == "commun":
+            verdicts = juge.affirme([(a.texte, texte) for a in sources])
             sources = [a for a, oui in zip(sources, verdicts) if oui]
             if not sources:
                 extraction.rejets.append(f"candidat commun qu'aucune source n'affirme : {texte!r}")

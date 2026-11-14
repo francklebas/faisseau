@@ -237,13 +237,13 @@ def test_lire_json_tolere_l_habillage():
 
 
 class FauxJuge:
-    """Juge de test : une phrase affirme le fait si elle contient l'un des fragments donnés."""
+    """Juge de test : un texte affirme le fait s'il contient l'un des fragments donnés."""
 
     def __init__(self, fragments: list[str]) -> None:
         self.fragments = fragments
 
     def affirme(self, paires):
-        return [any(f in phrase for f in self.fragments) for phrase, _ in paires]
+        return [any(f in texte for f in self.fragments) for texte, _ in paires]
 
 
 LYON = [

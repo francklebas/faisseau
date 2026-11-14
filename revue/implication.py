@@ -1,4 +1,4 @@
-"""Implication textuelle : une phrase de source affirme-t-elle un fait ?
+"""Implication textuelle : le texte d'une source (titre et extrait) affirme-t-il un fait ?
 
 Modèle multilingue exécuté en local sur CPU. Plus lent qu'une proximité de vecteurs, il
 n'est appelé que pour les faits candidats au niveau « commun » (voir faits.verifier).
@@ -22,7 +22,7 @@ class Juge:
         self._indice = 0
 
     def scores(self, paires: list[tuple[str, str]]) -> list[float]:
-        """Pour chaque (phrase, fait), probabilité que la phrase implique le fait."""
+        """Pour chaque (texte de la source, fait), probabilité que le texte implique le fait."""
         if not paires:
             return []
         import torch
@@ -37,7 +37,7 @@ class Juge:
         resultats: list[float] = []
         for debut in range(0, len(paires), self.lot):
             lot = paires[debut : debut + self.lot]
-            entrees = self._jetons([p for p, _ in lot], [f for _, f in lot], padding=True, truncation=True, max_length=256, return_tensors="pt")
+            entrees = self._jetons([p for p, _ in lot], [f for _, f in lot], padding=True, truncation=True, max_length=512, return_tensors="pt")
             with torch.no_grad():
                 probabilites = torch.softmax(self._modele(**entrees).logits, dim=-1)
             resultats += probabilites[:, self._indice].tolist()
