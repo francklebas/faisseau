@@ -51,6 +51,11 @@ defineProps<{ sujet: ResumeSujet, date: string, rang?: number }>()
     @include a-partir-de($large) { display: block; }
   }
 
+  // Colonne fixée : sans rang, le corps tomberait dans la colonne étroite du numéro.
+  &__corps {
+    @include a-partir-de($large) { grid-column: 2; }
+  }
+
   &__titre {
     font-size: 1.4rem;
 

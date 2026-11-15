@@ -9,7 +9,6 @@ useSeoMeta({
 // Du plus asymétrique au moins asymétrique ; le seuil d'affichage est appliqué par le pipeline.
 const sujets = computed(() => (edition.value?.sujets.filter(s => s.asymetrie.notable) ?? [])
   .toSorted((a, b) => Math.abs(b.asymetrie.ecart) - Math.abs(a.asymetrie.ecart)))
-const BORDS = ['gauche', 'droite'] as const
 const nbSport = computed(() => edition.value?.sujets.filter(s => s.asymetrie.ecarte === 'sport').length ?? 0)
 </script>
 
@@ -30,25 +29,7 @@ const nbSport = computed(() => edition.value?.sujets.filter(s => s.asymetrie.eca
       compare la part de chaque bord qui en parle.
     </p>
 
-    <ol v-if="sujets.length" class="ecarts">
-      <li v-for="(sujet, i) in sujets" :key="sujet.id" class="ecarts__sujet">
-        <CarteSujet :sujet="sujet" :date="edition.date" :rang="i + 1" />
-        <dl class="ecarts__detail">
-          <div v-for="bord in BORDS" :key="bord">
-            <dt><span class="pastille" :class="`pastille--${bord}`" aria-hidden="true" />Médias de {{ bord }}</dt>
-            <dd>
-              {{ sujet.asymetrie[bord].medias.length }} sur {{ sujet.asymetrie[bord].total }}
-              ({{ pourcent(sujet.asymetrie[bord].part) }})<template v-if="sujet.asymetrie[bord].depeche.length">,
-                plus {{ sujet.asymetrie[bord].depeche.length }} par dépêche reprise</template>
-            </dd>
-          </div>
-          <div>
-            <dt>Écart</dt>
-            <dd>{{ points(sujet.asymetrie.ecart) }}</dd>
-          </div>
-        </dl>
-      </li>
-    </ol>
+    <ListeSujets v-if="sujets.length" class="ecarts" :sujets="sujets" :date="edition.date" numerote ecarts />
     <p v-else class="ecarts__vide">Aucun sujet ne dépasse le seuil d'affichage aujourd'hui.</p>
 
     <p class="note ecarts__note">
@@ -68,8 +49,6 @@ const nbSport = computed(() => edition.value?.sujets.filter(s => s.asymetrie.eca
 .ecarts {
   margin-top: 2rem;
 
-  &__sujet:first-child :deep(.carte) { border-top: 0; }
-
   &__aide,
   &__vide {
     max-width: var(--mesure);
@@ -77,19 +56,6 @@ const nbSport = computed(() => edition.value?.sujets.filter(s => s.asymetrie.eca
     font-family: var(--police-interface);
     font-size: 0.9rem;
     color: var(--encre-douce);
-  }
-
-  &__detail {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 2rem;
-    margin-bottom: 1.4rem;
-    font-family: var(--police-interface);
-    font-size: 0.9rem;
-
-    div { display: flex; gap: 0.5rem; }
-    dt { color: var(--encre-douce); }
-    dd { font-weight: 600; }
   }
 
   &__note {

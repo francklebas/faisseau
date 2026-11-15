@@ -19,7 +19,7 @@ const anglesMorts = computed(() => (edition.value?.sujets.filter(s => s.asymetri
         <NuxtLink to="/angles-morts" class="bloc__suite">{{ pluriel(anglesMorts.length, 'sujet') }}</NuxtLink>
       </h2>
       <p class="bloc__aide">Les sujets que les médias de gauche et de droite couvrent le plus inégalement.</p>
-      <ListeSujets :sujets="anglesMorts.slice(0, 3)" :date="edition.date" />
+      <ListeSujets :sujets="anglesMorts.slice(0, 3)" :date="edition.date" numerote ecarts />
     </section>
 
     <section class="bloc" aria-labelledby="titre-une">
