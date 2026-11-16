@@ -72,21 +72,22 @@ def test_articles_par_media_plafonnes_et_signature_stable():
     assert sujet.signature == signature(list(reversed(sujet.articles)))
 
 
-# ───────── Test d'intégration : vrai modèle, vrais titres relevés le 2026-11-11 ─────────
+# ───────── Test d'intégration : vrai modèle, titres synthétiques de tests/donnees ─────────
+# (jeu rédigé pour les tests, événements inventés ; voir la description dans le fichier JSON)
 
 VOISINS = [
-    # Trois annonces de la même campagne présidentielle, toutes titrées « Présidentielle 2027 : … »
-    ("riner-candidature", "zemmour-candidature"),
-    ("riner-candidature", "retailleau-primaire"),
-    ("zemmour-candidature", "retailleau-primaire"),
-    # Deux affaires impliquant l'Iran le même jour
-    ("cyberattaque-frigos-iran", "iran-menace-bases"),
-    # Deux sujets sur la guerre en Ukraine
-    ("pourparlers-abou-dhabi", "melenchon-ukraine"),
-    # Deux actualités espagnoles
-    ("greve-generale-espagne", "tiktok-enquete-espagne"),
-    # Deux actualités russes
-    ("russie-interdit-deputes-journalistes", "ambassadeur-russe-mort"),
+    # Trois annonces de la même campagne présidentielle, toutes titrées « Présidentielle 2032 : … »
+    ("delcourt-candidature", "vasseur-candidature"),
+    ("delcourt-candidature", "moreau-primaire"),
+    ("vasseur-candidature", "moreau-primaire"),
+    # Deux affaires impliquant la Turquie le même jour
+    ("cyberattaque-ports-turquie", "turquie-menace-detroits"),
+    # Deux sujets sur la guerre au Soudan
+    ("pourparlers-geneve-soudan", "ferrand-soudan"),
+    # Deux actualités portugaises
+    ("greve-transports-portugal", "portugal-enquete-plateforme"),
+    # Deux actualités brésiliennes
+    ("bresil-interdit-deputes-journalistes", "ambassadeur-bresil-mort"),
 ]
 
 
@@ -127,5 +128,5 @@ def test_sujets_proches_reels_restent_separes(cfg):
         assert len({famille[etiquettes[i]] for i in groupe}) == 1
 
     # 3. Un sujet net (mêmes faits, formulations variées) est entièrement réuni.
-    assert len(groupes_du_sujet["ambassadeur-russe-mort"]) == 1
-    assert len(groupes_du_sujet["iran-menace-bases"]) == 1
+    assert len(groupes_du_sujet["ambassadeur-bresil-mort"]) == 1
+    assert len(groupes_du_sujet["turquie-menace-detroits"]) == 1
