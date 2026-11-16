@@ -14,7 +14,7 @@ cookie, ni script, ni ressource tierce.
 
 ## Lancer
 
-Prérequis : [uv](https://docs.astral.sh/uv/), Node ≥ 20 avec pnpm, make. Python 3.12 est
+Prérequis : [uv](https://docs.astral.sh/uv/), Node ≥ 22 avec pnpm (wrangler l’exige), make. Python 3.12 est
 installé par uv si besoin.
 
 ```sh
