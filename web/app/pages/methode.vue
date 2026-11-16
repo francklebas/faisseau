@@ -3,7 +3,7 @@ const { data: edition } = await useFetch('/api/editions/derniere')
 
 useSeoMeta({
   title: 'Méthode et limites',
-  description: 'Comment la Revue du matin regroupe les articles, extrait les faits et mesure la couverture, et ce qu\'elle ne sait pas faire.',
+  description: 'Comment la Revue quotidienne regroupe les articles, extrait les faits et mesure la couverture, et ce qu\'elle ne sait pas faire.',
 })
 </script>
 
@@ -11,7 +11,7 @@ useSeoMeta({
   <div class="prose">
     <h1 class="titre-page">Méthode et limites</h1>
     <p class="chapo">
-      La Revue du matin ne choisit pas « les bons médias ». Elle en lit beaucoup, de tous bords, et montre
+      La Revue quotidienne ne choisit pas « les bons médias ». Elle en lit beaucoup, de tous bords, et montre
       ce qui se recoupe et ce qui ne se recoupe pas. Voici exactement comment, et où cela peut se tromper.
     </p>
 

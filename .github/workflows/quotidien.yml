@@ -1,4 +1,4 @@
-# Passage quotidien de la Revue du matin : collecte, regroupement, extraction des faits,
+# Passage quotidien de la Revue quotidienne : collecte, regroupement, extraction des faits,
 # génération du site et publication sur Cloudflare (Workers Static Assets).
 #
 # Même enchaînement que l'unité systemd de deploy/ : `make quotidien` puis `make deployer`.
@@ -11,7 +11,7 @@
 #
 # Secrets attendus : MISTRAL_API_KEY, CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
 
-name: Revue du matin
+name: Revue quotidienne
 
 on:
   schedule:

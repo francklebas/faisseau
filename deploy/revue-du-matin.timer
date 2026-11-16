@@ -1,5 +1,5 @@
 [Unit]
-Description=Revue du matin, tous les jours à 6 h
+Description=Revue quotidienne, tous les jours à 6 h
 
 [Timer]
 OnCalendar=*-*-* 06:00:00

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { data: editions } = await useFetch('/api/editions')
 
-useSeoMeta({ title: 'Archives', description: 'Les éditions précédentes de la Revue du matin.' })
+useSeoMeta({ title: 'Archives', description: 'Les éditions précédentes de la Revue quotidienne.' })
 </script>
 
 <template>

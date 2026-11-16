@@ -578,3 +578,13 @@ Mesurée sur 31 sujets (bilan du 14) : 45 643 jetons en entrée, 13 868 en sorti
 
 - Créer les trois secrets du dépôt et le jeton Cloudflare (`Workers Scripts: Edit` sur le compte, `Workers Routes: Edit` sur la zone), faire un premier `make deployer` local si le Worker n'existe pas encore.
 - Lancer la purge de l'historique (script `purger-historique.sh` fourni dans la conversation, non exécuté), puis `git push --force`.
+
+# 16 novembre (suite) : le site s'appelle « Revue quotidienne »
+
+Le nom affiché (en-tête, titres de pages, pied de page, descriptions, README, Makefile, unités
+systemd, nom du workflow) passe de « Revue du matin » à « Revue quotidienne », pour coller à la
+page Ko-fi. Le pied de page renvoie vers https://ko-fi.com/revuequotidienne par un simple lien,
+sans script ni bouton tiers : le site reste sans JavaScript et la CSP est inchangée. Les
+identifiants techniques (`revue-du-matin` : Worker Cloudflare, paquets Python et npm, fichiers
+systemd, groupe de concurrence) ne bougent pas, renommer le Worker obligerait à rattacher le
+domaine.

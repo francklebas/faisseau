@@ -1,4 +1,4 @@
-# Revue du matin
+# Revue quotidienne
 
 Un équivalent français de Ground News. Chaque jour, le pipeline lit les flux RSS d'une
 quarantaine de médias français, regroupe les articles par sujet et produit un site statique

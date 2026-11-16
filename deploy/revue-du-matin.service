@@ -1,10 +1,10 @@
-# Passage quotidien de la Revue du matin (unité systemd utilisateur).
+# Passage quotidien de la Revue quotidienne (unité systemd utilisateur).
 # Installation :
 #   cp deploy/revue-du-matin.* ~/.config/systemd/user/
 #   systemctl --user daemon-reload && systemctl --user enable --now revue-du-matin.timer
 # Adapter WorkingDirectory si le dépôt n'est pas dans ~/workspace/faisseau.
 [Unit]
-Description=Revue du matin : collecte, regroupement, extraction, génération du site
+Description=Revue quotidienne : collecte, regroupement, extraction, génération du site
 After=network-online.target
 Wants=network-online.target
 

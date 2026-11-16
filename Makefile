@@ -1,4 +1,4 @@
-# Revue du matin — commandes du dépôt.
+# Revue quotidienne — commandes du dépôt.
 #   make            installe, lance le pipeline, génère le site et le sert en local
 #   make quotidien  passage planifiable : pipeline + génération du site, sans serveur
 .NOTPARALLEL:
@@ -22,7 +22,7 @@ site:
 	cd web && pnpm generate
 
 servir:
-	@echo "Revue du matin : http://localhost:$(PORT)  (Ctrl+C pour arrêter)"
+	@echo "Revue quotidienne : http://localhost:$(PORT)  (Ctrl+C pour arrêter)"
 	uv run python -m http.server $(PORT) --directory $(SITE) --bind 127.0.0.1
 
 # Passage quotidien : n'installe rien, ne sert rien, sort en erreur si une étape échoue

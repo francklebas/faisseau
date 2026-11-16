@@ -1,4 +1,4 @@
-# Réglages de la Revue du matin.
+# Réglages de la Revue quotidienne.
 # Tout ce qui est ici peut être modifié sans toucher au code.
 # Les secrets (clé Mistral) vont dans .env, jamais ici.
 

@@ -7,7 +7,7 @@ const liens = [
   { vers: '/archives', nom: 'Archives' },
 ]
 useHead({
-  titleTemplate: titre => (titre ? `${titre} — Revue du matin` : 'Revue du matin — l\'actualité française, recoupée'),
+  titleTemplate: titre => (titre ? `${titre} — Revue quotidienne` : 'Revue quotidienne — l\'actualité française, recoupée'),
 })
 
 const route = useRoute()
@@ -21,7 +21,7 @@ const actif = (vers: string) => (vers === '/' ? route.path === '/' : route.path.
     <div class="page entete__ligne">
       <NuxtLink to="/" class="entete__marque">
         <span class="entete__barres" aria-hidden="true"><i /><i /><i /></span>
-        Revue du matin
+        Revue quotidienne
       </NuxtLink>
       <nav aria-label="Navigation principale">
         <ul class="entete__nav">
@@ -40,12 +40,14 @@ const actif = (vers: string) => (vers === '/' ? route.path === '/' : route.path.
   <footer class="pied">
     <div class="page pied__ligne">
       <p>
-        Revue du matin recoupe les titres et extraits publiés par les médias dans leurs flux RSS.
+        Revue quotidienne recoupe les titres et extraits publiés par les médias dans leurs flux RSS.
         Elle ne reproduit aucun article : chaque lien mène au texte original.
       </p>
       <p>
         Pas de compte, pas de publicité, pas de cookie, pas de mesure d'audience.
         <NuxtLink to="/methode">Comment c'est fait, et avec quelles limites</NuxtLink>.
+        Si vous voulez soutenir le projet :
+        <a href="https://ko-fi.com/revuequotidienne" rel="noopener">Ko-fi</a>.
       </p>
     </div>
   </footer>

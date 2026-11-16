@@ -182,7 +182,7 @@ def affinites(_options) -> int:
 
 
 def main() -> None:
-    analyse = argparse.ArgumentParser(prog="revue", description="Revue du matin : pipeline quotidien")
+    analyse = argparse.ArgumentParser(prog="revue", description="Revue quotidienne : pipeline quotidien")
     commandes = analyse.add_subparsers(dest="commande", required=True)
 
     c = commandes.add_parser("executer", help="collecte, regroupement, extraction des faits, écriture de l'édition")
