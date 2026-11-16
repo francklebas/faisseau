@@ -5,3 +5,5 @@ __pycache__/
 .env
 # Données locales : base SQLite, éditions générées, rapports
 data/
+# IDE
+.idea/
