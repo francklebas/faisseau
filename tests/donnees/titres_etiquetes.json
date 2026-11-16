@@ -1,0 +1,1235 @@
+{
+ "description": "Jeu synthétique : titres rédigés pour les tests, sur des événements, des personnes et des lieux inventés (toute ressemblance avec l'actualité est fortuite). Il remplace, depuis le 16 novembre 2026, les titres réels relevés dans les flux RSS le 2026-11-11, retirés du dépôt. Même structure : des sujets rangés à la main, avec des voisins volontairement proches (même campagne, même pays, même affaire). Sert de vérité terrain pour comparer les modèles d'embeddings et tester le regroupement. Deux sujets de même « famille » sont liés (même affaire, angle différent) : leurs paires sont ignorées.",
+ "sujets": [
+  {
+   "id": "alertes-crue-vallee-saulne",
+   "titres": [
+    {
+     "media": "ladepeche",
+     "titre": "Crue de la Saulne : 3 000 habitants évacués à Montreuil-sur-Saulne dans la nuit"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "Vigilance rouge crue : la Saulne déborde, les écoles de la vallée fermées lundi"
+    },
+    {
+     "media": "atlantico",
+     "titre": "« L'eau est montée d'un mètre en deux heures » : à Varennes-la-Saulne, la nuit où la rivière a tout emporté"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Inondations dans la vallée de la Saulne : ce que l'on sait des évacuations"
+    },
+    {
+     "media": "ouestfrance",
+     "titre": "Crue de la Saulne : la préfecture déclenche le plan Orsec, 400 pompiers mobilisés"
+    },
+    {
+     "media": "lopinion",
+     "titre": "Vallée de la Saulne : le pic de crue attendu mardi matin, selon Vigicrues"
+    },
+    {
+     "media": "20minutes",
+     "titre": "Inondations : Montreuil-sur-Saulne coupé du monde après l'effondrement du pont de la Chaussée"
+    },
+    {
+     "media": "cnews",
+     "titre": "Crue de la Saulne : trois gymnases ouverts pour héberger les sinistrés"
+    },
+    {
+     "media": "humanite",
+     "titre": "« On n'avait jamais vu ça depuis 1983 » : la vallée de la Saulne face à une crue historique"
+    },
+    {
+     "media": "frontpopulaire",
+     "titre": "Inondations dans l'Est : la ministre de la Transition écologique attendue à Montreuil-sur-Saulne"
+    },
+    {
+     "media": "slate",
+     "titre": "Crue de la Saulne : les habitants de Varennes évacués par bateau"
+    },
+    {
+     "media": "lejdd",
+     "titre": "DIRECT. Crue de la Saulne : suivez l'évolution de la situation dans la vallée"
+    },
+    {
+     "media": "capital",
+     "titre": "La Saulne en vigilance rouge : trains et bus à l'arrêt entre Chaumont-le-Haut et Varennes"
+    },
+    {
+     "media": "valeursactuelles",
+     "titre": "Inondations : le maire de Montreuil-sur-Saulne demande la reconnaissance de catastrophe naturelle"
+    },
+    {
+     "media": "lacroix",
+     "titre": "Crue de la Saulne : les agriculteurs de la vallée craignent pour leurs récoltes"
+    },
+    {
+     "media": "france24",
+     "titre": "Vallée de la Saulne : 3 000 personnes évacuées, un disparu recherché"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Crue de la Saulne : les images impressionnantes de Montreuil-sur-Saulne sous les eaux"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "Inondations dans la vallée de la Saulne : les coupures d'électricité touchent 12 000 foyers"
+    }
+   ]
+  },
+  {
+   "id": "incendie-usine-vermandel",
+   "titres": [
+    {
+     "media": "capital",
+     "titre": "Incendie de l'usine Vermandel : un périmètre de confinement de deux kilomètres autour du site"
+    },
+    {
+     "media": "midilibre",
+     "titre": "Saint-Aubin-la-Forêt : un violent incendie ravage l'usine chimique Vermandel"
+    },
+    {
+     "media": "europe1",
+     "titre": "Incendie Vermandel : « aucune toxicité aiguë » dans l'air, assure la préfecture"
+    },
+    {
+     "media": "leparisien",
+     "titre": "Usine Vermandel en feu : les habitants invités à rester chez eux et à fermer leurs fenêtres"
+    },
+    {
+     "media": "frontpopulaire",
+     "titre": "Incendie de Saint-Aubin-la-Forêt : 150 pompiers toujours à pied d'œuvre au petit matin"
+    },
+    {
+     "media": "france24",
+     "titre": "Vermandel : le site classé Seveso avait été mis en demeure en mars pour des manquements"
+    },
+    {
+     "media": "mediapart",
+     "titre": "Incendie chimique à Saint-Aubin-la-Forêt : le panache de fumée visible à 30 kilomètres"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "Usine Vermandel : les riverains s'inquiètent des retombées de suie sur les jardins"
+    },
+    {
+     "media": "cnews",
+     "titre": "Incendie Vermandel : le feu est « circonscrit », annonce le préfet"
+    },
+    {
+     "media": "bvoltaire",
+     "titre": "Saint-Aubin-la-Forêt : les écoles fermées jeudi après l'incendie de l'usine Vermandel"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Ce que l'on sait de l'incendie de l'usine Vermandel, site Seveso seuil haut"
+    },
+    {
+     "media": "latribune",
+     "titre": "Incendie Vermandel : une enquête ouverte pour déterminer l'origine du sinistre"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Vermandel : la direction évoque « un départ de feu dans un entrepôt de solvants »"
+    },
+    {
+     "media": "lefigaro",
+     "titre": "Saint-Aubin-la-Forêt : après l'incendie, les analyses de l'air attendues dans la journée"
+    },
+    {
+     "media": "ladepeche",
+     "titre": "Incendie chimique : les maraîchers de Saint-Aubin-la-Forêt sommés de ne pas récolter"
+    },
+    {
+     "media": "alternatives-economiques",
+     "titre": "Usine Vermandel : deux salariés légèrement blessés, l'un hospitalisé"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "Incendie Vermandel : les associations réclament la publication des analyses"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Seveso : l'incendie de Vermandel relance le débat sur les usines en zone habitée"
+    }
+   ]
+  },
+  {
+   "id": "bresil-interdit-deputes-journalistes",
+   "titres": [
+    {
+     "media": "lejdd",
+     "titre": "Le Brésil interdit son territoire aux députés Léa Fontanel et Karim Besson et à deux journalistes français"
+    },
+    {
+     "media": "humanite",
+     "titre": "Brasilia ferme ses frontières à deux députés et deux journalistes français"
+    },
+    {
+     "media": "bvoltaire",
+     "titre": "Interdits d'entrée au Brésil : Léa Fontanel et Karim Besson dénoncent « une mesure de représailles »"
+    },
+    {
+     "media": "ladepeche",
+     "titre": "Deux députés et deux journalistes français déclarés indésirables au Brésil"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Le Brésil sanctionne quatre Français, dont deux députés, après le rapport sur la déforestation"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Brésil : le Quai d'Orsay « regrette » l'interdiction visant des parlementaires français"
+    },
+    {
+     "media": "lemonde",
+     "titre": "Léa Fontanel, Karim Besson et deux reporters interdits d'entrer au Brésil"
+    },
+    {
+     "media": "slate",
+     "titre": "Brésil : la liste des Français interdits de territoire s'allonge"
+    },
+    {
+     "media": "regards",
+     "titre": "Le Brésil interdit d'entrée deux députés français et deux journalistes de la presse régionale"
+    },
+    {
+     "media": "franceinter",
+     "titre": "Interdiction d'entrée au Brésil : « Je ne me tairai pas », réagit la députée Léa Fontanel"
+    },
+    {
+     "media": "lefigaro",
+     "titre": "Brasilia ferme la porte à quatre Français après un rapport parlementaire sur l'Amazonie"
+    },
+    {
+     "media": "cnews",
+     "titre": "Brésil : les journalistes Hélène Marty et Paul Vigneron interdits de territoire"
+    },
+    {
+     "media": "contrepoints",
+     "titre": "Interdits de Brésil : qui sont les quatre Français visés par Brasilia ?"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Le Brésil riposte au rapport de l'Assemblée en bannissant ses deux auteurs"
+    },
+    {
+     "media": "causeur",
+     "titre": "Diplomatie : Paris convoque l'ambassadeur du Brésil après l'interdiction visant deux députés"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "Brésil : deux députés français privés de visa, le gouvernement proteste"
+    },
+    {
+     "media": "mediapart",
+     "titre": "Le Brésil déclare quatre Français « personae non gratae »"
+    },
+    {
+     "media": "basta",
+     "titre": "Rapport sur l'Amazonie : le Brésil interdit son sol à ses rapporteurs français"
+    }
+   ]
+  },
+  {
+   "id": "petition-tele-horizon",
+   "titres": [
+    {
+     "media": "leprogres",
+     "titre": "La pétition pour fermer Télé Horizon dépasse le million de signatures sur le site de l'Assemblée"
+    },
+    {
+     "media": "ladepeche",
+     "titre": "Un million de signatures contre Télé Horizon : et maintenant ?"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Télé Horizon : la pétition record oblige l'Assemblée à se saisir du sujet"
+    },
+    {
+     "media": "atlantico",
+     "titre": "Pétition contre Télé Horizon : la chaîne dénonce « une cabale »"
+    },
+    {
+     "media": "humanite",
+     "titre": "Un million de signataires veulent la fermeture de Télé Horizon : ce que la loi permet"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Télé Horizon : le million franchi, la présidente de l'Assemblée promet un débat en séance"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Pétition Télé Horizon : le record de 2023 battu en huit jours"
+    },
+    {
+     "media": "huffpost",
+     "titre": "Fermeture de Télé Horizon : les signatures s'envolent, l'Arcom temporise"
+    },
+    {
+     "media": "20minutes",
+     "titre": "Télé Horizon : « une pétition ne fait pas une décision », répond le régulateur"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "La pétition contre Télé Horizon atteint un million de signatures : ce qui va se passer"
+    },
+    {
+     "media": "midilibre",
+     "titre": "Télé Horizon face à la pétition : la chaîne réunit ses salariés en urgence"
+    },
+    {
+     "media": "franceinter",
+     "titre": "Un million de signatures : la pétition anti-Télé Horizon devient la plus suivie de l'histoire de l'Assemblée"
+    },
+    {
+     "media": "tf1info",
+     "titre": "Télé Horizon : les députés divisés sur la suite à donner à la pétition"
+    },
+    {
+     "media": "capital",
+     "titre": "Pétition contre Télé Horizon : la commission des affaires culturelles saisie"
+    },
+    {
+     "media": "causeur",
+     "titre": "Télé Horizon : la pétition pour sa fermeture franchit le cap symbolique du million"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "« Censure » ou « salubrité publique » : la pétition Télé Horizon enflamme la classe politique"
+    },
+    {
+     "media": "rfi",
+     "titre": "Télé Horizon : le présentateur vedette répond aux pétitionnaires à l'antenne"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "Pétition Télé Horizon : un million de signatures, mais aucune obligation pour l'Arcom"
+    },
+    {
+     "media": "lejdd",
+     "titre": "Télé Horizon : la pétition record en cinq questions"
+    }
+   ]
+  },
+  {
+   "id": "lavergne-400-jours",
+   "titres": [
+    {
+     "media": "streetpress",
+     "titre": "« Quatre cents jours, c'est une éternité » : Mathieu Lavergne, toujours détenu au Mali, raconté par ses proches"
+    },
+    {
+     "media": "lcp",
+     "titre": "Mathieu Lavergne : 400 jours de détention au Mali, rassemblement place de la République"
+    },
+    {
+     "media": "tf1info",
+     "titre": "Journaliste détenu au Mali : la famille de Mathieu Lavergne interpelle l'Élysée"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Mathieu Lavergne, 400 jours sans procès à Bamako"
+    },
+    {
+     "media": "causeur",
+     "titre": "Mali : 400 jours de détention pour le journaliste français Mathieu Lavergne"
+    },
+    {
+     "media": "capital",
+     "titre": "Mathieu Lavergne : les rédactions françaises se mobilisent pour le journaliste détenu au Mali"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "« Il tient le coup » : les proches de Mathieu Lavergne, 400 jours après son arrestation à Bamako"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Mali : Reporters sans frontières réclame la libération immédiate de Mathieu Lavergne"
+    },
+    {
+     "media": "franceinter",
+     "titre": "400 jours de détention : la mairie de Paris affiche le portrait de Mathieu Lavergne"
+    },
+    {
+     "media": "politis",
+     "titre": "Mathieu Lavergne détenu au Mali : le Quai d'Orsay dit « travailler sans relâche »"
+    },
+    {
+     "media": "humanite",
+     "titre": "Journaliste emprisonné à Bamako : 400 jours de combat pour la famille Lavergne"
+    },
+    {
+     "media": "reporterre",
+     "titre": "Mathieu Lavergne : ce que l'on sait des accusations portées par la junte malienne"
+    },
+    {
+     "media": "sudradio",
+     "titre": "Mali : le journaliste Mathieu Lavergne entame son 400e jour de détention"
+    },
+    {
+     "media": "contrepoints",
+     "titre": "« Mon fils n'a rien fait » : la mère de Mathieu Lavergne, 400 jours après"
+    },
+    {
+     "media": "liberation",
+     "titre": "Mathieu Lavergne : les sportifs se joignent à l'appel pour le journaliste détenu au Mali"
+    },
+    {
+     "media": "alternatives-economiques",
+     "titre": "Mali : la détention de Mathieu Lavergne au cœur d'une soirée de soutien à Lyon"
+    },
+    {
+     "media": "europe1",
+     "titre": "400 jours : la détention du journaliste Mathieu Lavergne au Mali en cinq dates"
+    },
+    {
+     "media": "bvoltaire",
+     "titre": "Mathieu Lavergne au Mali : pourquoi la France n'obtient rien de Bamako"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "Mathieu Lavergne : l'Assemblée observe une minute de silence pour le journaliste détenu"
+    },
+    {
+     "media": "lemonde",
+     "titre": "Mali : « aucune négociation en cours », selon un proche du dossier Lavergne"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Journaliste détenu au Mali : 400 jours, et un procès toujours sans date"
+    }
+   ]
+  },
+  {
+   "id": "delcourt-candidature",
+   "famille": "delcourt",
+   "titres": [
+    {
+     "media": "bvoltaire",
+     "titre": "Présidentielle 2032 : Camille Delcourt, l'effet de surprise"
+    },
+    {
+     "media": "ladepeche",
+     "titre": "Camille Delcourt candidate à la présidentielle : la championne de natation se lance"
+    },
+    {
+     "media": "lacroix",
+     "titre": "Présidentielle 2032 : Camille Delcourt annonce sa candidature « sans parti et sans étiquette »"
+    },
+    {
+     "media": "atlantico",
+     "titre": "Camille Delcourt candidate : les réactions politiques, de l'ironie à la prudence"
+    },
+    {
+     "media": "cnews",
+     "titre": "Présidentielle : Camille Delcourt, de la piscine à l'Élysée ?"
+    },
+    {
+     "media": "politis",
+     "titre": "Camille Delcourt se déclare candidate à la présidentielle 2032 dans une vidéo"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Présidentielle 2032 : qui est Camille Delcourt, la nageuse qui veut l'Élysée"
+    },
+    {
+     "media": "lejdd",
+     "titre": "Camille Delcourt candidate : « Je ne suis l'envoyée de personne »"
+    },
+    {
+     "media": "lcp",
+     "titre": "La championne Camille Delcourt annonce sa candidature à la présidentielle"
+    },
+    {
+     "media": "tf1info",
+     "titre": "Camille Delcourt à la présidentielle : les sondeurs la testent déjà"
+    },
+    {
+     "media": "midilibre",
+     "titre": "Présidentielle 2032 : Camille Delcourt promet « une campagne hors des partis »"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Camille Delcourt candidate : la natation française entre fierté et malaise"
+    },
+    {
+     "media": "humanite",
+     "titre": "Candidature Delcourt : le monde politique pris de court"
+    },
+    {
+     "media": "valeursactuelles",
+     "titre": "Présidentielle 2032 : Camille Delcourt en campagne, le programme reste à écrire"
+    }
+   ]
+  },
+  {
+   "id": "delcourt-patrimoine",
+   "famille": "delcourt",
+   "titres": [
+    {
+     "media": "humanite",
+     "titre": "Présidentielle 2032 : à peine candidate, Camille Delcourt rattrapée par un redressement fiscal"
+    },
+    {
+     "media": "europe1",
+     "titre": "Camille Delcourt : un redressement fiscal de 2023 refait surface"
+    },
+    {
+     "media": "mediapart",
+     "titre": "Candidate depuis 48 heures, Camille Delcourt visée par des révélations sur sa fiscalité"
+    },
+    {
+     "media": "reporterre",
+     "titre": "Camille Delcourt : la championne conteste « un redressement réglé depuis longtemps »"
+    }
+   ]
+  },
+  {
+   "id": "delcourt-reaction-sportifs",
+   "famille": "delcourt",
+   "titres": [
+    {
+     "media": "capital",
+     "titre": "Camille Delcourt candidate à la présidentielle : la réponse de Thomas Ravel, son ancien entraîneur"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Candidature de Camille Delcourt : les nageurs des Bleus réagissent"
+    },
+    {
+     "media": "contrepoints",
+     "titre": "« Elle a toujours aimé les défis » : Thomas Ravel commente la candidature de Camille Delcourt"
+    }
+   ]
+  },
+  {
+   "id": "vasseur-candidature",
+   "titres": [
+    {
+     "media": "lopinion",
+     "titre": "Présidentielle 2032 : Hervé Vasseur candidat à l'élection, à combien est-il crédité dans les sondages ?"
+    },
+    {
+     "media": "tf1info",
+     "titre": "Hervé Vasseur officialise sa candidature à la présidentielle 2032"
+    },
+    {
+     "media": "alternatives-economiques",
+     "titre": "Présidentielle : Hervé Vasseur se lance, pour la deuxième fois"
+    },
+    {
+     "media": "valeursactuelles",
+     "titre": "Hervé Vasseur candidat : « Cette fois, j'irai jusqu'au bout »"
+    },
+    {
+     "media": "lejdd",
+     "titre": "Présidentielle 2032 : Hervé Vasseur annonce sa candidature depuis Marseille"
+    },
+    {
+     "media": "midilibre",
+     "titre": "Hervé Vasseur candidat : son parti réuni en congrès extraordinaire"
+    },
+    {
+     "media": "europe1",
+     "titre": "Présidentielle 2032 : la candidature de Vasseur rebat les cartes à droite"
+    },
+    {
+     "media": "humanite",
+     "titre": "Hervé Vasseur : les cinq propositions phares de sa déclaration de candidature"
+    },
+    {
+     "media": "basta",
+     "titre": "Hervé Vasseur candidat à la présidentielle : les 500 parrainages, premier obstacle"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Présidentielle 2032 : Hervé Vasseur veut « rassembler les déçus »"
+    },
+    {
+     "media": "challenges",
+     "titre": "Hervé Vasseur se déclare candidat et attaque le gouvernement"
+    },
+    {
+     "media": "franceinter",
+     "titre": "Présidentielle 2032 : Vasseur candidat, un meeting prévu à Lille le 20"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "Candidature d'Hervé Vasseur : ce que disent les premiers sondages"
+    }
+   ]
+  },
+  {
+   "id": "moreau-primaire",
+   "titres": [
+    {
+     "media": "bvoltaire",
+     "titre": "« Le temps presse » : Sylvie Moreau propose aux candidats de la droite et du centre une primaire les 31 janvier et 7 février"
+    },
+    {
+     "media": "20minutes",
+     "titre": "Primaire à droite : Sylvie Moreau fixe deux dates, les 31 janvier et 7 février"
+    },
+    {
+     "media": "sudradio",
+     "titre": "Sylvie Moreau relance l'idée d'une primaire de la droite et du centre"
+    },
+    {
+     "media": "reporterre",
+     "titre": "Primaire : la proposition de Sylvie Moreau accueillie fraîchement par ses rivaux"
+    },
+    {
+     "media": "leparisien",
+     "titre": "Sylvie Moreau veut une primaire fin janvier : « Sinon, nous irons divisés »"
+    },
+    {
+     "media": "atlantico",
+     "titre": "Droite et centre : Sylvie Moreau détaille son calendrier de primaire"
+    },
+    {
+     "media": "politis",
+     "titre": "Primaire des 31 janvier et 7 février : qui a répondu à Sylvie Moreau ?"
+    },
+    {
+     "media": "lacroix",
+     "titre": "Sylvie Moreau propose une primaire ouverte aux électeurs du centre"
+    }
+   ]
+  },
+  {
+   "id": "greve-transports-portugal",
+   "titres": [
+    {
+     "media": "rfi",
+     "titre": "Au Portugal, la grève générale des transports pour les salaires paralyse Lisbonne"
+    },
+    {
+     "media": "causeur",
+     "titre": "Portugal : grève générale, métros et trains à l'arrêt dans tout le pays"
+    },
+    {
+     "media": "mediapart",
+     "titre": "Grève générale au Portugal : des centaines de milliers de manifestants pour les salaires"
+    },
+    {
+     "media": "ladepeche",
+     "titre": "Portugal : la grève des transports entre dans son deuxième jour"
+    },
+    {
+     "media": "basta",
+     "titre": "Lisbonne paralysée : la grève générale des transports mobilise massivement"
+    },
+    {
+     "media": "latribune",
+     "titre": "Au Portugal, les syndicats revendiquent un succès pour la grève générale des transports"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "Grève au Portugal : les vols annulés se multiplient à Lisbonne et Porto"
+    },
+    {
+     "media": "leparisien",
+     "titre": "Portugal : le gouvernement propose des négociations après la grève générale"
+    },
+    {
+     "media": "regards",
+     "titre": "Portugal : la grève générale des transports, « la plus suivie depuis 2012 »"
+    }
+   ]
+  },
+  {
+   "id": "portugal-enquete-plateforme",
+   "titres": [
+    {
+     "media": "mediapart",
+     "titre": "Portugal : une enquête ouverte pour diffusion présumée de contenus pédocriminels sur l'application Viddo"
+    },
+    {
+     "media": "lopinion",
+     "titre": "Au Portugal, la justice enquête sur l'application Viddo"
+    },
+    {
+     "media": "slate",
+     "titre": "Viddo : le parquet de Lisbonne ouvre une enquête pour contenus pédocriminels"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Portugal : l'application Viddo visée par une enquête, ses dirigeants convoqués"
+    }
+   ]
+  },
+  {
+   "id": "marchal-forfait",
+   "titres": [
+    {
+     "media": "bvoltaire",
+     "titre": "DIRECT. Portugal-France : revivez la conférence de presse du sélectionneur et l'annonce du forfait de Hugo Marchal"
+    },
+    {
+     "media": "franceinter",
+     "titre": "Équipe de France : Hugo Marchal forfait pour Portugal-France"
+    },
+    {
+     "media": "france24",
+     "titre": "Portugal-France : Hugo Marchal, blessé à la cuisse, ne jouera pas"
+    },
+    {
+     "media": "cnews",
+     "titre": "Bleus : le forfait de Hugo Marchal, un coup dur avant Lisbonne"
+    },
+    {
+     "media": "alternatives-economiques",
+     "titre": "Hugo Marchal forfait : qui dans les buts des Bleus face au Portugal ?"
+    },
+    {
+     "media": "capital",
+     "titre": "Ligue des nations : Hugo Marchal renonce à Portugal-France"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Équipe de France : Hugo Marchal quitte le rassemblement, blessé"
+    },
+    {
+     "media": "rfi",
+     "titre": "Portugal-France : le sélectionneur confirme le forfait de Hugo Marchal"
+    },
+    {
+     "media": "lopinion",
+     "titre": "Hugo Marchal forfait : « Il ne prendra aucun risque », explique le staff des Bleus"
+    },
+    {
+     "media": "leparisien",
+     "titre": "Bleus : Hugo Marchal, touché à l'entraînement, forfait pour Lisbonne"
+    },
+    {
+     "media": "leprogres",
+     "titre": "Portugal-France : Hugo Marchal absent, Nolan Berthier titulaire"
+    },
+    {
+     "media": "basta",
+     "titre": "Équipe de France : le forfait de Marchal relance la concurrence dans les buts"
+    },
+    {
+     "media": "lacroix",
+     "titre": "Ligue des nations : les Bleus sans Hugo Marchal face au Portugal"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Hugo Marchal forfait : la fin d'une série de 41 matches consécutifs en bleu"
+    },
+    {
+     "media": "sudradio",
+     "titre": "Portugal-France : Marchal forfait, le club du gardien « rassuré » sur la blessure"
+    },
+    {
+     "media": "mediapart",
+     "titre": "Bleus : Hugo Marchal rentre à Munich pour se soigner"
+    },
+    {
+     "media": "lcp",
+     "titre": "Équipe de France : Hugo Marchal forfait, la compo probable face au Portugal"
+    },
+    {
+     "media": "lemonde",
+     "titre": "Hugo Marchal forfait pour Portugal-France : ce que l'on sait de sa blessure"
+    }
+   ]
+  },
+  {
+   "id": "whitcombe-motion",
+   "titres": [
+    {
+     "media": "humanite",
+     "titre": "Dale Whitcombe, chef du Pentagone, échappe à une procédure de destitution"
+    },
+    {
+     "media": "causeur",
+     "titre": "États-Unis : la Chambre rejette la destitution de Dale Whitcombe"
+    },
+    {
+     "media": "atlantico",
+     "titre": "Dale Whitcombe sauvé par la Chambre : la destitution rejetée à 221 voix contre 210"
+    },
+    {
+     "media": "frontpopulaire",
+     "titre": "Washington : le secrétaire à la Défense Dale Whitcombe échappe à l'impeachment"
+    },
+    {
+     "media": "lemonde",
+     "titre": "Dale Whitcombe : la destitution échoue, les démocrates promettent de revenir à la charge"
+    },
+    {
+     "media": "lcp",
+     "titre": "Pentagone : Dale Whitcombe reste en poste après le vote de la Chambre"
+    },
+    {
+     "media": "politis",
+     "titre": "États-Unis : pourquoi la destitution de Dale Whitcombe a échoué"
+    },
+    {
+     "media": "liberation",
+     "titre": "Dale Whitcombe : le chef du Pentagone remercie « les élus qui ont résisté à la pression »"
+    },
+    {
+     "media": "nouvelobs",
+     "titre": "Destitution de Dale Whitcombe : la Chambre dit non d'une courte majorité"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "Pentagone : le vote sur Dale Whitcombe révèle les fissures du camp républicain"
+    }
+   ]
+  },
+  {
+   "id": "cyberattaque-ports-turquie",
+   "titres": [
+    {
+     "media": "politis",
+     "titre": "« Nous avons les preuves » : comment la France a décidé d'attribuer la cyberattaque des ports à la Turquie"
+    },
+    {
+     "media": "leprogres",
+     "titre": "Cyberattaque des grues portuaires : Paris accuse Ankara"
+    },
+    {
+     "media": "lopinion",
+     "titre": "La France attribue la cyberattaque des ports du Havre et de Marseille à la Turquie"
+    },
+    {
+     "media": "tf1info",
+     "titre": "Cyberattaque des ports : Ankara rejette « des accusations sans fondement »"
+    },
+    {
+     "media": "atlantico",
+     "titre": "Ports paralysés en juin : la France pointe la Turquie, l'Union européenne la soutient"
+    },
+    {
+     "media": "basta",
+     "titre": "Cyberattaque des ports : ce que révèle le rapport de l'Anssi sur la piste turque"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "La Turquie accusée de la cyberattaque des grues : les sanctions à l'étude"
+    },
+    {
+     "media": "europe1",
+     "titre": "Cyberattaque des ports français : l'attribution à la Turquie, une première"
+    },
+    {
+     "media": "sudradio",
+     "titre": "Paris attribue à Ankara la cyberattaque qui a bloqué les ports pendant trois jours"
+    },
+    {
+     "media": "lejdd",
+     "titre": "Cyberattaque portuaire : l'ambassadeur de Turquie convoqué au Quai d'Orsay"
+    }
+   ]
+  },
+  {
+   "id": "ambassadeur-bresil-mort",
+   "titres": [
+    {
+     "media": "ouestfrance",
+     "titre": "L'ambassadeur du Brésil au Canada est mort « subitement » à l'âge de 61 ans"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "Mort soudaine de l'ambassadeur du Brésil au Canada, à 61 ans"
+    },
+    {
+     "media": "franceinter",
+     "titre": "Canada : l'ambassadeur brésilien Rogério Matos meurt subitement à Ottawa"
+    },
+    {
+     "media": "nouvelobs",
+     "titre": "L'ambassadeur du Brésil au Canada décède brutalement, Brasilia « sous le choc »"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Rogério Matos, ambassadeur du Brésil au Canada, est mort à 61 ans"
+    },
+    {
+     "media": "lejdd",
+     "titre": "Décès subit de l'ambassadeur du Brésil au Canada"
+    },
+    {
+     "media": "lemonde",
+     "titre": "Brésil : la mort soudaine de l'ambassadeur à Ottawa, Rogério Matos, à 61 ans"
+    }
+   ]
+  },
+  {
+   "id": "billets-ete-ventes",
+   "titres": [
+    {
+     "media": "franceinfo",
+     "titre": "Trains : tout savoir sur l'ouverture à la vente des billets jusqu'au 5 septembre"
+    },
+    {
+     "media": "leparisien",
+     "titre": "Billets de train pour l'été : les ventes ouvrent ce mercredi"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Vacances d'été : les billets de train en vente dès mercredi, nos conseils pour payer moins cher"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Trains : l'ouverture des ventes d'été avancée au 12 mars"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "Billets de train de l'été : ce qui change pour les réservations cette année"
+    },
+    {
+     "media": "regards",
+     "titre": "Trains d'été : les ventes ouvertes, les premiers prix déjà pris d'assaut"
+    },
+    {
+     "media": "bvoltaire",
+     "titre": "Réservations de train pour l'été : le site saturé dès l'ouverture"
+    },
+    {
+     "media": "20minutes",
+     "titre": "Billets de train : ouverture des ventes jusqu'au 5 septembre, ce qu'il faut savoir"
+    }
+   ]
+  },
+  {
+   "id": "pourparlers-geneve-soudan",
+   "titres": [
+    {
+     "media": "franceinter",
+     "titre": "Les belligérants soudanais ont trouvé un accord pour un vaste échange de prisonniers lors des pourparlers de Genève"
+    },
+    {
+     "media": "slate",
+     "titre": "Soudan : accord à Genève sur un échange de 1 200 prisonniers"
+    },
+    {
+     "media": "politis",
+     "titre": "Pourparlers de Genève : premier accord concret entre l'armée soudanaise et les paramilitaires"
+    },
+    {
+     "media": "leprogres",
+     "titre": "Soudan : l'échange de prisonniers conclu à Genève, un cessez-le-feu toujours hors de portée"
+    },
+    {
+     "media": "leparisien",
+     "titre": "Genève : l'armée soudanaise et les paramilitaires s'accordent sur un échange de prisonniers"
+    },
+    {
+     "media": "lefigaro",
+     "titre": "Soudan : ce que contient l'accord d'échange de prisonniers signé à Genève"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "Pourparlers sur le Soudan : un accord sur les prisonniers, et après ?"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "Soudan : l'ONU salue l'accord d'échange de prisonniers conclu à Genève"
+    },
+    {
+     "media": "causeur",
+     "titre": "Guerre au Soudan : les deux camps s'entendent sur la libération de 1 200 prisonniers"
+    },
+    {
+     "media": "lacroix",
+     "titre": "Genève : un échange de prisonniers pour relancer les négociations sur le Soudan"
+    }
+   ]
+  },
+  {
+   "id": "turquie-menace-detroits",
+   "titres": [
+    {
+     "media": "liberation",
+     "titre": "Tensions en mer Noire : un haut responsable turc menace de fermer les détroits aux navires de l'Otan en cas de reprise des hostilités"
+    },
+    {
+     "media": "midilibre",
+     "titre": "La Turquie menace de fermer le Bosphore aux navires de l'Otan"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "Détroits : Ankara brandit la menace d'une fermeture aux bâtiments de l'Otan"
+    },
+    {
+     "media": "lefigaro",
+     "titre": "Un responsable turc menace de fermer les détroits aux navires de l'Otan si les hostilités reprennent"
+    },
+    {
+     "media": "lincorrect",
+     "titre": "Mer Noire : la Turquie menace l'Otan d'une fermeture des détroits"
+    },
+    {
+     "media": "frontpopulaire",
+     "titre": "Ankara menace de bloquer le passage des navires de l'Otan par le Bosphore et les Dardanelles"
+    },
+    {
+     "media": "humanite",
+     "titre": "Turquie : la menace de fermeture des détroits aux navires de l'Otan inquiète les alliés"
+    }
+   ]
+  },
+  {
+   "id": "ferrand-soudan",
+   "titres": [
+    {
+     "media": "lemonde",
+     "titre": "Guerre au Soudan : « Les Soudanais n'ont pas besoin de leçons », Khartoum répond sèchement aux propos de Joël Ferrand"
+    },
+    {
+     "media": "lcp",
+     "titre": "Joël Ferrand sur le Soudan : la polémique enfle après ses propos sur « une guerre fabriquée par l'Occident »"
+    },
+    {
+     "media": "causeur",
+     "titre": "Soudan : les propos de Joël Ferrand provoquent la colère de l'opposition"
+    },
+    {
+     "media": "liberation",
+     "titre": "Joël Ferrand et le Soudan : ce qu'il a dit exactement"
+    },
+    {
+     "media": "politis",
+     "titre": "Guerre au Soudan : Joël Ferrand persiste et accuse ses détracteurs de « mauvaise foi »"
+    },
+    {
+     "media": "rfi",
+     "titre": "Soudan : Khartoum convoque le chargé d'affaires français après les déclarations de Joël Ferrand"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Joël Ferrand : son parti embarrassé par ses propos sur le Soudan"
+    },
+    {
+     "media": "leprogres",
+     "titre": "Soudan : la diaspora soudanaise de France répond à Joël Ferrand"
+    },
+    {
+     "media": "ouestfrance",
+     "titre": "Propos de Joël Ferrand sur le Soudan : le gouvernement « condamne fermement »"
+    },
+    {
+     "media": "slate",
+     "titre": "Joël Ferrand sur le Soudan : les ONG dénoncent « une insulte aux victimes »"
+    },
+    {
+     "media": "capital",
+     "titre": "Guerre au Soudan : Joël Ferrand défend « une position de paix » face aux critiques"
+    },
+    {
+     "media": "bvoltaire",
+     "titre": "Soudan : Joël Ferrand invité à s'expliquer devant la commission des affaires étrangères"
+    },
+    {
+     "media": "streetpress",
+     "titre": "Les propos de Joël Ferrand sur le Soudan relancent le débat sur la ligne diplomatique de son parti"
+    }
+   ]
+  },
+  {
+   "id": "proces-double-meurtre-villeurbanne",
+   "titres": [
+    {
+     "media": "regards",
+     "titre": "Au procès du double meurtre de Villeurbanne, la perpétuité requise contre trois accusés et leur « froideur absolue »"
+    },
+    {
+     "media": "publicsenat",
+     "titre": "Procès de Villeurbanne : la réclusion à perpétuité requise contre les trois accusés"
+    },
+    {
+     "media": "lemonde",
+     "titre": "Double meurtre de Villeurbanne : « Ils ont tué pour une dette de 4 000 euros », lance l'avocate générale"
+    },
+    {
+     "media": "franceinfo",
+     "titre": "Lyon : perpétuité requise au procès du double meurtre de Villeurbanne"
+    },
+    {
+     "media": "challenges",
+     "titre": "Procès du double meurtre de Villeurbanne : le verdict attendu vendredi"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Villeurbanne : les familles des victimes « soulagées » par les réquisitions"
+    },
+    {
+     "media": "latribune",
+     "titre": "Double meurtre de Villeurbanne : les avocats de la défense plaident l'acquittement pour l'un des accusés"
+    },
+    {
+     "media": "politis",
+     "titre": "Procès de Villeurbanne : trois semaines d'audience, trois perpétuités requises"
+    },
+    {
+     "media": "france24",
+     "titre": "Double meurtre de Villeurbanne : retour sur un procès hors norme à Lyon"
+    },
+    {
+     "media": "valeursactuelles",
+     "titre": "Lyon : l'accusation réclame la perpétuité pour le double meurtre de Villeurbanne"
+    }
+   ]
+  },
+  {
+   "id": "vernoux-elue-agression",
+   "titres": [
+    {
+     "media": "mediapart",
+     "titre": "Bidon d'essence, plainte pour tentative de meurtre, trois adolescents interpellés… Ce que l'on sait de l'agression d'une élue à Vernoux"
+    },
+    {
+     "media": "rfi",
+     "titre": "Loir-et-Cher : une conseillère municipale aspergée d'essence à Vernoux, trois mineurs en garde à vue"
+    },
+    {
+     "media": "lejdd",
+     "titre": "Agression d'une élue à Vernoux : le maire dénonce « une escalade insupportable »"
+    },
+    {
+     "media": "midilibre",
+     "titre": "Vernoux : l'élue agressée à l'essence sort de l'hôpital"
+    },
+    {
+     "media": "regards",
+     "titre": "Élue aspergée d'essence à Vernoux : les trois adolescents déférés au parquet"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Agression à Vernoux : les élus du Loir-et-Cher se rassemblent devant la mairie"
+    },
+    {
+     "media": "lcp",
+     "titre": "Vernoux : une élue aspergée d'essence, la ministre de l'Intérieur promet « une réponse ferme »"
+    }
+   ]
+  },
+  {
+   "id": "rugby-ferrol-ouvreur",
+   "titres": [
+    {
+     "media": "challenges",
+     "titre": "France-Nouvelle-Zélande : « Il peut jouer partout », Baptiste Ferrol, un ouvreur pour relancer les Bleus"
+    },
+    {
+     "media": "sudouest",
+     "titre": "XV de France : Baptiste Ferrol titulaire à l'ouverture face aux All Blacks"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "Rugby : Baptiste Ferrol repositionné en ouvreur contre la Nouvelle-Zélande"
+    },
+    {
+     "media": "nouvelobs",
+     "titre": "France-Nouvelle-Zélande : le pari Ferrol à l'ouverture"
+    },
+    {
+     "media": "leparisien",
+     "titre": "XV de France : pourquoi le staff a choisi Baptiste Ferrol en numéro 10"
+    },
+    {
+     "media": "reporterre",
+     "titre": "Baptiste Ferrol ouvreur contre les All Blacks : « Un rôle qui me plaît »"
+    },
+    {
+     "media": "lacroix",
+     "titre": "Rugby : la compo des Bleus face aux All Blacks, Ferrol à l'ouverture"
+    }
+   ]
+  },
+  {
+   "id": "8-mai-ceremonie-presidente",
+   "famille": "8-mai",
+   "titres": [
+    {
+     "media": "causeur",
+     "titre": "8 Mai : dernière commémoration pour la présidente Anne Castaing, les images autour de l'Arc de Triomphe"
+    },
+    {
+     "media": "lexpress",
+     "titre": "Anne Castaing ravive la flamme du Soldat inconnu pour son dernier 8 Mai à l'Élysée"
+    },
+    {
+     "media": "humanite",
+     "titre": "8 Mai : Anne Castaing préside sa dernière cérémonie sous l'Arc de Triomphe"
+    },
+    {
+     "media": "challenges",
+     "titre": "Commémorations du 8 Mai : la présidente Castaing rend hommage aux combattants de 1945"
+    },
+    {
+     "media": "atlantico",
+     "titre": "8 Mai : une cérémonie sobre à l'Arc de Triomphe pour la présidente sortante"
+    },
+    {
+     "media": "sudouest",
+     "titre": "Anne Castaing au 8 Mai : « La paix n'est jamais acquise »"
+    },
+    {
+     "media": "bfmtv",
+     "titre": "8 Mai : les images de la cérémonie présidée par Anne Castaing"
+    },
+    {
+     "media": "europe1",
+     "titre": "Dernier 8 Mai d'Anne Castaing : ce qu'il faut retenir de la cérémonie"
+    }
+   ]
+  },
+  {
+   "id": "8-mai-polemique-lycees",
+   "famille": "8-mai",
+   "titres": [
+    {
+     "media": "humanite",
+     "titre": "« Des syndicats aux ordres » : Vincent Aubrac s'attaque aux enseignants réticents à l'hommage du 8 Mai dans les lycées"
+    },
+    {
+     "media": "basta",
+     "titre": "Hommage du 8 Mai dans les lycées : polémique après les propos de Vincent Aubrac"
+    },
+    {
+     "media": "frontpopulaire",
+     "titre": "8 Mai à l'école : les syndicats d'enseignants répondent à Vincent Aubrac"
+    },
+    {
+     "media": "ladepeche",
+     "titre": "Vincent Aubrac accuse les professeurs de « saboter » la minute de silence du 8 Mai"
+    },
+    {
+     "media": "valeursactuelles",
+     "titre": "8 Mai dans les lycées : le ministre de l'Éducation appelle « au calme »"
+    },
+    {
+     "media": "sudradio",
+     "titre": "Polémique du 8 Mai : Vincent Aubrac persiste contre les syndicats enseignants"
+    },
+    {
+     "media": "bvoltaire",
+     "titre": "Hommage du 8 Mai : la circulaire contestée par une partie des professeurs"
+    },
+    {
+     "media": "slate",
+     "titre": "8 Mai dans les établissements : ce que prévoit vraiment la circulaire"
+    },
+    {
+     "media": "lopinion",
+     "titre": "Vincent Aubrac et le 8 Mai : les enseignants dénoncent « une instrumentalisation »"
+    },
+    {
+     "media": "20minutes",
+     "titre": "Minute de silence du 8 Mai : un lycée de Nantes au cœur de la polémique"
+    },
+    {
+     "media": "lcp",
+     "titre": "8 Mai : la polémique Aubrac s'invite dans les salles des professeurs"
+    }
+   ]
+  }
+ ]
+}
