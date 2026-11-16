@@ -117,7 +117,8 @@ useSeoMeta({
     <h2>Vie privée</h2>
     <p>
       Le site est fait de pages statiques. Il n'exécute aucun script, ne dépose aucun cookie, ne charge
-      rien depuis un autre domaine et ne mesure pas son audience. Il n'y a ni compte ni publicité.
+      rien depuis un autre domaine et ne piste personne. La seule mesure est un compteur de visites
+      anonyme, côté serveur. Il n'y a ni compte ni publicité.
     </p>
 
     <template v-if="edition">

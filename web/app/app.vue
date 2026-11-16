@@ -44,7 +44,7 @@ const actif = (vers: string) => (vers === '/' ? route.path === '/' : route.path.
         Elle ne reproduit aucun article : chaque lien mène au texte original.
       </p>
       <p>
-        Pas de compte, pas de publicité, pas de cookie, pas de mesure d'audience.
+        Pas de compte, pas de publicité, pas de cookie, pas de pistage : seulement un compteur de visites anonyme, côté serveur.
         <NuxtLink to="/methode">Comment c'est fait, et avec quelles limites</NuxtLink>.
         Si vous voulez soutenir le projet :
         <a href="https://ko-fi.com/revuequotidienne" rel="noopener">Ko-fi</a>.
