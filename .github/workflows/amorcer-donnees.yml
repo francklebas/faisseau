@@ -1,0 +1,43 @@
+# Amorçage ponctuel de l'artefact « donnees » lu par le passage quotidien, à partir d'une
+# branche qui contient editions/ et couvertures/ (jamais la base SQLite : elle porte les
+# extraits RSS). Utile pour conserver les éditions produites en local avant le premier
+# passage en CI, ou pour repartir d'un état connu. À lancer à la main, puis supprimer la branche.
+name: Amorcer les données
+
+on:
+  workflow_dispatch:
+    inputs:
+      branche:
+        description: "Branche contenant editions/ et couvertures/ à sa racine"
+        default: amorce-donnees
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: revue-du-matin      # même file que le passage quotidien : pas d'artefact écrit en double
+  cancel-in-progress: false
+
+jobs:
+  amorcer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branche }}
+          path: amorce
+      - name: Contrôle du contenu
+        run: |
+          cd amorce
+          test -d editions && test -f editions/index.json || { echo "editions/index.json absent" >&2; exit 1; }
+          test ! -e revue.db || { echo "revue.db ne doit pas être publié" >&2; exit 1; }
+          rm -rf .git
+          echo "Éditions : $(ls editions/????-??-??.json | wc -l) ; couvertures : $(ls couvertures/*.json 2>/dev/null | wc -l)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: donnees
+          path: amorce
+          retention-days: 90
+          if-no-files-found: error

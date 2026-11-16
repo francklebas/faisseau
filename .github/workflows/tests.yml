@@ -1,0 +1,43 @@
+# Tests à chaque poussée et sur les demandes de fusion. Le test qui charge le vrai modèle
+# d'embeddings est sauté (modèle absent du cache) : il se joue en local.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["README.md", "CONCLUSIONS.md", "deploy/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv sync --frozen
+      - run: uv run pytest -q
+
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.10.1   # même version qu'en local (pnpm -v)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: cd web && pnpm install --frozen-lockfile
+      - run: cd web && pnpm typecheck
+      # Génération à vide (aucune édition) : les pages fixes doivent se construire.
+      - run: cd web && pnpm generate

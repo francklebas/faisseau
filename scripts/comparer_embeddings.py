@@ -78,7 +78,7 @@ def score_regroupement(groupes: list[list[int]], n: int, i: np.ndarray, j: np.nd
 def evaluer(cle: str, reglage: dict, textes: list[str], sujets, familles, cfg, distracteurs: list[str], base: Base | None) -> list[str]:
     lignes = [f"## {cle} — `{reglage['nom']}`", ""]
     e = cfg.reglages["embeddings"]
-    encodeur = Encodeur(reglage["nom"], reglage.get("prefixe", ""), e["fils_cpu"], e["lot"])
+    encodeur = Encodeur(reglage["nom"], reglage.get("prefixe", ""), cfg.fils_cpu, e["lot"])
     t0 = time.perf_counter()
     encodeur.encoder(["mise en route"])
     chargement = time.perf_counter() - t0
@@ -90,7 +90,7 @@ def evaluer(cle: str, reglage: dict, textes: list[str], sujets, familles, cfg, d
     ensemble = np.vstack([vecteurs, encodeur.encoder(distracteurs)]) if distracteurs else vecteurs
     lignes += [
         f"- Dimension : {vecteurs.shape[1]} ; chargement : {chargement:.1f} s ; "
-        f"encodage : {len(textes) / encodage:.0f} textes/s ({e['fils_cpu']} fils CPU)",
+        f"encodage : {len(textes) / encodage:.0f} textes/s ({cfg.fils_cpu} fils CPU)",
     ]
 
     i, j, y = paires_evaluees(sujets, familles)

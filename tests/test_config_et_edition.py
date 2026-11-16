@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from conftest import FauxLLM, article
 
 from revue.config import BLOCS, ORIENTATIONS
@@ -115,3 +117,21 @@ def test_le_client_llm_cumule_la_consommation(monkeypatch):
     client.completer("s", "u")
     client.completer("s", "u")
     assert (client.appels, client.jetons_entree, client.jetons_sortie) == (2, 240, 60)
+
+
+def test_fils_cpu_surchargeable_par_l_environnement(cfg, monkeypatch):
+    from revue.implication import juge_depuis
+    from revue.plongements import encodeur_depuis
+
+    monkeypatch.delenv("REVUE_FILS_CPU", raising=False)
+    assert cfg.fils_cpu == cfg.reglages["embeddings"]["fils_cpu"]
+    monkeypatch.setenv("REVUE_FILS_CPU", "2")
+    assert cfg.fils_cpu == 2
+    assert encodeur_depuis(cfg).fils_cpu == 2
+    assert juge_depuis(cfg).fils_cpu == 2
+    monkeypatch.setenv("REVUE_FILS_CPU", "0")
+    with pytest.raises(ValueError):
+        cfg.fils_cpu
+    monkeypatch.setenv("REVUE_FILS_CPU", "quatre")
+    with pytest.raises(ValueError):
+        cfg.fils_cpu

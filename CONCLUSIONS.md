@@ -552,3 +552,29 @@ Relecture des 35 faits communs avec le titre et l'extrait de leurs 224 sources :
 1. Étendre le contrôle par implication à tous les faits publiés et au titre du sujet, et plus seulement aux candidats communs ? C'est ce qui aurait arrêté « octobre 2024 ». Coût : environ deux à trois fois plus de temps d'implication. Cela change la règle du 13 novembre (« seulement pour le niveau commun ») et ce que veut dire « isolé ».
 2. Publication : déployer en l'état, ou attendre que le point 1 soit tranché et l'édition du jour relue ?
 3. Indexation : `robots.txt` autorise aujourd'hui tous les robots. À garder ou à fermer pour un premier déploiement ?
+
+# 16 novembre : passage quotidien sur GitHub Actions, données de test synthétiques
+
+## Ce qui a été fait
+
+- **Aucun FastAPI dans le projet**, contrairement à la prémisse de la demande : le pipeline est déjà un script (`revue executer`) suivi d'un `nuxt generate` ; les routes de `web/server/api/` ne servent qu'au prérendu. Le travail a donc porté sur l'état entre deux passages, pas sur une migration.
+- **Passage quotidien** : `.github/workflows/quotidien.yml` (schedule 4 h et 5 h UTC filtré sur 6 h à Paris, `workflow_dispatch`), `make quotidien` puis `make deployer`, dossier `data/` repris de l'artefact `donnees` du dernier passage et réécrit à chaque fois, modèles et dépendances en cache. `.github/workflows/tests.yml` : pytest, `nuxt typecheck`, génération à vide. Déploiement inchangé : Workers Static Assets, `web/wrangler.jsonc`, `revue.francklebas.com`. Les unités systemd restent l'alternative locale.
+- **`REVUE_FILS_CPU`** surcharge `embeddings.fils_cpu` pour l'encodeur, le juge d'implication et les deux scripts de comparaison (test ajouté).
+- **`tests/donnees/`** : `titres_etiquetes.json` (275 titres, 25 sujets), `paires_fait_source.json` (77 paires) et `paires_a_juger.md` (20 paires, même graine) étaient des titres et extraits RSS réels publiés dans un dépôt public. Remplacés par des jeux **synthétiques** de même structure : événements, personnes et lieux inventés ; voisins volontairement proches (même campagne, même pays, même affaire) ; répartition des verdicts voisine (45 / 9 / 3 / 20 contre 43 / 11 / 3 / 20) ; `proximite_solon` recalculée avec le vrai modèle. Les 56 tests passent, dont celui qui charge Solon (identifiants des sujets voisins mis à jour dans `test_regroupement.py`). Les mesures des bilans précédents (AUC, F1, implication) ont été faites sur les jeux réels et ne se rejouent plus à l'identique.
+- Le pipeline lui-même n'a pas changé : pas de reprise d'extrait sur le site (vérifié : `edition.py` n'écrit que titre et lien). Restent publiés tels quels les titres d'articles (choix assumé), un titre de sujet repris d'un article quand la synthèse échoue à l'ancrage (0 à 1 par édition, étiqueté), et 3 à 10 % de faits qui sont une sous-chaîne exacte d'un titre ou d'un extrait (phrases courtes et factuelles).
+
+## Consommation Mistral
+
+Mesurée sur 31 sujets (bilan du 14) : 45 643 jetons en entrée, 13 868 en sortie, soit ~1 470 / ~450 par sujet et moins de 0,02 $ par passage au tarif lu. La consigne système (2 793 caractères, ~730 jetons) représente la moitié de l'entrée. Le cache des extractions n'économise rien d'un jour à l'autre.
+
+## Décisions prises sans validation préalable
+
+- Artefacts Actions plutôt que cache Actions pour `data/` : un artefact ne s'évapore pas au bout de sept jours sans usage et se télécharge par l'API avec le jeton du job ; le cache ne sert qu'aux modèles et aux dépendances.
+- Un seul job dans le passage quotidien (Python et Node dans le même runner) plutôt que deux reliés par artefact : plus simple, et le déploiement ne peut pas partir si le pipeline a échoué.
+- Le dossier `data/` est sauvegardé même quand le pipeline échoue (`!cancelled()`), pour garder les articles collectés.
+- Les identifiants des sujets synthétiques ne reprennent pas ceux des sujets réels : le contenu ayant changé, garder les anciens noms aurait été trompeur.
+
+## À faire par Franck
+
+- Créer les trois secrets du dépôt et le jeton Cloudflare (`Workers Scripts: Edit` sur le compte, `Workers Routes: Edit` sur la zone), faire un premier `make deployer` local si le Worker n'existe pas encore.
+- Lancer la purge de l'historique (script `purger-historique.sh` fourni dans la conversation, non exécuté), puis `git push --force`.

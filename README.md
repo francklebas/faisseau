@@ -39,7 +39,7 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
 | `uv run revue executer --reference 2026-11-11T21:55:00+01:00` | rejoue une édition passée à partir de la base, sans collecte |
 | `make affinites` | compare la couverture des médias sur l'historique et signale ceux qui s'écartent de leur bloc (ne classe rien) |
 | `make comparer-embeddings` | compare Solon et E5 sur l'échantillon étiqueté |
-| `make deployer` | publie sur Cloudflare (jamais lancé automatiquement) |
+| `make deployer` | publie sur Cloudflare (en local : jamais lancé automatiquement ; en CI : à la fin du passage quotidien) |
 
 ## Configuration
 
@@ -75,15 +75,43 @@ envoyés à l'API. Chaque passage affiche les jetons consommés.
 Un fait candidat au niveau « commun » passe en plus par un modèle d'implication textuelle
 local (`faits.implication`, mDeBERTa multilingue, ~280 Mo téléchargés au premier passage) : il
 ne garde que les sources dont le titre et l'extrait l'affirment. Compter ~10 minutes de plus
-par édition sur 4 fils. La comparaison des méthodes se rejoue avec
-`uv run python scripts/comparer_controles.py --implication <modèle>` sur les 77 paires relues
-de `tests/donnees/paires_fait_source.json`.
+par édition sur 4 fils (`embeddings.fils_cpu`, surcharge `REVUE_FILS_CPU`). La comparaison des
+méthodes se rejoue avec `uv run python scripts/comparer_controles.py --implication <modèle>` sur
+les 77 paires de `tests/donnees/paires_fait_source.json`. Ce jeu est **synthétique** (articles
+inventés, même structure) : les paires réelles relues le 13 novembre, et leurs mesures citées
+dans `CONCLUSIONS.md`, ont été retirées du dépôt pour ne pas republier d'extraits.
 
 `REVUE_LLM=aucun` désactive l'extraction. La réponse du LLM est mise en cache par sujet : un
 sujet dont les articles n'ont pas changé n'est jamais retraité, et rien n'est calculé à la
 lecture.
 
 ### Passage quotidien
+
+Le passage de référence est le workflow GitHub Actions `.github/workflows/quotidien.yml` :
+tous les jours à 6 h (heure de Paris), `make quotidien` puis `make deployer` sur un runner
+`ubuntu-latest` (4 cœurs, `REVUE_FILS_CPU=4`). Il se lance aussi à la main depuis l'onglet
+Actions (« Run workflow », avec ou sans publication).
+
+- **Secrets du dépôt** (Settings → Secrets and variables → Actions) : `MISTRAL_API_KEY`,
+  `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Rien d'autre n'est lu : pas de `.env` en CI.
+- **Jeton Cloudflare** (« Create Custom Token ») : *Account → Workers Scripts → Edit* sur le
+  compte, et *Zone → Workers Routes → Edit* sur la zone `francklebas.com` (le domaine
+  personnalisé est déclaré dans `web/wrangler.jsonc`). Rien de plus. Le Worker doit exister
+  avant le premier passage : un `make deployer` local après `pnpm dlx wrangler login` suffit,
+  un jeton limité à « Edit » ne peut pas le créer.
+- **État entre deux passages** : le dossier `data/` (base SQLite, éditions, couvertures) est
+  repris de l'artefact `donnees` du dernier passage, puis réécrit (90 jours de rétention,
+  renouvelés chaque jour). Sans lui, les archives du site se videraient. Les modèles
+  (Solon, mDeBERTa) et les dépendances sont dans le cache d'Actions.
+- **Horaire** : le cron d'Actions est en UTC. Le workflow se réveille à 4 h et 5 h UTC et ne
+  continue que si l'heure de Paris est 6 h, été comme hiver.
+- **Échec** : si Mistral est injoignable, `revue executer --exiger-llm` sort en erreur, rien
+  n'est publié et le site de la veille reste en ligne. Le dossier `data/` est quand même
+  sauvegardé (articles collectés).
+
+Compter 15 à 30 minutes par passage, dont l'essentiel pour l'implication textuelle.
+
+Alternative locale, même enchaînement, sur une machine qui reste allumée :
 
 ```sh
 # systemd (utilisateur) — tous les jours à 6 h
@@ -97,7 +125,8 @@ systemctl --user daemon-reload && systemctl --user enable --now revue-du-matin.t
 `make quotidien` échoue (et ne remplace pas l'édition précédente) si le LLM configuré est
 injoignable. Le site généré est dans `web/.output/public`, déployable tel quel :
 `make deployer` (Cloudflare Workers Static Assets, `web/wrangler.jsonc`, domaine
-`revue.francklebas.com`, après un `pnpm dlx wrangler login` dans `web/`). Seul ce dossier est
+`revue.francklebas.com`, après un `pnpm dlx wrangler login` dans `web/` ou avec
+`CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID` dans l'environnement). Seul ce dossier est
 envoyé : ni la base, ni les éditions JSON, ni la configuration. Les en-têtes de sécurité sont dans `web/public/_headers`.
 
 ## Comment ça marche
@@ -113,7 +142,7 @@ flux RSS ──► collecte ──► embeddings ──► regroupement ──�
 |---|---|---|
 | Collecte | `revue/collecte.py` | `feedparser` + `httpx`. On garde titre, lien, date et résumé tronqué à 400 caractères. `content:encoded` (parfois l'article entier) n'est jamais lu. |
 | Stockage | `revue/base.py` | SQLite (`data/revue.db`), purge à 14 jours. |
-| Embeddings | `revue/plongements.py` | `sentence-transformers` sur CPU, 4 fils, vecteurs en cache. |
+| Embeddings | `revue/plongements.py` | `sentence-transformers` sur CPU, 4 fils (`REVUE_FILS_CPU`), vecteurs en cache. |
 | Regroupement | `revue/regroupement.py` | Classification ascendante hiérarchique, distance cosinus, **liaison moyenne** : deux groupes ne fusionnent que si leurs articles se ressemblent en moyenne, ce qui empêche un article « pont » de souder deux sujets voisins. Sujet = au moins 3 médias distincts. |
 | Faits | `revue/faits.py` | Le LLM propose faits et sources ; le code contrôle chaque rattachement (mots, noms propres, chiffres), retire les sources non fondées, ajoute les sources oubliées — y compris celles qui disent la même chose autrement, repérées par Solon — et calcule seul le statut à partir du nombre de **médias** distincts. |
 | Couverture | `revue/couverture.py` | Comptage par bloc, un média = une voix. Asymétrie : part des médias de gauche qui couvrent le sujet moins part des médias de droite, parmi ceux qui ont publié ce jour-là ; seuls les blocs gauche et droite sont comparés. Affichée à partir de 25 points d'écart et de 2 médias du bord dominant. Les sujets de sport (rubrique dans l'adresse des articles) ne sont pas classés, et un média qui ne publie qu'un titre repris d'un autre (dépêche) n'est pas compté. Une édition = les 30 sujets les plus couverts, plus jusqu'à 8 sujets asymétriques trouvés au-delà. |
@@ -122,8 +151,11 @@ flux RSS ──► collecte ──► embeddings ──► regroupement ──�
 ### Solon ou E5 ?
 
 `make comparer-embeddings` mesure les deux modèles sur `tests/donnees/titres_etiquetes.json`
-(275 titres réels du 11 novembre 2026, rangés à la main en 25 sujets, mêlés à 1 500 autres
-articles du jour). Résultat sur un ThinkPad T14s (4 fils) :
+(275 titres rangés en 25 sujets, mêlés aux articles du jour présents en base). Le jeu actuel
+est **synthétique** (titres rédigés pour les tests, événements inventés, voisins volontairement
+proches) ; les chiffres ci-dessous ont été mesurés sur les 275 titres réels du 11 novembre 2026,
+retirés du dépôt depuis, et ne se rejouent donc pas à l'identique. Résultat sur un ThinkPad
+T14s (4 fils) :
 
 | | Solon-embeddings-base | multilingual-e5-small |
 |---|---|---|
@@ -208,9 +240,10 @@ Non fait : audit RGAA complet et test avec lecteur d'écran.
 ```
 config/      medias.yaml, reglages.yaml
 revue/       le pipeline (collecte, base, plongements, regroupement, faits, couverture, edition, cli)
-scripts/     comparer_embeddings.py
-tests/       pytest + titres réels étiquetés
+scripts/     comparer_embeddings.py, comparer_controles.py, paires_a_juger.py
+tests/       pytest + jeux de données synthétiques (titres étiquetés, paires fait / source)
 web/         site Nuxt 4 (app/, server/api/ pour lire les éditions à la génération)
-deploy/      unités systemd pour le passage quotidien
+deploy/      unités systemd pour le passage quotidien en local
+.github/     workflows Actions : passage quotidien et publication, tests
 data/        base SQLite et éditions générées (non versionné)
 ```

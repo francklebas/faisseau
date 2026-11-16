@@ -91,6 +91,18 @@ class Config:
             raise ValueError(f"modèle d'embeddings inconnu : {cle} (voir reglages.yaml)")
         return {"cle": cle, **e["modeles"][cle]}
 
+    @property
+    def fils_cpu(self) -> int:
+        """Fils PyTorch pour les modèles locaux (surcharge : REVUE_FILS_CPU, utile sur un runner)."""
+        valeur = os.environ.get("REVUE_FILS_CPU", self.reglages["embeddings"]["fils_cpu"])
+        try:
+            fils = int(valeur)
+        except (TypeError, ValueError):
+            raise ValueError(f"REVUE_FILS_CPU doit être un entier positif, pas « {valeur} »") from None
+        if fils < 1:
+            raise ValueError(f"REVUE_FILS_CPU doit être un entier positif, pas « {valeur} »")
+        return fils
+
     # ── LLM ──
     @property
     def fournisseur_llm(self) -> str:

@@ -40,7 +40,7 @@ class Encodeur:
 def encodeur_depuis(config) -> Encodeur:
     m = config.modele_embeddings
     e = config.reglages["embeddings"]
-    return Encodeur(m["nom"], m.get("prefixe", ""), e["fils_cpu"], e["lot"])
+    return Encodeur(m["nom"], m.get("prefixe", ""), config.fils_cpu, e["lot"])
 
 
 def vecteurs_articles(base: Base, encodeur: Encodeur, articles: list[Article]) -> np.ndarray:

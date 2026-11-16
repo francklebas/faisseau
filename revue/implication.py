@@ -56,4 +56,4 @@ def juge_depuis(config) -> Juge | None:
     reglage = config.reglages["faits"].get("implication")
     if not reglage:
         return None
-    return Juge(reglage["modele"], reglage.get("seuil", 0.5), config.reglages["embeddings"]["fils_cpu"])
+    return Juge(reglage["modele"], reglage.get("seuil", 0.5), config.fils_cpu)

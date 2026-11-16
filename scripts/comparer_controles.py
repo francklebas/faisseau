@@ -103,7 +103,7 @@ def main() -> None:
         court = nom.split("/")[-1]
         for condition, suffixe, premisses, attendu in conditions:
             t0 = time.time()
-            oui, non = implication(nom, premisses, faits, cfg.reglages["embeddings"]["fils_cpu"])
+            oui, non = implication(nom, premisses, faits, cfg.fils_cpu)
             duree = time.time() - t0
             print(f"\n{court}, {condition} ({attendu.count(True)} paires vraies sur {len(attendu)})")
             print(bilan("implication ≥ 0.5", list(oui >= 0.5), attendu, duree))

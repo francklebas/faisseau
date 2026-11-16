@@ -12,7 +12,7 @@ collecte:
 
 embeddings:
   modele: solon                 # clé de la table ci-dessous (surcharge : REVUE_EMBEDDINGS)
-  fils_cpu: 4                   # nombre de fils PyTorch (limite la chauffe)
+  fils_cpu: 4                   # nombre de fils PyTorch (limite la chauffe ; surcharge : REVUE_FILS_CPU)
   lot: 32
   modeles:
     solon:
