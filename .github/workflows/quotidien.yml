@@ -15,10 +15,13 @@ name: Revue quotidienne
 
 on:
   schedule:
-    # Le cron d'Actions est en UTC. 6 h à Paris = 5 h UTC en hiver, 4 h UTC en été :
-    # on se réveille aux deux heures et l'étape « Heure de Paris » n'en laisse passer qu'une.
+    # Le cron d'Actions est en UTC et souvent très en retard (plusieurs heures aux heures
+    # chargées). 6 h à Paris = 5 h UTC en hiver, 4 h UTC en été : on se réveille aux deux
+    # heures, plus une fois en fin de matinée au cas où les premières auraient échoué.
+    # L'étape « Édition du jour » saute le passage dès qu'une édition datée d'aujourd'hui existe.
     - cron: "0 4 * * *"
     - cron: "0 5 * * *"
+    - cron: "0 9 * * *"
   workflow_dispatch:
     inputs:
       publier:
@@ -44,22 +47,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - name: Heure de Paris
-        id: heure
-        run: |
-          heure=$(TZ=Europe/Paris date +%H)
-          echo "Il est ${heure} h à Paris (déclencheur : ${{ github.event_name }})"
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$heure" != "06" ]; then
-            echo "passer=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "passer=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.heure.outputs.passer == 'false'
 
       - name: Données du passage précédent
-        if: steps.heure.outputs.passer == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -74,26 +64,41 @@ jobs:
             echo "Artefact ${id} restauré :" && ls -la data data/editions | head -40
           fi
 
+      # Un passage planifié ne fait rien si l'édition du jour (date de Paris) est déjà là :
+      # c'est ce qui départage les crons d'été et d'hiver, et ce qui permet de relancer
+      # sans risque après un échec. Un lancement à la main passe toujours.
+      - name: Édition du jour
+        id: garde
+        run: |
+          jour=$(TZ=Europe/Paris date +%F)
+          echo "Date de Paris : ${jour} (déclencheur : ${{ github.event_name }})"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ -f "data/editions/${jour}.json" ]; then
+            echo "L'édition du ${jour} existe déjà, rien à faire."
+            echo "passer=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "passer=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: astral-sh/setup-uv@v6
-        if: steps.heure.outputs.passer == 'false'
+        if: steps.garde.outputs.passer == 'false'
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
 
       - uses: pnpm/action-setup@v4
-        if: steps.heure.outputs.passer == 'false'
+        if: steps.garde.outputs.passer == 'false'
         with:
           version: 12.10.1   # même version qu'en local (pnpm -v)
 
       - uses: actions/setup-node@v4
-        if: steps.heure.outputs.passer == 'false'
+        if: steps.garde.outputs.passer == 'false'
         with:
           node-version: 22
           cache: pnpm
           cache-dependency-path: web/pnpm-lock.yaml
 
       - name: Cache des modèles (Solon, mDeBERTa)
-        if: steps.heure.outputs.passer == 'false'
+        if: steps.garde.outputs.passer == 'false'
         uses: actions/cache@v4
         with:
           path: ${{ env.HF_HOME }}
@@ -101,19 +106,19 @@ jobs:
           restore-keys: hf-
 
       - name: Installation
-        if: steps.heure.outputs.passer == 'false'
+        if: steps.garde.outputs.passer == 'false'
         run: |
           uv sync --frozen
           cd web && pnpm install --frozen-lockfile
 
       - name: Pipeline et génération du site
-        if: steps.heure.outputs.passer == 'false'
+        if: steps.garde.outputs.passer == 'false'
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
         run: make quotidien
 
       - name: Publication sur Cloudflare
-        if: steps.heure.outputs.passer == 'false' && (github.event_name == 'schedule' || inputs.publier)
+        if: steps.garde.outputs.passer == 'false' && (github.event_name == 'schedule' || inputs.publier)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -121,7 +126,7 @@ jobs:
 
       # Même si le pipeline a échoué, les articles collectés sont conservés pour demain.
       - name: Sauvegarde des données
-        if: steps.heure.outputs.passer == 'false' && !cancelled()
+        if: steps.garde.outputs.passer == 'false' && !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: donnees
@@ -131,7 +136,7 @@ jobs:
           compression-level: 6
 
       - name: Site généré
-        if: steps.heure.outputs.passer == 'false' && !cancelled()
+        if: steps.garde.outputs.passer == 'false' && !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: site

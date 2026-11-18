@@ -103,8 +103,10 @@ Actions (« Run workflow », avec ou sans publication).
   repris de l'artefact `donnees` du dernier passage, puis réécrit (90 jours de rétention,
   renouvelés chaque jour). Sans lui, les archives du site se videraient. Les modèles
   (Solon, mDeBERTa) et les dépendances sont dans le cache d'Actions.
-- **Horaire** : le cron d'Actions est en UTC. Le workflow se réveille à 4 h et 5 h UTC et ne
-  continue que si l'heure de Paris est 6 h, été comme hiver.
+- **Horaire** : le cron d'Actions est en UTC et part souvent avec plusieurs heures de retard.
+  Le workflow se réveille à 4 h, 5 h et 9 h UTC ; un passage planifié s'arrête aussitôt si
+  une édition datée du jour (heure de Paris) existe déjà dans les données restaurées, sinon il
+  continue, quelle que soit l'heure. Une édition par jour, jamais deux.
 - **Échec** : si Mistral est injoignable, `revue executer --exiger-llm` sort en erreur, rien
   n'est publié et le site de la veille reste en ligne. Le dossier `data/` est quand même
   sauvegardé (articles collectés).
