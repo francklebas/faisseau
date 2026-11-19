@@ -15,19 +15,22 @@ name: Revue quotidienne
 
 on:
   schedule:
-    # Le cron d'Actions est en UTC et souvent très en retard (plusieurs heures aux heures
-    # chargées). 6 h à Paris = 5 h UTC en hiver, 4 h UTC en été : on se réveille aux deux
-    # heures, plus une fois en fin de matinée au cas où les premières auraient échoué.
-    # L'étape « Édition du jour » saute le passage dès qu'une édition datée d'aujourd'hui existe.
-    - cron: "0 4 * * *"
-    - cron: "0 5 * * *"
-    - cron: "0 9 * * *"
+    # Le cron d'Actions est en UTC, souvent en retard de plusieurs heures, et parfois
+    # purement et simplement abandonné (surtout à la minute 0, heure de pointe). On se
+    # réveille donc toutes les heures de 4 h à 12 h UTC, à une minute décalée : le premier
+    # réveil qui aboutit écrit l'édition du jour, les suivants la voient et s'arrêtent en
+    # quelques secondes (étape « Édition du jour »).
+    - cron: "23 4-12 * * *"
   workflow_dispatch:
     inputs:
       publier:
         description: "Publier sur Cloudflare à la fin"
         type: boolean
         default: true
+      rejouer:
+        description: "Rejouer une édition manquée à cette date (ex. 2026-11-17T06:00:00+01:00), sans collecte"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -115,7 +118,7 @@ jobs:
         if: steps.garde.outputs.passer == 'false'
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
-        run: make quotidien
+        run: make quotidien REFERENCE="${{ inputs.rejouer }}"
 
       - name: Publication sur Cloudflare
         if: steps.garde.outputs.passer == 'false' && (github.event_name == 'schedule' || inputs.publier)

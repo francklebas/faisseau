@@ -29,8 +29,10 @@ servir:
 # (y compris si le LLM configuré est injoignable : mieux vaut garder l'édition de la veille).
 # Fournisseur par défaut : celui de config/reglages.yaml (Mistral). Repli local, à demander
 # explicitement : make quotidien LLM=koboldcpp
+# Rejouer une édition manquée à partir des articles en base, sans collecte :
+# make quotidien REFERENCE=2026-11-17T06:00:00+01:00
 quotidien:
-	$(if $(LLM),REVUE_LLM=$(LLM) )uv run revue executer --exiger-llm
+	$(if $(LLM),REVUE_LLM=$(LLM) )uv run revue executer --exiger-llm$(if $(REFERENCE), --reference $(REFERENCE))
 	cd web && pnpm generate
 
 test:
