@@ -40,6 +40,7 @@ avec un avertissement et sans faits. Pour les faits, voir « Extraction des fait
 | `make affinites` | compare la couverture des médias sur l'historique et signale ceux qui s'écartent de leur bloc (ne classe rien) |
 | `make comparer-embeddings` | compare Solon et E5 sur l'échantillon étiqueté |
 | `make deployer` | publie sur Cloudflare (en local : jamais lancé automatiquement ; en CI : à la fin du passage quotidien) |
+| `make reveiller` | déploie le Worker Cloudflare qui réveille le workflow quotidien à l'heure (`reveil/`) |
 
 ## Configuration
 
@@ -103,12 +104,22 @@ Actions (« Run workflow », avec ou sans publication).
   repris de l'artefact `donnees` du dernier passage, puis réécrit (90 jours de rétention,
   renouvelés chaque jour). Sans lui, les archives du site se videraient. Les modèles
   (Solon, mDeBERTa) et les dépendances sont dans le cache d'Actions.
-- **Horaire** : le cron d'Actions est en UTC, souvent en retard de plusieurs heures, parfois
-  abandonné. Le workflow se réveille donc toutes les heures de 4 h à 12 h UTC ; un passage
-  planifié s'arrête aussitôt si une édition datée du jour (heure de Paris) existe déjà dans
-  les données restaurées, sinon il continue. Une édition par jour, jamais deux. Si aucun
-  réveil n'a abouti, « Run workflow » à la main produit l'édition du jour ; l'entrée
-  `rejouer` reconstitue une édition manquée d'un jour passé à partir des articles en base.
+- **Horaire** : le cron d'Actions est inutilisable comme réveil (en retard de plusieurs heures,
+  la plupart des créneaux sautés : en pratique un ou deux départs par jour vers 13 h UTC). Le
+  réveil est donc un Worker Cloudflare à part, `reveil/`, dont le cron part à la minute : à
+  4 h 15 UTC (5 h 15 à Paris l'hiver, 6 h 15 l'été) il envoie un `repository_dispatch` au
+  dépôt, et une seconde fois à 7 h 15 en filet. Le cron d'Actions (toutes les heures de 4 h
+  à 12 h UTC) reste en secours. Tout passage automatique s'arrête aussitôt si une édition
+  datée du jour (heure de Paris) existe déjà dans les données restaurées : une édition par
+  jour, jamais deux. Si rien n'a abouti, « Run workflow » à la main produit l'édition du
+  jour ; l'entrée `rejouer` reconstitue une édition manquée d'un jour passé.
+- **Worker de réveil** : `make reveiller` le déploie (compte Cloudflare, `wrangler login`
+  préalable). Il lit le secret `GITHUB_TOKEN`, à poser une fois depuis `reveil/` avec
+  `pnpm dlx wrangler secret put GITHUB_TOKEN` : jeton GitHub à granularité fine
+  (Settings → Developer settings → Fine-grained tokens), limité au dépôt `faisseau`,
+  permission *Contents : Read and write* uniquement (celle qu'exige `repository_dispatch`),
+  expiration à un an. Ses exécutions se lisent dans Cloudflare → Workers →
+  `revue-du-matin-reveil` → Logs.
 - **Échec** : si Mistral est injoignable, `revue executer --exiger-llm` sort en erreur, rien
   n'est publié et le site de la veille reste en ligne. Le dossier `data/` est quand même
   sauvegardé (articles collectés).
@@ -248,6 +259,7 @@ scripts/     comparer_embeddings.py, comparer_controles.py, paires_a_juger.py
 tests/       pytest + jeux de données synthétiques (titres étiquetés, paires fait / source)
 web/         site Nuxt 4 (app/, server/api/ pour lire les éditions à la génération)
 deploy/      unités systemd pour le passage quotidien en local
+reveil/      Worker Cloudflare à cron qui déclenche le workflow quotidien à l'heure
 .github/     workflows Actions : passage quotidien et publication, tests
 data/        base SQLite et éditions générées (non versionné)
 ```

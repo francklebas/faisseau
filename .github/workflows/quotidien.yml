@@ -14,12 +14,15 @@
 name: Revue quotidienne
 
 on:
+  # Réveil principal : le Worker Cloudflare de reveil/ (cron fiable à la minute) envoie cet
+  # événement à 4 h 15 UTC, puis une seconde fois à 7 h 15 en filet.
+  repository_dispatch:
+    types: [revue-du-matin]
   schedule:
-    # Le cron d'Actions est en UTC, souvent en retard de plusieurs heures, et parfois
-    # purement et simplement abandonné (surtout à la minute 0, heure de pointe). On se
-    # réveille donc toutes les heures de 4 h à 12 h UTC, à une minute décalée : le premier
-    # réveil qui aboutit écrit l'édition du jour, les suivants la voient et s'arrêtent en
-    # quelques secondes (étape « Édition du jour »).
+    # Filet de secours seulement : le cron d'Actions est en UTC, en retard de plusieurs
+    # heures et saute la plupart de ses créneaux (en pratique un ou deux réveils par jour,
+    # vers 13 h UTC). Le premier réveil qui aboutit écrit l'édition du jour, les suivants la
+    # voient et s'arrêtent en quelques secondes (étape « Édition du jour »).
     - cron: "23 4-12 * * *"
   workflow_dispatch:
     inputs:
@@ -67,15 +70,15 @@ jobs:
             echo "Artefact ${id} restauré :" && ls -la data data/editions | head -40
           fi
 
-      # Un passage planifié ne fait rien si l'édition du jour (date de Paris) est déjà là :
-      # c'est ce qui départage les crons d'été et d'hiver, et ce qui permet de relancer
-      # sans risque après un échec. Un lancement à la main passe toujours.
+      # Un passage automatique (réveil Cloudflare ou cron d'Actions) ne fait rien si l'édition
+      # du jour (date de Paris) est déjà là : une édition par jour, jamais deux, et les réveils
+      # suivants sont inoffensifs. Un lancement à la main passe toujours.
       - name: Édition du jour
         id: garde
         run: |
           jour=$(TZ=Europe/Paris date +%F)
           echo "Date de Paris : ${jour} (déclencheur : ${{ github.event_name }})"
-          if [ "${{ github.event_name }}" = "schedule" ] && [ -f "data/editions/${jour}.json" ]; then
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ -f "data/editions/${jour}.json" ]; then
             echo "L'édition du ${jour} existe déjà, rien à faire."
             echo "passer=true" >> "$GITHUB_OUTPUT"
           else
@@ -121,7 +124,7 @@ jobs:
         run: make quotidien REFERENCE="${{ inputs.rejouer }}"
 
       - name: Publication sur Cloudflare
-        if: steps.garde.outputs.passer == 'false' && (github.event_name == 'schedule' || inputs.publier)
+        if: steps.garde.outputs.passer == 'false' && (github.event_name != 'workflow_dispatch' || inputs.publier)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

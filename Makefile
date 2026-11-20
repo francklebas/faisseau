@@ -7,7 +7,7 @@
 PORT ?= 4173
 SITE := web/.output/public
 
-.PHONY: revue installer pipeline site servir quotidien test flux sujets affinites comparer-embeddings deployer
+.PHONY: revue installer pipeline site servir quotidien test flux sujets affinites comparer-embeddings deployer reveiller
 
 revue: installer pipeline site servir
 
@@ -53,3 +53,8 @@ comparer-embeddings:
 # Publication sur Cloudflare (nécessite un compte et `wrangler login`). Jamais lancé automatiquement.
 deployer:
 	cd web && pnpm dlx wrangler deploy
+
+# Worker Cloudflare qui réveille le workflow quotidien à l'heure (voir reveil/wrangler.jsonc).
+# À déployer une fois, puis à chaque changement d'horaire. Secret : wrangler secret put GITHUB_TOKEN
+reveiller:
+	cd reveil && pnpm dlx wrangler deploy

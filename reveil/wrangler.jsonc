@@ -1,0 +1,22 @@
+// Réveil du passage quotidien. Le cron de GitHub Actions est en retard de plusieurs heures
+// et saute la plupart de ses créneaux ; celui de Cloudflare part à la minute. Ce Worker ne
+// sert aucune page : à l'heure dite, il demande à GitHub de lancer le workflow quotidien
+// (événement repository_dispatch « revue-du-matin »). Déploiement : `make reveiller`.
+//
+// Secret attendu (une fois, depuis reveil/) : pnpm dlx wrangler secret put GITHUB_TOKEN
+// Jeton GitHub à granularité fine, limité au dépôt, permission « Contents : Read and write »
+// (c'est celle qu'exige repository_dispatch), rien d'autre.
+{
+  "name": "revue-du-matin-reveil",
+  "main": "reveil.js",
+  "compatibility_date": "2025-07-15",
+  "workers_dev": false,
+  "preview_urls": false,
+  "vars": { "DEPOT": "francklebas/faisseau" },
+  "triggers": {
+    // UTC. 4 h 15 UTC = 5 h 15 à Paris l'hiver, 6 h 15 l'été. Le second réveil est un
+    // filet : si le premier lancement n'a pas abouti, il relance ; sinon la garde du
+    // workflow (« Édition du jour ») l'arrête en quelques secondes.
+    "crons": ["15 4 * * *", "15 7 * * *"]
+  }
+}
